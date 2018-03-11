@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using BytesCrafter.USocketNet;
 
 public enum PlayerCtlrAction
 {
@@ -47,7 +48,7 @@ public class PlayerController : MonoBehaviour
 	public AudioListener audiListener = null;
 	public Rigidbody rigidBody = null;
 	public Animator animator = null;
-	public SocketIdentity socket = null;
+	public SocketView socket = null;
 
 	[Header("Guns Parameter")]
 	public Transform rightHand = null;

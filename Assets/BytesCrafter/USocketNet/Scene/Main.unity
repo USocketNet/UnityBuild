@@ -118,35 +118,7 @@ LightmapSettings:
     m_ShowResolutionOverlay: 1
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
---- !u!1 &359505251 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1683232747412996, guid: 6f4ef293ee3afe546a19a9444ffc2707,
-    type: 2}
-  m_PrefabInternal: {fileID: 1820346083}
---- !u!114 &359505253
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 359505251}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee1d28cc338d3cd44b2b02c39c6cccac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dataSting: 'Content: {"identity":"3AfHKEvInRRFhfQzAAAq","stat":"","pos":{"x":-2.394459,"y":0.000005103648,"z":-6.080234},"rot":{"x":0,"y":346.206,"z":0},"sca":{"x":0,"y":0,"z":0}}
-    Last: 2018-1-12 17:41:16
-
-'
-  rawSize: 193
-  baseSize: 193
-  vectorString: 
-  states:
-    synchronize: 1
-    syncValue: []
-    syncStatus: Nothing
-  lastState: []
---- !u!1001 &630166845
+--- !u!1001 &161504337
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -252,11 +224,6 @@ Prefab:
         type: 2}
       propertyPath: m_SizeDelta.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114516097664886260, guid: 6ca881da36188ab43b1aca15b1fe6622,
-        type: 2}
-      propertyPath: bindings.serverUrl
-      value: localhost
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6ca881da36188ab43b1aca15b1fe6622, type: 2}

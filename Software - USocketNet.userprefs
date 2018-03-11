@@ -1,8 +1,14 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\BytesCrafter\USocketNet\Script\UnityControls.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\BytesCrafter\USocketNet\Script\UnityPlayer.cs">
     <Files>
-      <File FileName="Assets\BytesCrafter\USocketNet\Script\UnityControls.cs" Line="25" Column="36" />
+      <File FileName="Assets\BytesCrafter\USocketNet\Script\UnityControls.cs" Line="12" Column="19" />
+      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\Other\Temp_Serial.cs" Line="93" Column="3" />
+      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\SocketView.cs" Line="5" Column="11" />
+      <File FileName="Assets\BytesCrafter\Prototype\Script\PlayerController.cs" Line="11" Column="1" />
+      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" Line="10" Column="31" />
+      <File FileName="Assets\BytesCrafter\Simulation\TestScript.cs" Line="36" Column="4" />
+      <File FileName="Assets\BytesCrafter\USocketNet\Script\UnityPlayer.cs" Line="27" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

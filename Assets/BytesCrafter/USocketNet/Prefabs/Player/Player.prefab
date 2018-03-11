@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 136161943698884440}
   - component: {fileID: 23794727639390432}
   - component: {fileID: 54990454498827192}
-  - component: {fileID: 114767128965221162}
+  - component: {fileID: 114799573014960534}
   - component: {fileID: 114577269107602516}
   m_Layer: 0
   m_Name: Player
@@ -268,8 +268,8 @@ MonoBehaviour:
   jumpHeight: 4.9
   camObject: {fileID: 20578602614342966}
   rigObject: {fileID: 54990454498827192}
-  socketView: {fileID: 114767128965221162}
---- !u!114 &114767128965221162
+  socketView: {fileID: 114799573014960534}
+--- !u!114 &114799573014960534
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -277,23 +277,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 1743767937772186}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1775076730, guid: c195317c804bdde45a467128b6ca1fa9, type: 3}
+  m_Script: {fileID: 11500000, guid: 34b76cf9b4dba7b4fa25edb21e2851dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sendRate: 15
+  sendRate: 30
   socketId: 
   IsLocalUser: 0
+  rigidbody: {fileID: 0}
   position:
     synchronize: 1
-    syncMode: 2
+    syncMode: 0
   rotation:
     synchronize: 1
-    syncMode: 2
+    syncMode: 0
   scale:
     synchronize: 1
-    syncMode: 2
+    syncMode: 0
   states:
-    synchronize: 0
+    synchronize: 1
     syncValue: []
   targetPos: {x: 0, y: 0, z: 0}
   posInterpolation: 3

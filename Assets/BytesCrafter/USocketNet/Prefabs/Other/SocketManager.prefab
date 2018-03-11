@@ -3527,17 +3527,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1606110803235182}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -648792313, guid: c195317c804bdde45a467128b6ca1fa9, type: 3}
+  m_Script: {fileID: 11500000, guid: 007cd0caee8ae404991b2fe5be4737fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   bindings:
     authenKey: SeCuReHaSkEy123
-    serverUrl: localhost
+    serverUrl: www.bytes-crafter.com
     serverPort: 3000
     connectDelay: 0.1
     runOnBackground: 1
   socketPrefabs:
-  - {fileID: 114767128965221162, guid: a239ee830ab412b4698127fcf7753b24, type: 2}
+  - {fileID: 114799573014960534, guid: a239ee830ab412b4698127fcf7753b24, type: 2}
   debugLog: 
 --- !u!114 &114540263936766472
 MonoBehaviour:
