@@ -1,0 +1,7 @@
+C:\Users\Bytes Crafter\Documents\Visual Studio 2017\Projects\Multiplayer Server\MultiplayerServer\MultiplayerServer\bin\Debug\USocketNet.dll
+C:\Users\Bytes Crafter\Documents\Visual Studio 2017\Projects\Multiplayer Server\MultiplayerServer\MultiplayerServer\bin\Debug\USocketNet.pdb
+C:\Users\Bytes Crafter\Documents\Visual Studio 2017\Projects\Multiplayer Server\MultiplayerServer\MultiplayerServer\bin\Debug\UnityEngine.dll
+C:\Users\Bytes Crafter\Documents\Visual Studio 2017\Projects\Multiplayer Server\MultiplayerServer\MultiplayerServer\bin\Debug\UnityEngine.xml
+C:\Users\Bytes Crafter\Documents\Visual Studio 2017\Projects\Multiplayer Server\MultiplayerServer\MultiplayerServer\obj\Debug\USocketNet.csproj.CoreCompileInputs.cache
+C:\Users\Bytes Crafter\Documents\Visual Studio 2017\Projects\Multiplayer Server\MultiplayerServer\MultiplayerServer\obj\Debug\USocketNet.dll
+C:\Users\Bytes Crafter\Documents\Visual Studio 2017\Projects\Multiplayer Server\MultiplayerServer\MultiplayerServer\obj\Debug\USocketNet.pdb

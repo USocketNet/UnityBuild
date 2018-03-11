@@ -1,0 +1,15 @@
+D:\1. Google Drive\7. Visual Studio\Multiplayer Server\USocketNet_Client\bin\Debug\USocketNet.dll
+D:\1. Google Drive\7. Visual Studio\Multiplayer Server\USocketNet_Client\bin\Debug\USocketNet.pdb
+D:\1. Google Drive\7. Visual Studio\Multiplayer Server\USocketNet_Client\bin\Debug\UnityEngine.dll
+D:\1. Google Drive\7. Visual Studio\Multiplayer Server\USocketNet_Client\bin\Debug\UnityEngine.xml
+D:\1. Google Drive\7. Visual Studio\Multiplayer Server\USocketNet_Client\obj\Debug\USocketNet_Client.csproj.CoreCompileInputs.cache
+D:\1. Google Drive\7. Visual Studio\Multiplayer Server\USocketNet_Client\obj\Debug\USocketNet.dll
+D:\1. Google Drive\7. Visual Studio\Multiplayer Server\USocketNet_Client\obj\Debug\USocketNet.pdb
+D:\Projects\Software - USocketNet\Dynamic\bin\Debug\USocketNet.dll
+D:\Projects\Software - USocketNet\Dynamic\bin\Debug\USocketNet.pdb
+D:\Projects\Software - USocketNet\Dynamic\bin\Debug\UnityEngine.dll
+D:\Projects\Software - USocketNet\Dynamic\bin\Debug\UnityEngine.xml
+D:\Projects\Software - USocketNet\Dynamic\obj\Debug\USocketNet_Client.csprojResolveAssemblyReference.cache
+D:\Projects\Software - USocketNet\Dynamic\obj\Debug\USocketNet_Client.csproj.CoreCompileInputs.cache
+D:\Projects\Software - USocketNet\Dynamic\obj\Debug\USocketNet.dll
+D:\Projects\Software - USocketNet\Dynamic\obj\Debug\USocketNet.pdb

@@ -256,7 +256,7 @@ Prefab:
     - target: {fileID: 114516097664886260, guid: 6ca881da36188ab43b1aca15b1fe6622,
         type: 2}
       propertyPath: bindings.serverUrl
-      value: www.bytes-crafter.com
+      value: localhost
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6ca881da36188ab43b1aca15b1fe6622, type: 2}
