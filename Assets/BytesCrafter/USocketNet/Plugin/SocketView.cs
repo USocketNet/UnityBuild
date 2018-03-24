@@ -67,12 +67,12 @@ namespace BytesCrafter.USocketNet
 			if (IsLocalUser)
 			{
 				rigidbody.useGravity = true;
-				rigidbody.isKinematic = false;
+				//rigidbody.isKinematic = false;
 
 			}
 			else
 			{
-				rigidbody.isKinematic = true;
+				//rigidbody.isKinematic = true;
 				rigidbody.useGravity = false;
 			}
 		}

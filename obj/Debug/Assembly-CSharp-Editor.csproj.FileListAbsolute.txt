@@ -160,3 +160,9 @@ D:\Projects\Software - USocketNet\Temp\bin\Debug\UnityEditor.VR.xml
 D:\Projects\Software - USocketNet\obj\Debug\Assembly-CSharp-Editor.csprojResolveAssemblyReference.cache
 D:\Projects\Software - USocketNet\obj\Debug\Assembly-CSharp-Editor.dll
 D:\Projects\Software - USocketNet\obj\Debug\Assembly-CSharp-Editor.pdb
+D:\Projects\Software - USocketNet\Temp\bin\Debug\KdTreeLib.dll
+D:\Projects\Software - USocketNet\Temp\bin\Debug\pb_Stl.dll
+D:\Projects\Software - USocketNet\Temp\bin\Debug\Poly2Tri.dll
+D:\Projects\Software - USocketNet\Temp\bin\Debug\ProBuilderCore-Unity5.dll
+D:\Projects\Software - USocketNet\Temp\bin\Debug\ProBuilderEditor-Unity5.dll
+D:\Projects\Software - USocketNet\Temp\bin\Debug\ProBuilderMeshOps-Unity5.dll

@@ -58,6 +58,7 @@
      <Compile Include="Assets\BytesCrafter\CameraScript\Scripts\CameraScripts\ShakeCamera.cs" />
      <Compile Include="Assets\BytesCrafter\CameraScript\Scripts\Crosshair.cs" />
      <Compile Include="Assets\BytesCrafter\CameraScript\Scripts\CrosshairManager.cs" />
+     <Compile Include="Assets\BytesCrafter\Medieval\Script\Med_Char_Control.cs" />
      <Compile Include="Assets\BytesCrafter\Prototype\Script\DamageReport.cs" />
      <Compile Include="Assets\BytesCrafter\Prototype\Script\GunScript.cs" />
      <Compile Include="Assets\BytesCrafter\Prototype\Script\ObjectDestroyer.cs" />
@@ -66,6 +67,84 @@
      <Compile Include="Assets\BytesCrafter\Simulation\SocketIO\Scripts\SocketIO\SocketIOComponent.cs" />
      <Compile Include="Assets\BytesCrafter\Simulation\SocketIO\Scripts\Test\TestSocketIO.cs" />
      <Compile Include="Assets\BytesCrafter\Simulation\TestScript.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\JSONObject\JSONObject.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\JSONObject\JSONTemplates.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\JSONObject\VectorTemplates.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\Scripts\SocketIO\Ack.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\Scripts\SocketIO\Decoder.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\Scripts\SocketIO\Encoder.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\Scripts\SocketIO\EnginePacketType.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\Scripts\SocketIO\Packet.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\Scripts\SocketIO\Parser.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\Scripts\SocketIO\SocketIOEvent.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\Scripts\SocketIO\SocketIOException.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\Scripts\SocketIO\SocketPacketType.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\AssemblyInfo.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\ByteOrder.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\CloseEventArgs.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\CloseStatusCode.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\CompressionMethod.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\ErrorEventArgs.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Ext.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Fin.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\HandshakeBase.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\HandshakeRequest.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\HandshakeResponse.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\LogData.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Logger.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\LogLevel.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Mask.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\MessageEventArgs.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\AuthenticationBase.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\AuthenticationChallenge.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\AuthenticationResponse.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\AuthenticationSchemes.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\Chunk.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\ChunkedRequestStream.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\ChunkStream.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\Cookie.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\CookieCollection.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\CookieException.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\EndPointListener.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\EndPointManager.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\HttpBasicIdentity.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\HttpConnection.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\HttpDigestIdentity.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\HttpHeaderInfo.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\HttpHeaderType.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\HttpListener.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\HttpListenerContext.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\HttpListenerException.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\HttpListenerPrefixCollection.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\HttpListenerRequest.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\HttpListenerResponse.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\HttpStatusCode.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\HttpStreamAsyncResult.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\HttpUtility.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\HttpVersion.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\InputChunkState.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\InputState.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\LineState.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\ListenerAsyncResult.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\ListenerPrefix.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\NetworkCredential.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\QueryStringCollection.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\ReadBufferState.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\RequestStream.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\ResponseStream.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\Security\SslStream.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\WebHeaderCollection.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\WebSockets\HttpListenerWebSocketContext.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\WebSockets\TcpListenerWebSocketContext.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Net\WebSockets\WebSocketContext.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Opcode.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\PayloadData.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\Rsv.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\WebSocket.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\WebSocketException.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\WebSocketFrame.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\WebSocketState.cs" />
+     <Compile Include="Assets\BytesCrafter\SocketIO\WebsocketSharp\WebSocketStream.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Other\Temp_Serial.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\SocketView.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" />
@@ -73,92 +152,191 @@
      <Compile Include="Assets\BytesCrafter\USocketNet\Script\Elasticity.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Script\UnityControls.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Script\UnityPlayer.cs" />
-     <Compile Include="Assets\SocketIO\JSONObject\JSONObject.cs" />
-     <Compile Include="Assets\SocketIO\JSONObject\JSONTemplates.cs" />
-     <Compile Include="Assets\SocketIO\JSONObject\VectorTemplates.cs" />
-     <Compile Include="Assets\SocketIO\Scripts\SocketIO\Ack.cs" />
-     <Compile Include="Assets\SocketIO\Scripts\SocketIO\Decoder.cs" />
-     <Compile Include="Assets\SocketIO\Scripts\SocketIO\Encoder.cs" />
-     <Compile Include="Assets\SocketIO\Scripts\SocketIO\EnginePacketType.cs" />
-     <Compile Include="Assets\SocketIO\Scripts\SocketIO\Packet.cs" />
-     <Compile Include="Assets\SocketIO\Scripts\SocketIO\Parser.cs" />
-     <Compile Include="Assets\SocketIO\Scripts\SocketIO\SocketIOEvent.cs" />
-     <Compile Include="Assets\SocketIO\Scripts\SocketIO\SocketIOException.cs" />
-     <Compile Include="Assets\SocketIO\Scripts\SocketIO\SocketPacketType.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\AssemblyInfo.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\ByteOrder.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\CloseEventArgs.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\CloseStatusCode.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\CompressionMethod.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\ErrorEventArgs.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Ext.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Fin.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\HandshakeBase.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\HandshakeRequest.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\HandshakeResponse.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\LogData.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Logger.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\LogLevel.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Mask.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\MessageEventArgs.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\AuthenticationBase.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\AuthenticationChallenge.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\AuthenticationResponse.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\AuthenticationSchemes.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\Chunk.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\ChunkedRequestStream.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\ChunkStream.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\Cookie.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\CookieCollection.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\CookieException.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\EndPointListener.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\EndPointManager.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\HttpBasicIdentity.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\HttpConnection.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\HttpDigestIdentity.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\HttpHeaderInfo.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\HttpHeaderType.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\HttpListener.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\HttpListenerContext.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\HttpListenerException.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\HttpListenerPrefixCollection.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\HttpListenerRequest.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\HttpListenerResponse.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\HttpStatusCode.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\HttpStreamAsyncResult.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\HttpUtility.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\HttpVersion.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\InputChunkState.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\InputState.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\LineState.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\ListenerAsyncResult.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\ListenerPrefix.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\NetworkCredential.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\QueryStringCollection.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\ReadBufferState.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\RequestStream.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\ResponseStream.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\Security\SslStream.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\WebHeaderCollection.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\WebSockets\HttpListenerWebSocketContext.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\WebSockets\TcpListenerWebSocketContext.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Net\WebSockets\WebSocketContext.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Opcode.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\PayloadData.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\Rsv.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\WebSocket.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\WebSocketException.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\WebSocketFrame.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\WebSocketState.cs" />
-     <Compile Include="Assets\SocketIO\WebsocketSharp\WebSocketStream.cs" />
-     <None Include="Assets\SocketIO\JSONObject\readme.txt" />
+     <Compile Include="Assets\PostProcessing\Runtime\Attributes\GetSetAttribute.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Attributes\MinAttribute.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Attributes\TrackballAttribute.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Attributes\TrackballGroupAttribute.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Components\AmbientOcclusionComponent.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Components\BloomComponent.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Components\BuiltinDebugViewsComponent.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Components\ChromaticAberrationComponent.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Components\ColorGradingComponent.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Components\DepthOfFieldComponent.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Components\DitheringComponent.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Components\EyeAdaptationComponent.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Components\FogComponent.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Components\FxaaComponent.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Components\GrainComponent.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Components\MotionBlurComponent.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Components\ScreenSpaceReflectionComponent.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Components\TaaComponent.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Components\UserLutComponent.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Components\VignetteComponent.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Models\AmbientOcclusionModel.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Models\AntialiasingModel.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Models\BloomModel.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Models\BuiltinDebugViewsModel.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Models\ChromaticAberrationModel.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Models\ColorGradingModel.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Models\DepthOfFieldModel.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Models\DitheringModel.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Models\EyeAdaptationModel.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Models\FogModel.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Models\GrainModel.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Models\MotionBlurModel.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Models\ScreenSpaceReflectionModel.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Models\UserLutModel.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Models\VignetteModel.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\PostProcessingBehaviour.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\PostProcessingComponent.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\PostProcessingContext.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\PostProcessingModel.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\PostProcessingProfile.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Utils\ColorGradingCurve.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Utils\GraphicsUtils.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Utils\MaterialFactory.cs" />
+     <Compile Include="Assets\PostProcessing\Runtime\Utils\RenderTextureFactory.cs" />
+     <Compile Include="Assets\PostProcessing\Utilities\CustomMotionTexture\ExampleWheelController.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Enum\z_BrushMirror.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Enum\z_ComponentIndex.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Enum\z_Culling.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Enum\z_Direction.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Enum\z_MeshChannel.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Enum\z_MirrorCoordinateSpace.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Enum\z_ModelSource.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Enum\z_PaintMode.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Enum\z_PlacementDirection.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Enum\z_SelectionRenderState.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Scripts\MonoBehaviour\z_AdditionalVertexStreams.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Scripts\MonoBehaviour\z_OverlayRenderer.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Scripts\MonoBehaviour\z_ZoomOverride.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Scripts\Type\z_AttributeLayout.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Scripts\Type\z_ColorMask.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Scripts\Type\z_CommonEdge.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Scripts\Type\z_Edge.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Scripts\Type\z_GradientSerializer.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Scripts\Type\z_IHasDefault.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Scripts\Type\z_IValid.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Scripts\Type\z_Mesh.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Scripts\Type\z_RndVec3.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Scripts\Type\z_SplatSet.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Scripts\Type\z_SplatWeight.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Scripts\Utility\z_Math.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Scripts\Utility\z_MeshUtility.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Scripts\Utility\z_Util.cs" />
+     <Compile Include="Assets\ProCore\Polybrush\Code\Scripts\Utility\z_Vector.cs" />
+     <Compile Include="Assets\ProCore\ProBuilder\API Examples\Icosphere FFT\Scripts\CameraControls.cs" />
+     <Compile Include="Assets\ProCore\ProBuilder\API Examples\Icosphere FFT\Scripts\IcoBumpin.cs" />
+     <Compile Include="Assets\ProCore\ProBuilder\API Examples\Misc\HueCube.cs" />
+     <Compile Include="Assets\ProCore\ProBuilder\API Examples\Procedural Mesh\ExtrudeRandomEdges.cs" />
+     <Compile Include="Assets\ProCore\ProBuilder\API Examples\Runtime Editing\RuntimeEdit.cs" />
+     <Compile Include="Assets\ProCore\ProBuilder\API Examples\Vertex Colors\HighlightNearestFace.cs" />
+     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_Constant.cs" />
+     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_Enum.cs" />
+     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_IconUtility.cs" />
+     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_IgnoreSnapAttribute.cs" />
+     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_SceneMeshRender.cs" />
+     <Compile Include="Assets\ProCore\ProGrids\Classes\pg_Util.cs" />
+     <Compile Include="Assets\ProCore\ProGrids\MonoBehaviour\pg_IgnoreSnap.cs" />
+     <None Include="Assets\BytesCrafter\SocketIO\JSONObject\readme.txt" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\DepthOfField.shader" />
+     <None Include="Assets\ProCore\ProGrids\Shader\pg_GridShader.shader" />
+     <None Include="Assets\ProCore\Polybrush\Shader\z_TriPlanarBlend_SfSrc.shader" />
+     <None Include="Assets\ProCore\ProBuilder\Shader\pb_TransparentOverlay.shader" />
+     <None Include="Assets\ProCore\Polybrush\Shader\z_TextureBlendMobile.shader" />
+     <None Include="Assets\ProCore\ProBuilder\API Examples\Icosphere FFT\README.txt" />
+     <None Include="Assets\ProCore\Polybrush\README.txt" />
+     <None Include="Assets\ProCore\Polybrush\Shader\z_TriPlanarBlendLegacy_SfSrc.shader" />
+     <None Include="Assets\ProCore\Polybrush\Shader\z_TextureBlendHeight.shader" />
+     <None Include="Assets\ProCore\Polybrush\Shader\z_TextureBlendWithVertexColor.shader" />
+     <None Include="Assets\ProCore\ProBuilder\Shader\pb_SelectionPicker.shader" />
+     <None Include="Assets\ProCore\ProBuilder\About\changelog.txt" />
+     <None Include="Assets\ProCore\ProBuilder\Shader\DiffuseVertexColor.shader" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\MotionBlur.cginc" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\Fog.shader" />
+     <None Include="Assets\ProCore\Polybrush\Shader\z_TextureBlendHeight_SfSrc.shader" />
+     <None Include="Assets\PostProcessing\Editor Resources\Monitors\ParadeRender.shader" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\LutGen.shader" />
+     <None Include="Assets\PostProcessing\Editor Resources\Monitors\HistogramRender.shader" />
+     <None Include="Assets\ProCore\Polybrush\Shader\Example\z_UnlitTextureBlend.shader" />
+     <None Include="Assets\PostProcessing\Editor Resources\UI\CurveBackground.shader" />
+     <None Include="Assets\ProCore\Polybrush\Shader\z_BaseWithDecals.shader" />
+     <None Include="Assets\ProCore\ProBuilder\Shader\pb_FaceHighlight.shader" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\ScreenSpaceReflection.shader" />
+     <None Include="Assets\ProCore\Polybrush\ThirdPartyLicenses.txt" />
+     <None Include="Assets\PostProcessing\Utilities\CustomMotionTexture\Shaders\CustomMotionVectorTexture.shader" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\ACES.cginc" />
+     <None Include="Assets\ProCore\Polybrush\Shader\z_TextureBlendMobile_SfSrc.shader" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\UberSecondPass.cginc" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\Tonemapping.cginc" />
+     <None Include="Assets\ProCore\Polybrush\Shader\z_TriPlanarBlendLegacy.shader" />
+     <None Include="Assets\PostProcessing\Editor Resources\Monitors\HistogramCompute.compute" />
+     <None Include="Assets\ProCore\ProBuilder\Shader\pb_UnlitSolidColor.shader" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\Uber.shader" />
+     <None Include="Assets\ProCore\ProGrids\About\pc_AboutEntry_ProGrids.txt" />
+     <None Include="Assets\ProCore\ProBuilder\Shader\pb_ReferenceUnlit.shader" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\Blit.shader" />
+     <None Include="Assets\ProCore\Polybrush\Shader\z_TextureBlendModulate.shader" />
+     <None Include="Assets\PostProcessing\Editor Resources\Monitors\WaveformRender.shader" />
+     <None Include="Assets\PostProcessing\Editor Resources\Monitors\VectorscopeCompute.compute" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\FXAA3.cginc" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\MotionBlur.shader" />
+     <None Include="Assets\ProCore\ProBuilder\Shader\DiffuseTextureBlend.shader" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\AmbientOcclusion.shader" />
+     <None Include="Assets\ProCore\ProBuilder\Shader\pb_StandardVertexColor.shader" />
+     <None Include="Assets\ProCore\ProBuilder\Shader\pb_VertexPicker.shader" />
+     <None Include="Assets\ProCore\Polybrush\Shader\z_VertexBillboard.shader" />
+     <None Include="Assets\ProCore\ProBuilder\Shader\pb_HideVertices.shader" />
+     <None Include="Assets\ProCore\Polybrush\Shader\z_TextureBlender.shader" />
+     <None Include="Assets\PostProcessing\Resources\Bluenoise64\LICENSE.txt" />
+     <None Include="Assets\ProCore\Polybrush\Shader\z_TextureBlendBmp.shader" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\BuiltinDebugViews.shader" />
+     <None Include="Assets\ProCore\Polybrush\Shader\Example\z_UnlitTextureBlend_WithMetaData.shader" />
+     <None Include="Assets\ProCore\ProBuilder\About\ThirdPartyLicenses.txt" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\Common.cginc" />
+     <None Include="Assets\PostProcessing\Resources\Bluenoise64\COPYING.txt" />
+     <None Include="Assets\ProCore\ProBuilder\Shader\pb_UnlitVertexColor.shader" />
+     <None Include="Assets\ProCore\ProBuilder\Shader\pb_FacePicker.shader" />
+     <None Include="Assets\ProCore\Polybrush\Shader\Example\z_UnlitTextureBlendAndSnow.shader" />
+     <None Include="Assets\PostProcessing\Editor Resources\UI\Trackball.shader" />
      <None Include="Assets\BytesCrafter\Simulation\SocketIO\Readme.txt" />
+     <None Include="Assets\ProCore\Polybrush\Shader\z_StandardVertexColor.shader" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\Bloom.cginc" />
+     <None Include="Assets\ProCore\Polybrush\Shader\Noise.cginc" />
+     <None Include="Assets\ProCore\ProBuilder\About\Font\SIL Open Font License.txt" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\TAA.shader" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\EyeHistogram.compute" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\TAA.cginc" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\EyeAdaptation.cginc" />
+     <None Include="Assets\ProCore\ProBuilder\About\pc_AboutEntry_ProBuilder.txt" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\GrainGen.shader" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\FXAA.shader" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\DiskKernels.cginc" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\DepthOfField.cginc" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\ScreenSpaceRaytrace.cginc" />
+     <None Include="Assets\ProCore\ProBuilder\Shader\pb_VertexShader.shader" />
+     <None Include="Assets\ProCore\Polybrush\Shader\z_DiffuseVertexColor.shader" />
+     <None Include="Assets\ProCore\ProGrids\About\changelog.txt" />
+     <None Include="Assets\ProCore\ProBuilder\Shader\pb_NormalPreview.shader" />
+     <None Include="Assets\ProCore\Polybrush\Shader\z_TextureBlender_SfSrc.shader" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\Bloom.shader" />
      <None Include="Assets\BytesCrafter\Prototype\Model\Weapons Pack(LOW POLY)\Weapons Pack info.txt" />
+     <None Include="Assets\ProCore\Polybrush\Shader\z_TextureBlendBmp_SfSrc.shader" />
+     <None Include="Assets\PostProcessing\Editor Resources\Monitors\VectorscopeRender.shader" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\EyeAdaptation.shader" />
+     <None Include="Assets\ProCore\ProBuilder\Shader\pb_ScrollHighlight.shader" />
+     <None Include="Assets\ProCore\Polybrush\Shader\z_TriPlanarBlend.shader" />
+     <None Include="Assets\ProCore\ProBuilder\readme.txt" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\ColorGrading.cginc" />
+     <None Include="Assets\ProCore\Polybrush\Shader\z_TextureBlendWithVertexColor_SfSrc.shader" />
+     <None Include="Assets\PostProcessing\Resources\Shaders\AmbientOcclusion.cginc" />
+     <None Include="Assets\ProCore\Polybrush\Shader\z_Overlay.shader" />
+     <None Include="Assets\PostProcessing\Editor Resources\Monitors\WaveformCompute.compute" />
+     <None Include="Assets\ProCore\ProBuilder\Shader\pb_SmoothingPreview.shader" />
+     <None Include="Assets\ProCore\Polybrush\Font\Apache License.txt" />
+     <None Include="Assets\ProCore\Polybrush\Shader\z_TextureBlendModulate_SfSrc.shader" />
  <Reference Include="Facebook.Unity.Settings">
  <HintPath>D:/Projects/Software - USocketNet/Library/FacebookSDK/Facebook.Unity.Settings.dll</HintPath>
- </Reference>
- <Reference Include="Vuforia.UnityExtensions.Editor">
- <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/VuforiaSupport/Managed/Editor/Vuforia.UnityExtensions.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Vuforia.UnityExtensions">
  <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/VuforiaSupport/Managed/Runtime/Vuforia.UnityExtensions.dll</HintPath>
@@ -166,17 +344,8 @@
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
- <Reference Include="UnityEditor.UI">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/Editor/UnityEditor.UI.dll</HintPath>
- </Reference>
  <Reference Include="UnityEngine.Networking">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.Networking">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/Editor/UnityEditor.Networking.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.TestRunner">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/TestRunner/Editor/UnityEditor.TestRunner.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.TestRunner">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/TestRunner/UnityEngine.TestRunner.dll</HintPath>
@@ -187,89 +356,44 @@
  <Reference Include="UnityEngine.Timeline">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Timeline/RuntimeEditor/UnityEngine.Timeline.dll</HintPath>
  </Reference>
- <Reference Include="UnityEditor.Timeline">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Timeline/Editor/UnityEditor.Timeline.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.TreeEditor">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/TreeEditor/Editor/UnityEditor.TreeEditor.dll</HintPath>
- </Reference>
  <Reference Include="UnityEngine.UIAutomation">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UIAutomation/UnityEngine.UIAutomation.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.UIAutomation">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UIAutomation/Editor/UnityEditor.UIAutomation.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.GoogleAudioSpatializer">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityGoogleAudioSpatializer/Editor/UnityEditor.GoogleAudioSpatializer.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.GoogleAudioSpatializer">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityGoogleAudioSpatializer/RuntimeEditor/UnityEngine.GoogleAudioSpatializer.dll</HintPath>
  </Reference>
- <Reference Include="UnityEditor.HoloLens">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/Editor/UnityEditor.HoloLens.dll</HintPath>
- </Reference>
  <Reference Include="UnityEngine.HoloLens">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.SpatialTracking">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/Editor/UnityEditor.SpatialTracking.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.SpatialTracking">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
  </Reference>
- <Reference Include="UnityEditor.VR">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/Editor/UnityEditor.VR.dll</HintPath>
+ <Reference Include="ProBuilderCore-Unity5">
+ <HintPath>D:/Projects/Software - USocketNet/Assets/ProCore/ProBuilder/Classes/ProBuilderCore-Unity5.dll</HintPath>
  </Reference>
- <Reference Include="UnityEditor.Graphs">
- <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
+ <Reference Include="ProBuilderMeshOps-Unity5">
+ <HintPath>D:/Projects/Software - USocketNet/Assets/ProCore/ProBuilder/Classes/ProBuilderMeshOps-Unity5.dll</HintPath>
  </Reference>
- <Reference Include="UnityEditor.Android.Extensions">
- <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll</HintPath>
+ <Reference Include="KdTreeLib">
+ <HintPath>D:/Projects/Software - USocketNet/Assets/ProCore/ProBuilder/Classes/ClassesLib/KdTreeLib.dll</HintPath>
  </Reference>
- <Reference Include="UnityEditor.iOS.Extensions">
- <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.dll</HintPath>
+ <Reference Include="pb_Stl">
+ <HintPath>D:/Projects/Software - USocketNet/Assets/ProCore/ProBuilder/Classes/ClassesLib/pb_Stl.dll</HintPath>
  </Reference>
- <Reference Include="UnityEditor.AppleTV.Extensions">
- <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/AppleTVSupport/UnityEditor.AppleTV.Extensions.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.WSA.Extensions">
- <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/MetroSupport/UnityEditor.WSA.Extensions.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.WebGL.Extensions">
- <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.LinuxStandalone.Extensions">
- <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/LinuxStandaloneSupport/UnityEditor.LinuxStandalone.Extensions.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.WindowsStandalone.Extensions">
- <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.OSXStandalone.Extensions">
- <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.Facebook.Extensions">
- <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/Facebook/UnityEditor.Facebook.Extensions.dll</HintPath>
+ <Reference Include="Poly2Tri">
+ <HintPath>D:/Projects/Software - USocketNet/Assets/ProCore/ProBuilder/Classes/ClassesLib/Poly2Tri.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.Advertisements">
- <HintPath>C:/Users/Bytes Crafter/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.3/UnityEngine.Advertisements.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.Advertisements">
- <HintPath>C:/Users/Bytes Crafter/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.3/Editor/UnityEditor.Advertisements.dll</HintPath>
+ <HintPath>C:/ProgramData/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.3/UnityEngine.Advertisements.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.Analytics">
- <HintPath>C:/Users/Bytes Crafter/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.13/UnityEngine.Analytics.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.Analytics">
- <HintPath>C:/Users/Bytes Crafter/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.13/Editor/UnityEditor.Analytics.dll</HintPath>
+ <HintPath>C:/ProgramData/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.13/UnityEngine.Analytics.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.Purchasing">
- <HintPath>C:/Users/Bytes Crafter/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.purchasing@0.0.19/UnityEngine.Purchasing.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.Purchasing">
- <HintPath>C:/Users/Bytes Crafter/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.purchasing@0.0.19/Editor/UnityEditor.Purchasing.dll</HintPath>
+ <HintPath>C:/ProgramData/Unity/cache/packages/packages.unity.com/com.unity.purchasing@0.0.19/UnityEngine.Purchasing.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.StandardEvents">
- <HintPath>C:/Users/Bytes Crafter/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.10/UnityEngine.StandardEvents.dll</HintPath>
+ <HintPath>C:/ProgramData/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.10/UnityEngine.StandardEvents.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

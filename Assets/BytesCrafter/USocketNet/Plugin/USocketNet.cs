@@ -13,7 +13,7 @@ namespace BytesCrafter.USocketNet
 {
 	public class USocketNet : MonoBehaviour
 	{
-		#region ExposedInterface
+		#region ExposedInterface - Ongoing!
 
 		[Header("NETWORK SETTINGS")]
 		public Bindings bindings = new Bindings();
@@ -21,12 +21,9 @@ namespace BytesCrafter.USocketNet
 		[Header("INSTANCE PREFAB")]
 		public List<SocketView> socketPrefabs = new List<SocketView>();
 
-		[Header("SERVER MESSAGE")]
-		public string debugLog = string.Empty;
-
 		#endregion
 
-		#region CheckerInterface
+		#region CheckerInterface - Done!
 
 		/// <summary>
 		/// Determines whether this client is connected to web socket server.
@@ -52,97 +49,59 @@ namespace BytesCrafter.USocketNet
 			//else{ return "Not Connected"; } } else { return "No Internet Access"; } }
 		}
 
-		public int PingServer
+		/// <summary>
+		/// Gets the current ping count in ms or millisecond.
+		/// </summary>
+		/// <value>The ping count in ms.</value>
+		public int PingCount
 		{
 			get
 			{
 				return pingValue;
 			}
 		}
-
-		#endregion
-
-		#region PingMechanism
-
 		private int pingValue = 0;
-		/*
-        private DateTime lastPing = DateTime.Now;
-        private float timer = 0f;
-        private void Pinging()
-        {
-            if (threadset.IsConnected)
-            {
-                if (timer > 0f)
-                {
-                    timer -= Time.deltaTime;
-                }
-
-                else
-                {
-                    lastPing = DateTime.Now;
-                    SendEmit("sping", OnPingReceived);
-                }
-            }
-        }
-
-        private void OnPingReceived(JSONObject jsonObject)
-        {
-            TimeSpan timeSpan = DateTime.Now.Subtract(lastPing);
-            pingValue = timeSpan.Milliseconds;
-            timer = 1.2f;
-        }
-        */
-
-		#endregion
-
-		#region CallbackEvents // ------------------------------------- SERVER AUTHORITATIVE EVENTS! ------------------------------------ //
-
-		private MessageCallback messageCallback = null;
-		private void OnMessageReceived(SocketIOEvent _eventArgs)
+		private DateTime lastPing = DateTime.Now;
+		private float timer = 0f;
+		private void Pinging()
 		{
-			MsgJson msgJson = JsonUtility.FromJson<MsgJson>(_eventArgs.data.ToString());
-			Debug.Log("OnEvent:" + "MESSAGE: " + " Sender: " + msgJson.sender + " Content: " + msgJson.content + " Receiver: " + msgJson.content + " Type: " + msgJson.content);
-			if (messageCallback != null) { messageCallback(msgJson); }
-		}
-
-		private RoomCallback joinedCallback = null;
-		private void OnRoomJoined(SocketIOEvent _eventArgs)
-		{
-			RoomJson roomJson = JsonUtility.FromJson<RoomJson>(_eventArgs.data.ToString());
-			Debug.Log("OnEvent:" + "JOINED: " + " ID: " + roomJson.identity + " NAME: " + roomJson.cname + " VAR: " + roomJson.variant + " MAX: " + roomJson.maxconnect + " CUR: " + roomJson.users.Length);
-			if (joinedCallback != null) { joinedCallback(roomJson); }
-		}
-
-		private RoomCallback leavedCallback = null;
-		private void OnRoomLeaved(SocketIOEvent _eventArgs)
-		{
-			RoomJson roomJson = JsonUtility.FromJson<RoomJson>(_eventArgs.data.ToString());
-			Debug.Log("OnEvent:" + "LEAVE: " + " ID: " + roomJson.identity + " NAME: " + roomJson.cname + " VAR: " + roomJson.variant + " MAX: " + roomJson.maxconnect + " CUR: " + roomJson.users.Length);
-			if (leavedCallback != null) { leavedCallback(roomJson); }
-		}
-
-		private List<SocketView> socketIdentities = new List<SocketView>();
-		private void OnInstancePeer(SocketIOEvent _eventArgs)
-		{
-			Debug.Log("OnRoomEvent: " + "Instance from Peers!" + " Content: " + _eventArgs.data.ToString());
-			Instances instances = JsonUtility.FromJson<Instances>(_eventArgs.data.ToString());
-
-			SocketView curUser = Instantiate(socketPrefabs[instances.prefabIndex], instances.pos.ToVector, instances.rot.ToQuaternion);
-			curUser.IsLocalUser = false; curUser.socketId = instances.identity; curUser.uSocketNet = this;
-			socketIdentities.Add(curUser);
-		}
-
-		private void OnStateReceived(SocketIOEvent _eventArgs)
-		{
-			if (_eventArgs.data.keys.Exists(x => x == "identity"))
+			if (threadset.IsConnected)
 			{
-				string identity = ""; _eventArgs.data.ToDictionary().TryGetValue("identity", out identity);
-
-				if (socketIdentities.Exists(x => x.socketId == identity && x.IsLocalUser == false))
+				if (timer > 0f)
 				{
-					SocketView sockId = socketIdentities.Find(x => x.socketId == identity);
-					sockId.Downdate(_eventArgs.data.ToString());
+					timer -= Time.deltaTime;
 				}
+
+				else
+				{
+					lastPing = DateTime.Now;
+					SendEmit("sping", OnPingReceived);
+				}
+			}
+		}
+		private void OnPingReceived(JSONObject jsonObject)
+		{
+			TimeSpan timeSpan = DateTime.Now.Subtract(lastPing);
+			pingValue = timeSpan.Milliseconds;
+			timer = 1f;
+		}
+
+		enum Debugs { Log, Warn, Error }
+		private void DebugLog(Debugs debugs, string title, string details)
+		{
+			if(debugs == Debugs.Warn)
+			{
+				Debug.LogWarning(title + " - " + details);
+			}
+
+			else if(debugs == Debugs.Error)
+			{
+				Debug.LogError(title + " - " + details);
+			}
+
+			else
+			{
+				Debug.Log(title + " - " + details);
 			}
 		}
 
@@ -150,7 +109,9 @@ namespace BytesCrafter.USocketNet
 
 		#region ConnectServer // ------------------------------------------ CONNECTING TO THE SERVER! ------------------------------------------ //
 
-		private Action<ConnStat, ConnJson> connectCallback = null; private bool connectReturn = false;
+		private bool connectReturn = false;
+		private Action<ConnStat, ConnJson> connectCallback = null;
+
 		public void ConnectToServer(string username, Action<ConnStat, ConnJson> connCallback)
 		{
 			connectCallback = connCallback; connectReturn = false;
@@ -163,7 +124,11 @@ namespace BytesCrafter.USocketNet
 				StartCoroutine(ConnectingToServer(username));
 			}
 
-			else { connectCallback(ConnStat.Connected, new ConnJson()); Debug.LogWarning("Connection failed: Already connected to the server!"); }
+			else
+			{
+				connectCallback(ConnStat.Connected, new ConnJson());
+				DebugLog(Debugs.Error, "ConnectionFailed", "Already connected to the server!");
+			}
 		}
 
 		private string lastUsername = string.Empty;
@@ -180,18 +145,27 @@ namespace BytesCrafter.USocketNet
 				SendEmit("connect", new JSONObject(sendData), OnServerConnect);
 
 				yield return new WaitForSeconds(bindings.connectDelay);
-				if (!connectReturn) { connectCallback(ConnStat.InternetAccess, new ConnJson()); }
+
+				if (!connectReturn)
+				{
+					connectCallback(ConnStat.InternetAccess, new ConnJson());
+					DebugLog(Debugs.Error, "ConnectionNoInternet", "Detected no internet connection!");
+				}
 			}
 
 			else
 			{
-				ForceDisconnect(); connectCallback(ConnStat.Maintainance, new ConnJson());
+				ForceDisconnect();
+				connectCallback(ConnStat.Maintainance, new ConnJson());
+				DebugLog(Debugs.Error, "ConnectionMaintainance", "Server seems to be shutdown or offline!");
 			}
 		}
 
 		private void OnServerConnect(JSONObject jsonObject)
 		{
-			StopCoroutine("ConnectingToServer"); connectReturn = true;
+			StopCoroutine("ConnectingToServer");
+			connectReturn = true;
+
 			ConnJson connJson = JsonSerializer.ToObject<ConnJson>(jsonObject.ToString());
 			lastUsername = connJson.username;
 			connectCallback(ConnStat.Connected, connJson);
@@ -201,17 +175,24 @@ namespace BytesCrafter.USocketNet
 
 		#region DisconnectServer // ---------------------------------------- DISCONNECTING FROM THE SERVER! --------------------------------------- //
 
-		private Action<ConnStat> disconnectCallback = null; private bool disconnectReturn = false;
+		private bool disconnectReturn = false;
+		private Action<ConnStat> disconnectCallback = null;
+
 		public void DisconnectFromServer(Action<ConnStat> disconCallback)
 		{
-			disconnectCallback = disconCallback; disconnectReturn = false;
+			disconnectCallback = disconCallback;
+			disconnectReturn = false;
 
 			if (threadset.websocket.IsConnected)
 			{
 				StartCoroutine(DisconnectingToServer());
 			}
 
-			else { disconnectCallback(ConnStat.Maintainance); Debug.LogWarning("Disconnection failed: Not connected to the server!"); }
+			else
+			{
+				disconnectCallback(ConnStat.Disconnected);
+				DebugLog (Debugs.Warn, "CantDisconnect", "You are not connected to server!");
+			}
 		}
 
 		IEnumerator DisconnectingToServer()
@@ -227,14 +208,12 @@ namespace BytesCrafter.USocketNet
 
 		private void OnServerDisconnect(JSONObject jsonObject)
 		{
-			StopCoroutine("DisconnectingToServer"); disconnectReturn = true;
-			ForceDisconnect(); disconnectCallback(ConnStat.Disconnected); pingValue = 0;
-		}
+			StopCoroutine("DisconnectingToServer");
+			disconnectReturn = true;
 
-		private void OnUserRejected(SocketIOEvent _eventArgs)
-		{
-			ConnJson connJson = JsonUtility.FromJson<ConnJson>(_eventArgs.data.ToString());
-			ForceDisconnect(); disconnectCallback(ConnStat.Disconnected); pingValue = 0;
+			ForceDisconnect();
+			disconnectCallback(ConnStat.Disconnected);
+			pingValue = 0;
 		}
 
 		#endregion
@@ -263,26 +242,37 @@ namespace BytesCrafter.USocketNet
 
 			if (!onListeningReturn)
 			{
-				if (connectionStats != null) { connectionStats(connStat, null); }
-				else { Debug.LogWarning(connStat.ToString() + " - Add a callback to ListenConnectionStatus. Currently Null!"); }
+				if (connectionStats != null)
+				{
+					connectionStats(connStat, null);
+				}
 			}
+
+			DebugLog (Debugs.Warn, "ConnectionStatus", "You are currently " + connStat.ToString() + " to the server!");
 		}
 
 		private void OnServerReconnect(JSONObject jsonObject)
 		{
-			onListeningReturn = true; ConnJson connJson = JsonSerializer.ToObject<ConnJson>(jsonObject.ToString());
-			if (connectionStats != null) { connectionStats(ConnStat.Reconnected, connJson); }
-			else { Debug.LogWarning("Reconnected - Add a callback to ListenConnectionStatus. Currently Null!"); }
+			onListeningReturn = true;
+			ConnJson connJson = JsonSerializer.ToObject<ConnJson>(jsonObject.ToString());
+
+			if (connectionStats != null)
+			{
+				connectionStats(ConnStat.Reconnected, connJson);
+			}
 		}
 
 		#endregion
 
-		#region LobbyMessage // ----------------------------------------- SENDING PUBLIC MESSAGE! --------------------------------------- //
+		#region PublicMessage // ----------------------------------------- SENDING PUBLIC MESSAGE! --------------------------------------- //
 
-		private Action<MsgStat, MsgJson> lobbyCallback = null; private bool lobbyReturned = false;
-		public void SendLobbyMessage(string message, Action<MsgStat, MsgJson> _lobbyCallback)
+		private bool publicReturned = false;
+		private Action<MsgStat, MsgJson> publicCallback = null;
+
+		public void SendPublicMessage(string message, Action<MsgStat, MsgJson> _publicCallback)
 		{
-			lobbyCallback = _lobbyCallback; lobbyReturned = false;
+			publicCallback = _publicCallback;
+			publicReturned = false;
 
 			if (threadset.websocket.IsConnected)
 			{
@@ -295,8 +285,8 @@ namespace BytesCrafter.USocketNet
 			else
 			{
 				MsgJson msgJson = new MsgJson();
-				lobbyCallback(MsgStat.Failed, msgJson);
-				Debug.LogWarning("Lobby Message Failed: Not connected to the server!");
+				publicCallback(MsgStat.Failed, msgJson);
+				DebugLog (Debugs.Error, "LobbyMsgFailed", "You are currently disconnected!");
 			}
 		}
 
@@ -304,66 +294,86 @@ namespace BytesCrafter.USocketNet
 		{
 			yield return new WaitForSeconds(bindings.connectDelay);
 
-			if (!lobbyReturned)
+			if (!publicReturned)
 			{
-				MsgJson msgJson = new MsgJson(); if (!threadset.websocket.IsConnected)
-				{ lobbyCallback(MsgStat.Failed, msgJson); }
+				MsgJson msgJson = new MsgJson();
+				if (!threadset.websocket.IsConnected)
+				{
+					publicCallback(MsgStat.Failed, msgJson);
+					DebugLog (Debugs.Error, "LobbyMsgFailed", "You are currently disconnected!");
+				}
 			}
 		}
 
 		private void OnLobbyMessageSent(JSONObject jsonObject)
 		{
 			MsgJson msgJson = JsonSerializer.ToObject<MsgJson>(jsonObject.ToString());
-			lobbyReturned = true; lobbyCallback(MsgStat.Success, msgJson);
+			publicReturned = true;
+			publicCallback(MsgStat.Success, msgJson);
+
+			DebugLog (Debugs.Log, "LobbyMsgSuccess", "Successfully sent a lobby message!");
 		}
 
 		#endregion
 
-		#region RoomMessage // ------------------------------------ SENDING ROOM MESSAGE! ---------------------------------- //
+		#region ChannelMessage // ------------------------------------ SENDING ROOM MESSAGE! ---------------------------------- //
 
-		private Action<MsgStat, MsgJson> roomCallback = null; private bool roomReturned = false;
-		public void SendRoomMessage(string message, Action<MsgStat, MsgJson> _roomCallback)
+		private bool channelReturned = false;
+		private Action<MsgStat, MsgJson> channelCallback = null;
+
+		public void SendChannelMessage(string message, Action<MsgStat, MsgJson> _channelCallback)
 		{
-			roomCallback = _roomCallback; roomReturned = false;
+			channelCallback = _channelCallback;
+			channelReturned = false;
 
 			if (threadset.websocket.IsConnected)
 			{
 				MsgJson msgJson = new MsgJson(message, Sending.Channel.ToString());
 				string sendData = JsonUtility.ToJson(msgJson);
-				SendEmit("message", new JSONObject(sendData), OnRoomMessageSent);
-				StartCoroutine(SendingRoomMessage());
+				SendEmit("message", new JSONObject(sendData), OnChannelMessageSent);
+				StartCoroutine(SendingChannelMessage());
 			}
 
 			else
 			{
 				MsgJson msgJson = new MsgJson();
-				roomCallback(MsgStat.Failed, msgJson);
-				Debug.LogWarning("Room Message Failed: Not connected to the server!");
+				channelCallback(MsgStat.Failed, msgJson);
+				DebugLog (Debugs.Error, "ChannelMsgFailed", "You are currently disconnected to the server!");
 			}
 		}
 
-		IEnumerator SendingRoomMessage()
+		IEnumerator SendingChannelMessage()
 		{
 			yield return new WaitForSeconds(bindings.connectDelay);
 
-			if (!roomReturned)
+			if (!channelReturned)
 			{
-				MsgJson msgJson = new MsgJson(); if (!threadset.websocket.IsConnected)
-				{ roomCallback(MsgStat.Failed, msgJson); }
+				MsgJson msgJson = new MsgJson();
+
+				if (!threadset.websocket.IsConnected)
+				{
+					channelCallback(MsgStat.Failed, msgJson);
+					DebugLog (Debugs.Error, "ChannelMsgFailed", "You are currently disconnected to the server!");
+				}
 			}
 		}
 
-		private void OnRoomMessageSent(JSONObject jsonObject)
+		private void OnChannelMessageSent(JSONObject jsonObject)
 		{
 			MsgJson msgJson = JsonSerializer.ToObject<MsgJson>(jsonObject.ToString());
-			roomReturned = true; roomCallback(MsgStat.Success, msgJson);
+			channelReturned = true;
+			channelCallback(MsgStat.Success, msgJson);
+
+			DebugLog (Debugs.Log, "ChannelMsgSuccess", "Successfully sent a channel message!");
 		}
 
 		#endregion
 
 		#region PrivateMessage // ---------------------------------------- SENDING PRIVATE MESSAGE! --------------------------------------- //
 
-		private Action<MsgStat, MsgJson> privateMessage = null; private bool privateReturned = false;
+		private bool privateReturned = false;
+		private Action<MsgStat, MsgJson> privateMessage = null;
+
 		public void SendPrivateMessage(string receiver, string message, Action<MsgStat, MsgJson> _privateMessage)
 		{
 			privateMessage = _privateMessage; privateReturned = false;
@@ -380,7 +390,7 @@ namespace BytesCrafter.USocketNet
 			{
 				MsgJson msgJson = new MsgJson();
 				privateMessage(MsgStat.Failed, msgJson);
-				Debug.LogWarning("Private Message Failed: Not connected to the server!");
+				DebugLog (Debugs.Error, "PrivateMsgFailed", "You are currently disconnected to the server!");
 			}
 		}
 
@@ -390,53 +400,72 @@ namespace BytesCrafter.USocketNet
 
 			if (!privateReturned)
 			{
-				MsgJson msgJson = new MsgJson(); if (!threadset.websocket.IsConnected)
-				{ privateMessage(MsgStat.Failed, msgJson); }
+				MsgJson msgJson = new MsgJson();
+
+				if (!threadset.websocket.IsConnected)
+				{
+					privateMessage(MsgStat.Failed, msgJson);
+					DebugLog (Debugs.Error, "PrivateMsgFailed", "You are currently disconnected to the server!");
+				}
 			}
 		}
 
 		private void OnPrivateMessageSent(JSONObject jsonObject)
 		{
 			MsgJson msgJson = JsonSerializer.ToObject<MsgJson>(jsonObject.ToString());
-			privateReturned = true; privateMessage(MsgStat.Failed, msgJson);
+			privateReturned = true;
+			privateMessage(MsgStat.Failed, msgJson);
+
+			DebugLog (Debugs.Log, "PrivateMsgSuccess", "Successfully sent a private message!");
 		}
 
 		#endregion
 
-		#region AutoChannel // ------------------------------------------- AUTO JOIN CHANNEL OR ROOM! ------------------------------------------ //
+		#region AutoChannel // ------------------------------------------- AUTO JOIN CHANNEL ------------------------------------------ //
 
-		private Action<RoomJson> autoRoomCallback = null; private bool autoReturned = false;
-		public void AutoJoinServerRoom(string variant, int maxconnect, Action<RoomJson> autoCallback)
+		private bool autoReturned = false;
+		private Action<RoomJson> autoChannelCallback = null;
+
+		public void AutoJoinChannel(string variant, int maxconnect, Action<RoomJson> autoCallback)
 		{
-			autoRoomCallback = autoCallback; autoReturned = false;
+			autoChannelCallback = autoCallback;
+			autoReturned = false;
 
 			if (threadset.websocket.IsConnected)
 			{
 				RoomJson roomJson = new RoomJson(variant, maxconnect);
 				string sendData = JsonUtility.ToJson(roomJson);
-				SendEmit("auto", new JSONObject(sendData), OnAutoServerRoom);
-				StartCoroutine(AutoServerRoom(roomJson));
+				SendEmit("auto", new JSONObject(sendData), OnAutoServerChannel);
+				StartCoroutine(AutoServerChannel(roomJson));
 			}
 
 			else
 			{
-				Debug.LogWarning("Private Lobby Message Failed: Not connected to the server!");
+				DebugLog (Debugs.Error, "AutoChannelFailed", "You are currently disconnected to the server!");
 			}
 		}
 
-		IEnumerator AutoServerRoom(RoomJson roomJson)
+		IEnumerator AutoServerChannel(RoomJson roomJson)
 		{
-			yield return new WaitForEndOfFrame(); //yield return new WaitForSeconds (approaches.callbackWait);
+			yield return new WaitForEndOfFrame();
+
 			if (!autoReturned)
 			{
-				if (!threadset.websocket.IsConnected) { autoRoomCallback(roomJson); }
+				if (!threadset.websocket.IsConnected)
+				{
+					autoChannelCallback(roomJson);
+					DebugLog (Debugs.Error, "AutoChannelFailed", "You are currently disconnected to the server!");
+				}
 			}
 		}
 
-		private void OnAutoServerRoom(JSONObject jsonObject)
+		private void OnAutoServerChannel(JSONObject jsonObject)
 		{
 			RoomJson roomJson = JsonSerializer.ToObject<RoomJson>(jsonObject.ToString());
-			autoReturned = true; autoRoomCallback(roomJson);
+			autoReturned = true;
+			autoChannelCallback(roomJson);
+
+			DebugLog (Debugs.Log, "AutoChannelSuccess", "Successfully auto match a channel!");
 		}
 
 		#endregion
@@ -458,7 +487,7 @@ namespace BytesCrafter.USocketNet
 
 			else
 			{
-				Debug.LogWarning("Lobby Message Failed: Not connected to the server!");
+				DebugLog (Debugs.Error, "CreateChannelFailed", "You are currently disconnected to the server!");
 			}
 		}
 
@@ -467,14 +496,21 @@ namespace BytesCrafter.USocketNet
 			yield return new WaitForEndOfFrame(); //yield return new WaitForSeconds (approaches.callbackWait);
 			if (!createReturned)
 			{
-				if (!threadset.websocket.IsConnected) { createCallback(roomJson); }
+				if (!threadset.websocket.IsConnected)
+				{
+					createCallback(roomJson);
+					DebugLog (Debugs.Error, "CreateChannelFailed", "You are currently disconnected to the server!");
+				}
 			}
 		}
 
 		private void OnCreatedServerRoom(JSONObject jsonObject)
 		{
 			RoomJson roomJson = JsonSerializer.ToObject<RoomJson>(jsonObject.ToString());
-			createReturned = true; createCallback(roomJson);
+			createReturned = true;
+			createCallback(roomJson);
+
+			DebugLog (Debugs.Log, "CreateChannelSuccess", "Successfully create match a channel!");
 		}
 
 		#endregion
@@ -493,23 +529,34 @@ namespace BytesCrafter.USocketNet
 				SendEmit("join", new JSONObject(sendData), OnJoinedServerRoom);
 				StartCoroutine(JoiningServerRoom(roomJson));
 			}
-			else { Debug.Log("Disconnection failed: You are not connected to the server!"); }
+
+			else
+			{
+				DebugLog (Debugs.Error, "JoinChannelFailed", "You are currently disconnected to the server!");
+			}
 		}
 
 		IEnumerator JoiningServerRoom(RoomJson roomJson)
 		{
 			yield return new WaitForEndOfFrame();
+
 			if (!joinReturned)
 			{
-				if (joinCallback != null) { joinCallback(null); }
+				if (joinCallback != null)
+				{
+					joinCallback(null);
+					DebugLog (Debugs.Error, "JoinChannelFailed", "You are currently disconnected to the server!");
+				}
 			}
 		}
 
 		private void OnJoinedServerRoom(JSONObject jsonObject)
 		{
-			joinReturned = true;
 			RoomJson roomJson = JsonSerializer.ToObject<RoomJson>(jsonObject.ToString());
-			if (joinCallback != null) { joinCallback(roomJson); }
+			joinReturned = true;
+			joinCallback(roomJson);
+
+			DebugLog (Debugs.Log, "JoinChannelSuccess", "Successfully join match a channel!");
 		}
 
 		#endregion
@@ -522,32 +569,36 @@ namespace BytesCrafter.USocketNet
 			{
 				SendEmit("leave", OnLeaveServerRoom);
 			}
-			else { Debug.Log("Disconnection failed: You are not connected to the server!"); }
+
+			else
+			{
+				Debug.Log("Disconnection failed: You are not connected to the server!");
+			}
 		}
 
 		private void OnLeaveServerRoom(JSONObject jsonObject)
 		{
+			socketPrefabs.ForEach ((SocketView sockView) => {
+				DestroyObject(sockView.gameObject);
+			});
 			Debug.Log("Room Leaved: " + jsonObject.ToString());
 		}
 
 		#endregion
 
-		#region OngoingCodes // ----------------------------------------- SENDING TRANSFORM ROOM VALUE! --------------------------------------- //
 
-		public void StateSync(StateJson stateJson)
-		{
-			string sendData = JsonUtility.ToJson(stateJson);
-			SendEmit("transtate", new JSONObject(sendData));
-		}
+
+
+		#region OngoingCodes // ----------------------------------------- SENDING TRANSFORM ROOM VALUE! --------------------------------------- //
 
 		public void Instantiate(int prefabIndex, Vector3 position, Quaternion rotation)
 		{
 			Instances intance = new Instances(prefabIndex, position, rotation.eulerAngles);
 			string sendData = JsonUtility.ToJson(intance);
-			SendEmit("instance", new JSONObject(sendData), OnInstantiateThis);
+			SendEmit("instance", new JSONObject(sendData), OnInstantiate);
 		}
 
-		private void OnInstantiateThis(JSONObject jsonObject)
+		private void OnInstantiate(JSONObject jsonObject)
 		{
 			Debug.Log("OnRoomEvent: " + "Instance from Local! " + " Content: " + jsonObject.ToString());
 			Instances instances = JsonSerializer.ToObject<Instances>(jsonObject.ToString());
@@ -557,46 +608,138 @@ namespace BytesCrafter.USocketNet
 			socketIdentities.Add(curUser);
 		}
 
+		public void StateSync(StateJson stateJson)
+		{
+			string sendData = JsonUtility.ToJson(stateJson);
+			SendEmit("transtate", new JSONObject(sendData));
+		}
+
 		#endregion
 
-		#region UnityInterface
 
-		//Initialized custom websocket approaches.
+
+
+		#region CallbackEvents // ------------------------------------- SERVER AUTHORITATIVE EVENTS! ------------------------------------ //
+
+		private void OnUserRejected(SocketIOEvent _eventArgs)
+		{
+			ConnJson connJson = JsonUtility.FromJson<ConnJson>(_eventArgs.data.ToString());
+
+			ForceDisconnect();
+			disconnectCallback(ConnStat.Disconnected);
+			pingValue = 0;
+		}
+
+		private MessageCallback messageCallback = null;
+		private void OnMessageReceived(SocketIOEvent _eventArgs)
+		{
+			MsgJson msgJson = JsonUtility.FromJson<MsgJson>(_eventArgs.data.ToString());
+			DebugLog(Debugs.Log, "OnEvent: MESSAGE", "Sender: " + msgJson.sender + " Content: " + msgJson.content + " Receiver: " + msgJson.content + " Type: " + msgJson.content);
+
+			if (messageCallback != null)
+			{
+				messageCallback(msgJson);
+			}
+		}
+
+		private RoomCallback joinedCallback = null;
+		private void OnRoomJoined(SocketIOEvent _eventArgs)
+		{
+			RoomJson roomJson = JsonUtility.FromJson<RoomJson>(_eventArgs.data.ToString());
+			DebugLog(Debugs.Log, "OnEvent: JOINED", "ID: " + roomJson.identity + " NAME: " + roomJson.cname + " VAR: " + roomJson.variant + " MAX: " + roomJson.maxconnect + " CUR: " + roomJson.users.Length);
+
+			if (joinedCallback != null)
+			{
+				joinedCallback(roomJson);
+			}
+		}
+
+		private RoomCallback leavedCallback = null;
+		private void OnRoomLeaved(SocketIOEvent _eventArgs)
+		{
+			RoomJson roomJson = JsonUtility.FromJson<RoomJson>(_eventArgs.data.ToString());
+			DebugLog(Debugs.Log, "OnEvent: LEAVE", "ID: " + roomJson.identity + " NAME: " + roomJson.cname + " VAR: " + roomJson.variant + " MAX: " + roomJson.maxconnect + " CUR: " + roomJson.users.Length);
+
+			if (leavedCallback != null)
+			{
+				leavedCallback(roomJson);
+			}
+		}
+
+		private List<SocketView> socketIdentities = new List<SocketView>();
+		private void OnInstancePeer(SocketIOEvent _eventArgs)
+		{
+			Debug.Log("OnRoomEvent: " + "Instance from Peers!" + " Content: " + _eventArgs.data.ToString());
+			Instances instances = JsonUtility.FromJson<Instances>(_eventArgs.data.ToString());
+
+			SocketView curUser = Instantiate(socketPrefabs[instances.prefabIndex], instances.pos.ToVector, instances.rot.ToQuaternion);
+			curUser.IsLocalUser = false;
+			curUser.socketId = instances.identity;
+			curUser.uSocketNet = this;
+			socketIdentities.Add(curUser);
+		}
+
+		private void OnStateReceived(SocketIOEvent _eventArgs)
+		{
+			if (_eventArgs.data.keys.Exists(x => x == "identity"))
+			{
+				string identity = "";
+				_eventArgs.data.ToDictionary().TryGetValue("identity", out identity);
+
+				if (socketIdentities.Exists(x => x.socketId == identity && x.IsLocalUser == false))
+				{
+					SocketView sockId = socketIdentities.Find(x => x.socketId == identity);
+					sockId.Downdate(_eventArgs.data.ToString());
+				}
+			}
+		}
+
+		#endregion
+
+		#region UnityInterface - Done!
+
+		//Initilaized all the required mechanisms.
 		void Awake()
 		{
-			DontDestroyOnLoad(this); //Prevent destroying the instance of this script.
+			//CUSTOM INITIALIZATION
+			DontDestroyOnLoad(this);
+			threadset.IsInitialized = true;
+			Application.runInBackground = bindings.runOnBackground;
 
-			//- CUSTOM INITIALIZATION - CUSTOM INITIALIZATION - CUSTOM INITIALIZATION - CUSTOM INITIALIZATION - CUSTOM INITIALIZATION -//
-			threadset.IsInitialized = true; Application.runInBackground = bindings.runOnBackground;
-			//- CUSTOM INITIALIZATION - CUSTOM INITIALIZATION - CUSTOM INITIALIZATION - CUSTOM INITIALIZATION - CUSTOM INITIALIZATION -//
+			//ENCRYPTIONS & HANDLERS
+			queueCoder.encoder = new Encoder();
+			queueCoder.decoder = new Decoder();
+			queueCoder.parser = new Parser();
 
-			//- ENCRYPTIONS & HANDLERS - ENCRYPTIONS & HANDLERS - ENCRYPTIONS & HANDLERS - ENCRYPTIONS & HANDLERS - ENCRYPTIONS & HANDLERS -//
-			queueCoder.encoder = new Encoder(); queueCoder.decoder = new Decoder(); queueCoder.parser = new Parser();
-			queueCoder.handlers = new Dictionary<string, List<Action<SocketIOEvent>>>(); queueCoder.eventQueue = new Queue<SocketIOEvent>();
-			queueCoder.eventQueueLock = new object(); queueCoder.ackQueue = new Queue<Packet>();
-			queueCoder.ackQueueLock = new object(); queueCoder.ackList = new List<Ack>();
-			//- ENCRYPTIONS & HANDLERS - ENCRYPTIONS & HANDLERS - ENCRYPTIONS & HANDLERS - ENCRYPTIONS & HANDLERS - ENCRYPTIONS & HANDLERS -//
+			queueCoder.handlers = new Dictionary<string, List<Action<SocketIOEvent>>>();
+			queueCoder.eventQueue = new Queue<SocketIOEvent>();
+			queueCoder.eventQueueLock = new object();
 
-			//- WEB SOCKET INITIALIZATION - WEB SOCKET INITIALIZATION - WEB SOCKET INITIALIZATION - WEB SOCKET INITIALIZATION - WEB SOCKET INITIALIZATION - //
+			queueCoder.ackQueue = new Queue<Packet>();
+			queueCoder.ackQueueLock = new object();
+			queueCoder.ackList = new List<Ack>();
+
+			//WEB SOCKET INITIALIZATION
 			threadset.websocket = new WebSocket("ws://" + bindings.serverUrl + ":" + bindings.serverPort + "/socket.io/?EIO=4&transport=websocket");
-			threadset.websocket.OnOpen += OnOpen; threadset.websocket.OnError += OnError; threadset.websocket.OnClose += OnClose;
-			threadset.websocket.OnMessage += OnMessage; threadset.wsCheck = false; threadset.IsConnected = false;
-			threadset.packetId = 0; threadset.socketId = null; threadset.autoConnect = true;
-			//- WEB SOCKET INITIALIZATION - WEB SOCKET INITIALIZATION - WEB SOCKET INITIALIZATION - WEB SOCKET INITIALIZATION - WEB SOCKET INITIALIZATION - //
+			threadset.websocket.OnOpen += OnOpen;
+			threadset.websocket.OnError += OnError;
+			threadset.websocket.OnClose += OnClose;
+			threadset.websocket.OnMessage += OnMessage;
 
-			//- LISTENERS AND EVENTS - LISTENERS AND EVENTS - LISTENERS AND EVENTS - LISTENERS AND EVENTS - LISTENERS AND EVENTS - LISTENERS AND EVENTS -//
+			threadset.wsCheck = false;
+			threadset.IsConnected = false;
+			threadset.packetId = 0;
+			threadset.socketId = null;
+			threadset.autoConnect = true;
+
+			//LISTENERS AND EVENTS
 			CallbackOn("disconnected", OnUserRejected);
-
 			CallbackOn("messaged", OnMessageReceived);
 			CallbackOn("joined", OnRoomJoined);
 			CallbackOn("leaved", OnRoomLeaved);
-
 			CallbackOn("instanced", OnInstancePeer);
 			CallbackOn("transtated", OnStateReceived);
-
 			//ADD MORE HERE!
-
-			//- LISTENERS AND EVENTS - LISTENERS AND EVENTS - LISTENERS AND EVENTS - LISTENERS AND EVENTS - LISTENERS AND EVENTS - LISTENERS AND EVENTS -//
 		}
 
 		//On any case that abruptly closing the app, force to disconnect client.
@@ -625,8 +768,15 @@ namespace BytesCrafter.USocketNet
 
 		private void AbortConnection()
 		{
-			if (socketThread != null) { socketThread.Abort(); }
-			if (pingThread != null) { pingThread.Abort(); }
+			if (socketThread != null)
+			{
+				socketThread.Abort();
+			}
+
+			if (pingThread != null)
+			{
+				pingThread.Abort();
+			}
 		}
 
 		void Update()
@@ -637,7 +787,10 @@ namespace BytesCrafter.USocketNet
 			{
 				lock (queueCoder.eventQueueLock)
 				{
-					while (queueCoder.eventQueue.Count > 0) { EmitEvent(queueCoder.eventQueue.Dequeue()); }
+					while (queueCoder.eventQueue.Count > 0)
+					{
+						EmitEvent(queueCoder.eventQueue.Dequeue());
+					}
 				}
 
 				lock (queueCoder.ackQueueLock)
@@ -647,8 +800,15 @@ namespace BytesCrafter.USocketNet
 						Packet packet = queueCoder.ackQueue.Dequeue();
 						Ack ack; for (int i = 0; i < queueCoder.ackList.Count; i++)
 						{
-							if (queueCoder.ackList[i].packetId != packet.id) { continue; }
-							ack = queueCoder.ackList[i]; queueCoder.ackList.RemoveAt(i); ack.Invoke(packet.json); return;
+							if (queueCoder.ackList[i].packetId != packet.id)
+							{
+								continue;
+							}
+
+							ack = queueCoder.ackList[i];
+							queueCoder.ackList.RemoveAt(i);
+							ack.Invoke(packet.json);
+							return;
 						}
 					}
 				}
@@ -672,7 +832,8 @@ namespace BytesCrafter.USocketNet
 
 						else
 						{
-							StartCoroutine(OnListeningConnectionStatus(ConnStat.Connected)); threadset.autoConnect = true;
+							StartCoroutine(OnListeningConnectionStatus(ConnStat.Connected));
+							threadset.autoConnect = true;
 						}
 					}
 
@@ -680,21 +841,98 @@ namespace BytesCrafter.USocketNet
 					{
 						EmitEvent("disconnect");
 
-						if (threadset.autoConnect) { StartCoroutine(OnListeningConnectionStatus(ConnStat.Maintainance)); } //User disconnection.
-						else { StartCoroutine(OnListeningConnectionStatus(ConnStat.Disconnected)); } //Server disconnection.
+						if (threadset.autoConnect) //User disconnection.
+						{
+							StartCoroutine(OnListeningConnectionStatus(ConnStat.Maintainance));
+						}
+
+						else //Server disconnection.
+						{
+							StartCoroutine(OnListeningConnectionStatus(ConnStat.Disconnected));
+						}
 					}
 				}
 
 				if (queueCoder.ackList.Count == 0) { return; }
-				if (DateTime.Now.Subtract(queueCoder.ackList[0].time).TotalSeconds < threadset.ackExpireTime)
-				{ return; }
+				if (DateTime.Now.Subtract (queueCoder.ackList [0].time).TotalSeconds < threadset.ackExpireTime) { return; }
 				queueCoder.ackList.RemoveAt(0);
 			}
 		}
 
 		#endregion
 
-		#region WebSocketThreading
+		#region DefaultSocketEvent - Done!
+
+		private void OnOpen(object sender, EventArgs e) { EmitEvent("open"); }
+		private void OnError(object sender, ErrorEventArgs e) { EmitEvent("error"); }
+		private void OnClose(object sender, CloseEventArgs e) { EmitEvent("close"); }
+
+		private void OnMessage(object sender, MessageEventArgs e)
+		{
+			Packet packet = queueCoder.decoder.Decode(e); 
+
+			switch (packet.enginePacketType)
+			{
+			case EnginePacketType.OPEN: HandleOpen(packet); break;
+			case EnginePacketType.CLOSE: EmitEvent("close"); break;
+			case EnginePacketType.PING: HandlePing(); break;
+			case EnginePacketType.PONG: HandlePong(); break;
+			case EnginePacketType.MESSAGE: HandleMessage(packet); break;
+			}
+		}
+
+		private void HandleOpen(Packet packet)
+		{
+			threadset.socketId = packet.json["sid"].str;
+			EmitEvent("open");
+		}
+
+		private void HandlePing()
+		{
+			EmitPacket(new Packet(EnginePacketType.PONG));
+		}
+
+		private void HandlePong()
+		{
+			threadset.wsPonging = true;
+			threadset.wsPinging = false;
+		}
+
+		private void HandleMessage(Packet packet)
+		{
+			if (packet.json == null) { return; }
+
+			if (packet.socketPacketType == SocketPacketType.ACK)
+			{
+				for (int i = 0; i < queueCoder.ackList.Count; i++)
+				{
+					if (queueCoder.ackList[i].packetId != packet.id)
+					{
+						continue;
+					}
+
+					lock (queueCoder.ackQueueLock)
+					{
+						queueCoder.ackQueue.Enqueue(packet);
+					}
+
+					return;
+				}
+			}
+
+			if (packet.socketPacketType == SocketPacketType.EVENT)
+			{
+				SocketIOEvent e = queueCoder.parser.Parse(packet.json);
+				lock (queueCoder.eventQueueLock)
+				{
+					queueCoder.eventQueue.Enqueue(e);
+				}
+			}
+		}
+
+		#endregion
+
+		#region WebSocketThreading - Done!
 
 		private Threadset threadset = new Threadset();
 		private QueueCoder queueCoder = new QueueCoder();
@@ -706,8 +944,15 @@ namespace BytesCrafter.USocketNet
 
 			while (threadset.IsConnected)
 			{
-				if (webSocket.IsConnected) { Thread.Sleep(threadset.reconDelay); }
-				else { webSocket.Connect(); }
+				if (webSocket.IsConnected)
+				{
+					Thread.Sleep(threadset.reconDelay);
+				}
+
+				else
+				{
+					webSocket.Connect();
+				}
 			}
 
 			webSocket.Close();
@@ -748,48 +993,9 @@ namespace BytesCrafter.USocketNet
 			}
 		}
 
-		private void OnOpen(object sender, EventArgs e) { EmitEvent("open"); }
-		private void OnError(object sender, ErrorEventArgs e) { EmitEvent("error"); }
-		private void OnClose(object sender, CloseEventArgs e) { EmitEvent("close"); }
-		private void OnMessage(object sender, MessageEventArgs e)
-		{
-			Packet packet = queueCoder.decoder.Decode(e); switch (packet.enginePacketType)
-			{
-			case EnginePacketType.OPEN: HandleOpen(packet); break;
-			case EnginePacketType.CLOSE: EmitEvent("close"); break;
-			case EnginePacketType.PING: HandlePing(); break;
-			case EnginePacketType.PONG: HandlePong(); break;
-			case EnginePacketType.MESSAGE: HandleMessage(packet); break;
-			}
-		}
-
-		private void HandleOpen(Packet packet) { threadset.socketId = packet.json["sid"].str; EmitEvent("open"); }
-		private void HandlePing() { EmitPacket(new Packet(EnginePacketType.PONG)); }
-		private void HandlePong() { threadset.wsPonging = true; threadset.wsPinging = false; }
-		private void HandleMessage(Packet packet)
-		{
-			if (packet.json == null) { return; }
-
-			if (packet.socketPacketType == SocketPacketType.ACK)
-			{
-				for (int i = 0; i < queueCoder.ackList.Count; i++)
-				{
-					if (queueCoder.ackList[i].packetId != packet.id) { continue; }
-					lock (queueCoder.ackQueueLock) { queueCoder.ackQueue.Enqueue(packet); }
-					return;
-				}
-			}
-
-			if (packet.socketPacketType == SocketPacketType.EVENT)
-			{
-				SocketIOEvent e = queueCoder.parser.Parse(packet.json);
-				lock (queueCoder.eventQueueLock) { queueCoder.eventQueue.Enqueue(e); }
-			}
-		}
-
 		#endregion
 
-		#region EmitterInterface
+		#region EmitterInterface - Done!
 
 		private void EmitEvent(string type)
 		{
@@ -798,11 +1004,22 @@ namespace BytesCrafter.USocketNet
 
 		private void EmitEvent(SocketIOEvent eventArgs)
 		{
-			if (!queueCoder.handlers.ContainsKey(eventArgs.name)) { return; }
-			foreach (Action<SocketIOEvent> handler in queueCoder.handlers[eventArgs.name])
-			{ try { handler(eventArgs); } catch (Exception except) { /*Debug.LogWarning(except.Message);*/ debugLog = except.Message; } }
-		}
+			if (!queueCoder.handlers.ContainsKey(eventArgs.name))
+				return;
 
+			foreach (Action<SocketIOEvent> handler in queueCoder.handlers[eventArgs.name])
+			{
+				try
+				{
+					handler(eventArgs);
+				}
+
+				catch (Exception except)
+				{
+					DebugLog(Debugs.Warn, "EmitEventCatch", except.Message);
+				}
+			}
+		}
 
 		private void EmitMessage(int id, string raw)
 		{
@@ -811,30 +1028,54 @@ namespace BytesCrafter.USocketNet
 
 		private void EmitPacket(Packet packet)
 		{
-			try { threadset.websocket.Send(queueCoder.encoder.Encode(packet)); }
-			catch (SocketIOException ex) { if (ex != null) { } }
+			try
+			{
+				threadset.websocket.Send(queueCoder.encoder.Encode(packet));
+			}
+
+			catch (SocketIOException ex)
+			{
+				if (ex != null)
+				{
+					DebugLog(Debugs.Warn, "EmitPacketCatch", ex.Message);
+				}
+			}
 		}
 
 		#endregion
 
-		#region MethodsInterface
+		#region MethodsInterface - Done!
 
 		private void CallbackOn(string events, Action<SocketIOEvent> callback)
 		{
-			if (!queueCoder.handlers.ContainsKey(events)) { queueCoder.handlers[events] = new List<Action<SocketIOEvent>>(); }
+			if (!queueCoder.handlers.ContainsKey(events))
+			{
+				queueCoder.handlers[events] = new List<Action<SocketIOEvent>>();
+			}
+
 			queueCoder.handlers[events].Add(callback);
 		}
 
 		private void CallbackOff(string events, Action<SocketIOEvent> callback)
 		{
 			if (!queueCoder.handlers.ContainsKey(events))
-			{ Debug.LogWarning("No callbacks registered for event: " + events); debugLog = events; return; }
+			{
+				DebugLog(Debugs.Warn, "CallbackOffMissing", "No callbacks registered for event: " + events);
+				return;
+			}
 
 			List<Action<SocketIOEvent>> eventList = queueCoder.handlers[events];
 			if (!eventList.Contains(callback))
-			{ Debug.LogWarning("Couldn't remove callback action for event: " + events); debugLog = events; return; }
+			{
+				DebugLog(Debugs.Warn, "CallbackOffCantRemove", "Couldn't remove callback action for event: " + events);
+				return;
+			}
 
-			eventList.Remove(callback); if (eventList.Count == 0) { queueCoder.handlers.Remove(events); }
+			eventList.Remove(callback);
+			if (eventList.Count == 0)
+			{
+				queueCoder.handlers.Remove(events);
+			}
 		}
 
 		private void SendEmit(string events)
