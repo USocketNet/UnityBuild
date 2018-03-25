@@ -1,9 +1,0 @@
-C:\Users\Bytes Crafter\Documents\Visual Studio 2017\Projects\Multiplayer Server\MultiplayerServer\MultiplayerServer\bin\Release\USocketNet.dll
-C:\Users\Bytes Crafter\Documents\Visual Studio 2017\Projects\Multiplayer Server\MultiplayerServer\MultiplayerServer\bin\Release\USocketNet.pdb
-C:\Users\Bytes Crafter\Documents\Visual Studio 2017\Projects\Multiplayer Server\MultiplayerServer\MultiplayerServer\bin\Release\UnityEngine.dll
-C:\Users\Bytes Crafter\Documents\Visual Studio 2017\Projects\Multiplayer Server\MultiplayerServer\MultiplayerServer\bin\Release\UnityEngine.xml
-D:\1. Google Drive\4. GooglePlay\Testing\MultiplayerServer\Assets\BytesCrafter\USocketNet\Plugin\USocketNet.dll
-D:\1. Google Drive\4. GooglePlay\Testing\MultiplayerServer\Assets\BytesCrafter\USocketNet\Plugin\USocketNet.pdb
-C:\Users\Bytes Crafter\Documents\Visual Studio 2017\Projects\Multiplayer Server\MultiplayerServer\MultiplayerServer\obj\Release\USocketNet.csproj.CoreCompileInputs.cache
-C:\Users\Bytes Crafter\Documents\Visual Studio 2017\Projects\Multiplayer Server\MultiplayerServer\MultiplayerServer\obj\Release\USocketNet.dll
-C:\Users\Bytes Crafter\Documents\Visual Studio 2017\Projects\Multiplayer Server\MultiplayerServer\MultiplayerServer\obj\Release\USocketNet.pdb

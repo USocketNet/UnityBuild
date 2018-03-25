@@ -2,13 +2,17 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs">
     <Files>
-      <File FileName="Assets\BytesCrafter\USocketNet\Script\UnityControls.cs" Line="167" Column="21" />
-      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" Line="582" Column="18" />
-      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\SocketView.cs" Line="1" Column="1" />
+      <File FileName="Assets\BytesCrafter\USocketNet\Script\UnityControls.cs" Line="163" Column="6" />
+      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" Line="755" Column="4" />
+      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\USocketView.cs" Line="23" Column="3" />
+      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\USocketSerial.cs" Line="205" Column="1" />
+      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\USocketLib\JSONObject\JSONObject.cs" Line="941" Column="36" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="D:\Projects\Software - USocketNet\Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" line="571" column="13" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

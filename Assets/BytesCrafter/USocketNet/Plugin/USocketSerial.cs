@@ -25,6 +25,11 @@ namespace BytesCrafter.USocketNet
 		}
 	}
 
+	public enum Returned
+	{
+		Success, Failed, Error
+	}
+
 	#endregion
 
 	#region REQUIRED CLASSES

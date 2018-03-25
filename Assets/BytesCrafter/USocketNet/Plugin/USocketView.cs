@@ -21,8 +21,6 @@ namespace BytesCrafter.USocketNet
 			}
 		}
 
-		[Range(1f, 30f)] public float sendRate = 15f;
-
 		[HideInInspector] public string socketId = string.Empty;
 		[HideInInspector] public bool IsLocalUser = false;
 		[HideInInspector] public Rigidbody rigidbody = null;
@@ -57,6 +55,10 @@ namespace BytesCrafter.USocketNet
 			targetSize = transform.localScale;
 
 			rigidbody = GetComponent<Rigidbody>();
+		}
+
+		void Update()
+		{
 			if (IsLocalUser)
 			{
 				rigidbody.useGravity = true;

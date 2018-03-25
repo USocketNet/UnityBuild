@@ -68,6 +68,7 @@ public class UnityControls : MonoBehaviour//, SocketInterface
 	void Awake()
 	{
 		netScript.ListenMessagesEvent (ListenOnMessage);
+		netScript.ListenMatchJoined (ListenOnMatchJoined);
 	}
 
 	private void ListenOnMessage(MsgJson msgJson)
@@ -86,6 +87,11 @@ public class UnityControls : MonoBehaviour//, SocketInterface
 		{
 			channelViewer.Logs(msgJson.sender + ": " + msgJson.content);
 		}
+	}
+
+	private void ListenOnMatchJoined(ChannelUser channelUser)
+	{
+
 	}
 
 	//Connecting to server with callbacks.
@@ -129,7 +135,7 @@ public class UnityControls : MonoBehaviour//, SocketInterface
 	//Send a private message on the server.
 	public void SendPrivateMessage()
 	{
-		netScript.SendPrivateMessage (priMsgReceiver.text, priMsgContent.text, (MsgStat msgStat, MsgJson msgJson) =>
+		netScript.SendPrivateMessage (priMsgReceiver.text, priMsgContent.text, (MsgStat msgStat) =>
 		{
 			privateViewer.Logs("Me: " + pubMsgContent.text);
 			priMsgContent.text = string.Empty;
@@ -139,9 +145,9 @@ public class UnityControls : MonoBehaviour//, SocketInterface
 
 	public void SendChannelMessage()
 	{
-		netScript.SendChannelMessage (chanMsgContent.text, (MsgStat msgStat, MsgJson msgJson) =>
+		netScript.SendChannelMessage (chanMsgContent.text, (MsgStat msgStat) =>
 		{
-			channelViewer.Logs("Me: " + msgJson.content);
+			channelViewer.Logs("Me: " + chanMsgContent.text);
 			chanMsgContent.text = string.Empty;
 		});
 	}
@@ -149,52 +155,49 @@ public class UnityControls : MonoBehaviour//, SocketInterface
 
 	public void AutoJoinServerRoom()
 	{
-		netScript.AutoJoinChannel ("Default", 100, (ChannelJson roomJson) =>
+		netScript.AutoJoinChannel ("Default", 100, (Returned returned, ChannelJson channelJson) =>
 			{
-				ChangeCanvas(2);
-				netScript.Instantiate (0, spawnPoint.position, spawnPoint.rotation);
+				if(returned == Returned.Success)
+				{
+					ChangeCanvas(2);
+					netScript.Instantiate (0, spawnPoint.position, spawnPoint.rotation);
+				}
 			});
 	}
 
 	public void CreateServerRoom()
 	{
-		netScript.CreateServerRoom (roomname.text, "Default", 2, (ChannelJson roomJson) => 
+		netScript.CreateServerRoom (roomname.text, "Default", 2, (Returned returned, ChannelJson roomJson) => 
 			{
-				//debugViewer.Logs("Room Created: " + " : " + roomJson.cname + " : " + roomJson.maxconnect);
-				//plist = new List<UnityPlayer> (); InstantiateThis (netScript.Identity, true);
-
-				ChangeCanvas(2);
-				netScript.Instantiate (0, spawnPoint.position, spawnPoint.rotation);
-
-				//Instatiate All
+				if(returned == Returned.Success)
+				{
+					ChangeCanvas(2);
+					netScript.Instantiate (0, spawnPoint.position, spawnPoint.rotation);
+				}
 			});
 	}
 
 	public void JoinServerRoom()
 	{
-		netScript.JoinServerRoom (roomname.text, (ChannelJson roomJson) =>
+		netScript.JoinServerRoom (roomname.text, (Returned returned, ChannelJson roomJson) =>
 			{
-				//debugViewer.Logs("Room Joined: " + " : " + roomJson.cname + " : " + roomJson.maxconnect);
-				//plist = new List<UnityPlayer> (); 
-
-				//for (int i = 0; i < roomJson.users.Length; i++)
-				//{
-				//	if (netScript.Identity == roomJson.users [i].identity)
-				//	{ InstantiateThis (netScript.Identity, true); }
-
-				//	else { InstantiateThis (roomJson.users [i].identity, false); }
-				//}
-
-				ChangeCanvas(2);
-				netScript.Instantiate (0, spawnPoint.position, spawnPoint.rotation);
-
-				//Instatiate All
+				if(returned == Returned.Success)
+				{
+					ChangeCanvas(2);
+					netScript.Instantiate (0, spawnPoint.position, spawnPoint.rotation);
+				}
 			});
 	}
 
 	public void LeaveServerRoom()
 	{
-		netScript.LeaveServerRoom ();
-		ChangeCanvas(1);
+		netScript.LeaveChannel ((Returned returned, ChannelJson roomJson) =>
+			{
+				if(returned == Returned.Success)
+				{
+					ChangeCanvas(1);
+				}
+			});
+		
 	}
 }
