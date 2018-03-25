@@ -14,7 +14,7 @@ public class Med_Char_Control : MonoBehaviour
 	public Animator animator = null;
 	public Rigidbody rigidbody = null;
 	public Camera camObject = null;
-	public SocketView socketView = null;
+	public USocketView socketView = null;
 
 	[Header("DEBUGGER")]
 	public string debugger = string.Empty;

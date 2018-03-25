@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour
 	public AudioListener audiListener = null;
 	public Rigidbody rigidBody = null;
 	public Animator animator = null;
-	public SocketView socket = null;
+	public USocketView socket = null;
 
 	[Header("Guns Parameter")]
 	public Transform rightHand = null;

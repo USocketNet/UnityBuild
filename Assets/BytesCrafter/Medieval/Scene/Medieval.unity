@@ -217,7 +217,7 @@ Transform:
   m_Father: {fileID: 86425815}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &972473728
+--- !u!1001 &432570916
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -319,9 +319,21 @@ Prefab:
       propertyPath: spawnPoint
       value: 
       objectReference: {fileID: 134439427}
-    m_RemovedComponents:
-    - {fileID: 81435485729818116, guid: 02cbfd853dfda824884dab8ef273c99c, type: 2}
-    - {fileID: 124306621330170574, guid: 02cbfd853dfda824884dab8ef273c99c, type: 2}
+    - target: {fileID: 1410923841689232, guid: 02cbfd853dfda824884dab8ef273c99c, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224296428790692456, guid: 02cbfd853dfda824884dab8ef273c99c,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 224385270702280118, guid: 02cbfd853dfda824884dab8ef273c99c,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 14
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 02cbfd853dfda824884dab8ef273c99c, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &1656810174

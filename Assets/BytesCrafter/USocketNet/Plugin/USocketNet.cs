@@ -19,7 +19,8 @@ namespace BytesCrafter.USocketNet
 		public Bindings bindings = new Bindings();
 
 		[Header("INSTANCE PREFAB")]
-		public List<SocketView> socketPrefabs = new List<SocketView>();
+		public List<USocketView> socketPrefabs = new List<USocketView>();
+		private List<USocketView> socketIdentities = new List<USocketView>();
 
 		#endregion
 
@@ -83,7 +84,7 @@ namespace BytesCrafter.USocketNet
 		{
 			TimeSpan timeSpan = DateTime.Now.Subtract(lastPing);
 			pingValue = timeSpan.Milliseconds;
-			timer = 1f;
+			timer = bindings.pingFrequency;
 		}
 
 		enum Debugs { Log, Warn, Error }
@@ -107,7 +108,7 @@ namespace BytesCrafter.USocketNet
 
 		#endregion
 
-		#region ConnectServer // ------------------------------------------ CONNECTING TO THE SERVER! ------------------------------------------ //
+		#region ConnectServer - Done!
 
 		private bool connectReturn = false;
 		private Action<ConnStat, ConnJson> connectCallback = null;
@@ -173,7 +174,7 @@ namespace BytesCrafter.USocketNet
 
 		#endregion
 
-		#region DisconnectServer // ---------------------------------------- DISCONNECTING FROM THE SERVER! --------------------------------------- //
+		#region DisconnectServer - Done!
 
 		private bool disconnectReturn = false;
 		private Action<ConnStat> disconnectCallback = null;
@@ -218,9 +219,10 @@ namespace BytesCrafter.USocketNet
 
 		#endregion
 
-		#region ReconnectServer // ----------------------------------------- RECONNECTING FROM THE SERVER! --------------------------------------- //
+		#region ReconnectServer - Done!
 
-		private Action<ConnStat, ConnJson> connectionStats = null; private bool onListeningReturn = false;
+		private Action<ConnStat, ConnJson> connectionStats = null;
+		private bool onListeningReturn = false;
 
 		public void ListenConnectionStatus(Action<ConnStat, ConnJson> connectionStatus)
 		{
@@ -264,33 +266,33 @@ namespace BytesCrafter.USocketNet
 
 		#endregion
 
-		#region PublicMessage // ----------------------------------------- SENDING PUBLIC MESSAGE! --------------------------------------- //
+		#region PublicMessage - Done!
 
 		private bool publicReturned = false;
-		private Action<MsgStat, MsgJson> publicCallback = null;
+		private Action<MsgStat> publicCallback = null;
 
-		public void SendPublicMessage(string message, Action<MsgStat, MsgJson> _publicCallback)
+		public void SendPublicMessage(string message, Action<MsgStat> _publicCallback)
 		{
 			publicCallback = _publicCallback;
 			publicReturned = false;
 
 			if (threadset.websocket.IsConnected)
 			{
-				MsgJson msgJson = new MsgJson(message, Sending.Lobby.ToString());
+				MsgJson msgJson = new MsgJson(message, MsgType.Public);
 				string sendData = JsonUtility.ToJson(msgJson);
-				SendEmit("message", new JSONObject(sendData), OnLobbyMessageSent);
-				StartCoroutine(SendingLobbyMessage());
+				SendEmit("message", new JSONObject(sendData), OnPublicMessageSent);
+				StartCoroutine(SendingPublicMessage());
 			}
 
 			else
 			{
 				MsgJson msgJson = new MsgJson();
-				publicCallback(MsgStat.Failed, msgJson);
-				DebugLog (Debugs.Error, "LobbyMsgFailed", "You are currently disconnected!");
+				publicCallback(MsgStat.Failed);
+				DebugLog (Debugs.Error, "PubMsgFailed", "You are currently disconnected!");
 			}
 		}
 
-		IEnumerator SendingLobbyMessage()
+		IEnumerator SendingPublicMessage()
 		{
 			yield return new WaitForSeconds(bindings.connectDelay);
 
@@ -299,77 +301,26 @@ namespace BytesCrafter.USocketNet
 				MsgJson msgJson = new MsgJson();
 				if (!threadset.websocket.IsConnected)
 				{
-					publicCallback(MsgStat.Failed, msgJson);
-					DebugLog (Debugs.Error, "LobbyMsgFailed", "You are currently disconnected!");
+					publicCallback(MsgStat.Failed);
+					DebugLog (Debugs.Error, "PubMsgFailed", "You are currently disconnected!");
 				}
 			}
 		}
 
-		private void OnLobbyMessageSent(JSONObject jsonObject)
+		private void OnPublicMessageSent(JSONObject jsonObject)
 		{
-			MsgJson msgJson = JsonSerializer.ToObject<MsgJson>(jsonObject.ToString());
+			StopCoroutine ("SendingLobbyMessage");
+
+			MsgCallback msgJson = JsonSerializer.ToObject<MsgCallback>(jsonObject.ToString());
 			publicReturned = true;
-			publicCallback(MsgStat.Success, msgJson);
+			publicCallback(MsgStat.Success);
 
-			DebugLog (Debugs.Log, "LobbyMsgSuccess", "Successfully sent a lobby message!");
+			DebugLog (Debugs.Log, "PubMsgSuccess", "Successfully sent a lobby message!");
 		}
 
 		#endregion
 
-		#region ChannelMessage // ------------------------------------ SENDING ROOM MESSAGE! ---------------------------------- //
-
-		private bool channelReturned = false;
-		private Action<MsgStat, MsgJson> channelCallback = null;
-
-		public void SendChannelMessage(string message, Action<MsgStat, MsgJson> _channelCallback)
-		{
-			channelCallback = _channelCallback;
-			channelReturned = false;
-
-			if (threadset.websocket.IsConnected)
-			{
-				MsgJson msgJson = new MsgJson(message, Sending.Channel.ToString());
-				string sendData = JsonUtility.ToJson(msgJson);
-				SendEmit("message", new JSONObject(sendData), OnChannelMessageSent);
-				StartCoroutine(SendingChannelMessage());
-			}
-
-			else
-			{
-				MsgJson msgJson = new MsgJson();
-				channelCallback(MsgStat.Failed, msgJson);
-				DebugLog (Debugs.Error, "ChannelMsgFailed", "You are currently disconnected to the server!");
-			}
-		}
-
-		IEnumerator SendingChannelMessage()
-		{
-			yield return new WaitForSeconds(bindings.connectDelay);
-
-			if (!channelReturned)
-			{
-				MsgJson msgJson = new MsgJson();
-
-				if (!threadset.websocket.IsConnected)
-				{
-					channelCallback(MsgStat.Failed, msgJson);
-					DebugLog (Debugs.Error, "ChannelMsgFailed", "You are currently disconnected to the server!");
-				}
-			}
-		}
-
-		private void OnChannelMessageSent(JSONObject jsonObject)
-		{
-			MsgJson msgJson = JsonSerializer.ToObject<MsgJson>(jsonObject.ToString());
-			channelReturned = true;
-			channelCallback(MsgStat.Success, msgJson);
-
-			DebugLog (Debugs.Log, "ChannelMsgSuccess", "Successfully sent a channel message!");
-		}
-
-		#endregion
-
-		#region PrivateMessage // ---------------------------------------- SENDING PRIVATE MESSAGE! --------------------------------------- //
+		#region PrivateMessage - Done!
 
 		private bool privateReturned = false;
 		private Action<MsgStat, MsgJson> privateMessage = null;
@@ -380,7 +331,7 @@ namespace BytesCrafter.USocketNet
 
 			if (threadset.websocket.IsConnected)
 			{
-				MsgJson msgJson = new MsgJson(message, Sending.Socket.ToString(), receiver);
+				MsgJson msgJson = new MsgJson(message, MsgType.Private, receiver);
 				string sendData = JsonUtility.ToJson(msgJson);
 				SendEmit("message", new JSONObject(sendData), OnPrivateMessageSent);
 				StartCoroutine(SendingPrivateMessage());
@@ -421,22 +372,99 @@ namespace BytesCrafter.USocketNet
 
 		#endregion
 
-		#region AutoChannel // ------------------------------------------- AUTO JOIN CHANNEL ------------------------------------------ //
+		#region ChannelMessage - Done!
+
+		private bool channelReturned = false;
+		private Action<MsgStat, MsgJson> channelCallback = null;
+
+		public void SendChannelMessage(string message, Action<MsgStat, MsgJson> _channelCallback)
+		{
+			channelCallback = _channelCallback;
+			channelReturned = false;
+
+			if (threadset.websocket.IsConnected)
+			{
+				MsgJson msgJson = new MsgJson(message, MsgType.Channel);
+				string sendData = JsonUtility.ToJson(msgJson);
+				SendEmit("message", new JSONObject(sendData), OnChannelMessageSent);
+				StartCoroutine(SendingChannelMessage());
+			}
+
+			else
+			{
+				MsgJson msgJson = new MsgJson();
+				channelCallback(MsgStat.Failed, msgJson);
+				DebugLog (Debugs.Error, "ChannelMsgFailed", "You are currently disconnected to the server!");
+			}
+		}
+
+		IEnumerator SendingChannelMessage()
+		{
+			yield return new WaitForSeconds(bindings.connectDelay);
+
+			if (!channelReturned)
+			{
+				MsgJson msgJson = new MsgJson();
+
+				if (!threadset.websocket.IsConnected)
+				{
+					channelCallback(MsgStat.Failed, msgJson);
+					DebugLog (Debugs.Error, "ChannelMsgFailed", "You are currently disconnected to the server!");
+				}
+			}
+		}
+
+		private void OnChannelMessageSent(JSONObject jsonObject)
+		{
+			MsgJson msgJson = JsonSerializer.ToObject<MsgJson>(jsonObject.ToString());
+			channelReturned = true;
+			channelCallback(MsgStat.Success, msgJson);
+
+			DebugLog (Debugs.Log, "ChannelMsgSuccess", "Successfully sent a channel message!");
+		}
+
+		#endregion
+
+		#region ListenerMessage - Done!
+
+		private MsgListener messageCallback = null;
+
+		public void ListenMessagesEvent(MsgListener _messageCallback)
+		{
+			messageCallback = _messageCallback;
+		}
+
+		private void OnMessageReceived(SocketIOEvent _eventArgs)
+		{
+			MsgJson msgJson = JsonUtility.FromJson<MsgJson>(_eventArgs.data.ToString());
+			DebugLog(Debugs.Log, "OnEvent: MESSAGE", "Sender: " + msgJson.sender + " Type: " + msgJson.content);
+
+			if (messageCallback != null)
+			{
+				messageCallback(msgJson);
+			}
+		}
+
+		#endregion
+
+
+
+		#region AutoChannel - OnGoing!
 
 		private bool autoReturned = false;
-		private Action<RoomJson> autoChannelCallback = null;
+		private Action<ChannelJson> autoChannelCallback = null;
 
-		public void AutoJoinChannel(string variant, int maxconnect, Action<RoomJson> autoCallback)
+		public void AutoJoinChannel(string variant, int maxconnect, Action<ChannelJson> autoCallback)
 		{
 			autoChannelCallback = autoCallback;
 			autoReturned = false;
 
 			if (threadset.websocket.IsConnected)
 			{
-				RoomJson roomJson = new RoomJson(variant, maxconnect);
-				string sendData = JsonUtility.ToJson(roomJson);
+				ChannelJson channelJson = new ChannelJson(variant, maxconnect);
+				string sendData = JsonUtility.ToJson(channelJson);
 				SendEmit("auto", new JSONObject(sendData), OnAutoServerChannel);
-				StartCoroutine(AutoServerChannel(roomJson));
+				StartCoroutine(AutoServerChannel(channelJson));
 			}
 
 			else
@@ -445,7 +473,7 @@ namespace BytesCrafter.USocketNet
 			}
 		}
 
-		IEnumerator AutoServerChannel(RoomJson roomJson)
+		IEnumerator AutoServerChannel(ChannelJson channelJson)
 		{
 			yield return new WaitForEndOfFrame();
 
@@ -453,7 +481,7 @@ namespace BytesCrafter.USocketNet
 			{
 				if (!threadset.websocket.IsConnected)
 				{
-					autoChannelCallback(roomJson);
+					autoChannelCallback(channelJson);
 					DebugLog (Debugs.Error, "AutoChannelFailed", "You are currently disconnected to the server!");
 				}
 			}
@@ -461,28 +489,28 @@ namespace BytesCrafter.USocketNet
 
 		private void OnAutoServerChannel(JSONObject jsonObject)
 		{
-			RoomJson roomJson = JsonSerializer.ToObject<RoomJson>(jsonObject.ToString());
+			ChannelJson channelJson = JsonSerializer.ToObject<ChannelJson>(jsonObject.ToString());
 			autoReturned = true;
-			autoChannelCallback(roomJson);
+			autoChannelCallback(channelJson);
 
 			DebugLog (Debugs.Log, "AutoChannelSuccess", "Successfully auto match a channel!");
 		}
 
 		#endregion
 
-		#region CreateChannel // ------------------------------------------- CREATING CHANNEL OR ROOM! ------------------------------------------ //
+		#region CreateChannel - OnGoing!
 
-		private Action<RoomJson> createCallback = null; private bool createReturned = false;
-		public void CreateServerRoom(string channelName, string variant, int maxconnect, Action<RoomJson> _createCallback)
+		private Action<ChannelJson> createCallback = null; private bool createReturned = false;
+		public void CreateServerRoom(string channelName, string variant, int maxconnect, Action<ChannelJson> _createCallback)
 		{
 			createCallback = _createCallback; createReturned = false;
 
 			if (threadset.websocket.IsConnected)
 			{
-				RoomJson roomJson = new RoomJson(channelName, variant, maxconnect);
-				string sendData = JsonUtility.ToJson(roomJson);
+				ChannelJson channelJson = new ChannelJson(channelName, variant, maxconnect);
+				string sendData = JsonUtility.ToJson(channelJson);
 				SendEmit("create", new JSONObject(sendData), OnCreatedServerRoom);
-				StartCoroutine(CreatingServerRoom(roomJson));
+				StartCoroutine(CreatingServerRoom(channelJson));
 			}
 
 			else
@@ -491,14 +519,14 @@ namespace BytesCrafter.USocketNet
 			}
 		}
 
-		IEnumerator CreatingServerRoom(RoomJson roomJson)
+		IEnumerator CreatingServerRoom(ChannelJson channelJson)
 		{
 			yield return new WaitForEndOfFrame(); //yield return new WaitForSeconds (approaches.callbackWait);
 			if (!createReturned)
 			{
 				if (!threadset.websocket.IsConnected)
 				{
-					createCallback(roomJson);
+					createCallback(channelJson);
 					DebugLog (Debugs.Error, "CreateChannelFailed", "You are currently disconnected to the server!");
 				}
 			}
@@ -506,28 +534,30 @@ namespace BytesCrafter.USocketNet
 
 		private void OnCreatedServerRoom(JSONObject jsonObject)
 		{
-			RoomJson roomJson = JsonSerializer.ToObject<RoomJson>(jsonObject.ToString());
+			ChannelJson channelJson = JsonSerializer.ToObject<ChannelJson>(jsonObject.ToString());
 			createReturned = true;
-			createCallback(roomJson);
+			createCallback(channelJson);
 
 			DebugLog (Debugs.Log, "CreateChannelSuccess", "Successfully create match a channel!");
 		}
 
 		#endregion
 
-		#region JoinChannel // ------------------------------------------- JOINING CHANNEL OR ROOM! ------------------------------------------ //
+		#region JoinChannel - OnGoing!
 
-		private Action<RoomJson> joinCallback = null; private bool joinReturned = false;
-		public void JoinServerRoom(string channelId, Action<RoomJson> _joinCallback)
+		private Action<ChannelJson> joinCallback = null;
+		private bool joinReturned = false;
+
+		public void JoinServerRoom(string channelId, Action<ChannelJson> _joinCallback)
 		{
 			joinCallback = _joinCallback; joinReturned = false;
 
 			if (threadset.websocket.IsConnected)
 			{
-				RoomJson roomJson = new RoomJson(channelId);
-				string sendData = JsonUtility.ToJson(roomJson);
+				ChannelJson channelJson = new ChannelJson(channelId);
+				string sendData = JsonUtility.ToJson(channelJson);
 				SendEmit("join", new JSONObject(sendData), OnJoinedServerRoom);
-				StartCoroutine(JoiningServerRoom(roomJson));
+				StartCoroutine(JoiningServerRoom(channelJson));
 			}
 
 			else
@@ -536,7 +566,7 @@ namespace BytesCrafter.USocketNet
 			}
 		}
 
-		IEnumerator JoiningServerRoom(RoomJson roomJson)
+		IEnumerator JoiningServerRoom(ChannelJson channelJson)
 		{
 			yield return new WaitForEndOfFrame();
 
@@ -552,16 +582,16 @@ namespace BytesCrafter.USocketNet
 
 		private void OnJoinedServerRoom(JSONObject jsonObject)
 		{
-			RoomJson roomJson = JsonSerializer.ToObject<RoomJson>(jsonObject.ToString());
+			ChannelJson channelJson = JsonSerializer.ToObject<ChannelJson>(jsonObject.ToString());
 			joinReturned = true;
-			joinCallback(roomJson);
+			joinCallback(channelJson);
 
 			DebugLog (Debugs.Log, "JoinChannelSuccess", "Successfully join match a channel!");
 		}
 
 		#endregion
 
-		#region LeaveChannel // ------------------------------------------- LEAVING CHANNEL OR ROOM! ------------------------------------------ //
+		#region LeaveChannel - OnGoing!
 
 		public void LeaveServerRoom()
 		{
@@ -572,20 +602,11 @@ namespace BytesCrafter.USocketNet
 
 			else
 			{
-				Debug.Log("Disconnection failed: You are not connected to the server!");
+				DebugLog(Debugs.Error, "LeaveMatchFailed", "You are not connected to the server!");
 			}
 		}
 
-		private void OnLeaveServerRoom(JSONObject jsonObject)
-		{
-			socketPrefabs.ForEach ((SocketView sockView) => {
-				DestroyObject(sockView.gameObject);
-			});
-			Debug.Log("Room Leaved: " + jsonObject.ToString());
-		}
-
 		#endregion
-
 
 
 
@@ -600,18 +621,144 @@ namespace BytesCrafter.USocketNet
 
 		private void OnInstantiate(JSONObject jsonObject)
 		{
-			Debug.Log("OnRoomEvent: " + "Instance from Local! " + " Content: " + jsonObject.ToString());
 			Instances instances = JsonSerializer.ToObject<Instances>(jsonObject.ToString());
-
-			SocketView curUser = Instantiate(socketPrefabs[instances.prefabIndex], instances.pos.ToVector, instances.rot.ToQuaternion);
-			curUser.IsLocalUser = true; curUser.socketId = instances.identity; curUser.uSocketNet = this;
+			USocketView curUser = Instantiate(socketPrefabs[instances.prefabIndex], instances.pos.ToVector, instances.rot.ToQuaternion);
+			curUser.IsLocalUser = true;
+			curUser.socketId = instances.identity;
+			curUser.uSocketNet = this;
 			socketIdentities.Add(curUser);
+			DebugLog(Debugs.Log, "StartedMatchSuccess", "You successfully started a match!");
 		}
 
-		public void StateSync(StateJson stateJson)
+		private void Synching()
 		{
-			string sendData = JsonUtility.ToJson(stateJson);
-			SendEmit("transtate", new JSONObject(sendData));
+			socketIdentities.ForEach ((USocketView local) => 
+			{
+					if (local.socketId == string.Empty)
+						return;
+
+					if(local.IsLocalUser) //LocalSync on Uplink
+					{
+						//Send data as transform.
+						StateJson stateJson = new StateJson ();
+						stateJson.states.AddRange (new string[4] { "f", "f", "f", "f" }); //pos, rot, sca, sta
+
+						if (local.position.synchronize)
+						{
+							local.position.sendTimer += Time.deltaTime;
+
+							if (local.position.sendTimer >= (1f / local.position.sendRate))
+							{
+								stateJson.states [0] = "t";
+								stateJson.states.Add (TVector.ToVectorStr (local.transform.position));
+								local.scale.sendTimer = 0f;
+							}
+						}
+
+						if (local.rotation.synchronize)
+						{
+							local.rotation.sendTimer += Time.deltaTime;
+
+							if (local.rotation.sendTimer >= (1f / local.rotation.sendRate))
+							{
+								stateJson.states [1] = "t";
+								stateJson.states.Add (TVector.ToVectorStr (local.transform.rotation.eulerAngles));
+								local.rotation.sendTimer = 0f;
+							}
+						}
+
+						if (local.scale.synchronize)
+						{
+							local.scale.sendTimer += Time.deltaTime;
+
+							if (local.scale.sendTimer >= (1f / local.scale.sendRate))
+							{
+								stateJson.states [2] = "t";
+								stateJson.states.Add (TVector.ToVectorStr (local.transform.lossyScale));
+								local.scale.sendTimer = 0f;
+							}
+						}
+
+						if (local.states.synchronize)
+						{
+							local.states.sendTimer += Time.deltaTime;
+
+							if (local.states.sendTimer >= (1f / local.states.sendRate))
+							{
+								stateJson.states [3] = "t";
+								stateJson.states.AddRange (local.states.syncValue.ToArray ());
+								local.states.sendTimer = 0f;
+							}
+						}
+
+						//Note: First check if values is same then dont send.
+						string sendData = JsonUtility.ToJson (stateJson);
+						SendEmit ("transtate", new JSONObject (sendData));
+					}
+
+					else //LocalSync on DownLink
+					{
+						if (local.position.synchronize)
+						{
+							if (local.position.syncMode == SocketSync.Realtime)
+							{
+								local.transform.position = local.targetPos;
+							}
+
+							else if (local.position.syncMode == SocketSync.AdjustToward)
+							{
+								float pDamp = Vector3.Distance(local.transform.position, local.targetPos);
+								local.transform.position = Vector3.MoveTowards(local.transform.position, local.targetPos, (pDamp + local.posInterpolation) * local.posSpeed * Time.deltaTime);
+							}
+
+							else if (local.position.syncMode == SocketSync.LerpValues)
+							{
+								float pDamp = Vector3.Distance(local.transform.position, local.targetPos);
+								local.transform.position = Vector3.Lerp(local.transform.position, local.targetPos, (pDamp + local.posInterpolation) * local.posSpeed * Time.deltaTime);
+							}
+						}
+
+						if (local.rotation.synchronize)
+						{
+							if (local.rotation.syncMode == SocketSync.Realtime)
+							{
+								local.transform.rotation = Quaternion.Euler(local.targetRot);
+							}
+
+							else if (local.rotation.syncMode == SocketSync.AdjustToward)
+							{
+								float rDamp = Quaternion.Angle(local.transform.rotation, Quaternion.Euler(local.targetRot));
+								local.transform.rotation = Quaternion.RotateTowards(local.transform.rotation, Quaternion.Euler(local.targetRot), (rDamp + local.rotInterpolation) * local.rotSpeed * Time.deltaTime);
+							}
+
+							else if (local.rotation.syncMode == SocketSync.LerpValues)
+							{
+								float rDamp = Quaternion.Angle(local.transform.rotation, Quaternion.Euler(local.targetRot));
+								local.transform.rotation = Quaternion.Lerp(local.transform.rotation, Quaternion.Euler(local.targetRot), (rDamp + local.rotInterpolation) * local.rotSpeed * Time.deltaTime);
+							}
+						}
+
+						if (local.scale.synchronize)
+						{
+							if (local.scale.syncMode == SocketSync.Realtime)
+							{
+								local.transform.localScale = local.targetSize;
+							}
+
+							else if (local.scale.syncMode == SocketSync.AdjustToward)
+							{
+								float sDamp = Vector3.Distance(local.transform.localScale, local.targetSize);
+								local.transform.localScale = Vector3.MoveTowards(local.transform.localScale, local.targetSize, (sDamp + local.sizeInterpolation) * local.sizeSpeed * Time.deltaTime);
+							}
+
+							else if (local.position.syncMode == SocketSync.LerpValues)
+							{
+								float sDamp = Vector3.Distance(local.transform.localScale, local.targetSize);
+								local.transform.localScale = Vector3.Lerp(local.transform.localScale, local.targetSize, (sDamp + local.sizeInterpolation) * local.sizeSpeed * Time.deltaTime);
+							}
+						}
+					}
+			});
 		}
 
 		#endregion
@@ -621,6 +768,7 @@ namespace BytesCrafter.USocketNet
 
 		#region CallbackEvents // ------------------------------------- SERVER AUTHORITATIVE EVENTS! ------------------------------------ //
 
+		//Done! User rejections if authKey is not valid!
 		private void OnUserRejected(SocketIOEvent _eventArgs)
 		{
 			ConnJson connJson = JsonUtility.FromJson<ConnJson>(_eventArgs.data.ToString());
@@ -628,51 +776,56 @@ namespace BytesCrafter.USocketNet
 			ForceDisconnect();
 			disconnectCallback(ConnStat.Disconnected);
 			pingValue = 0;
+
+			DebugLog (Debugs.Error, "ConnectForbidden", "Your authentication key is not authorized!");
 		}
 
-		private MessageCallback messageCallback = null;
-		private void OnMessageReceived(SocketIOEvent _eventArgs)
-		{
-			MsgJson msgJson = JsonUtility.FromJson<MsgJson>(_eventArgs.data.ToString());
-			DebugLog(Debugs.Log, "OnEvent: MESSAGE", "Sender: " + msgJson.sender + " Content: " + msgJson.content + " Receiver: " + msgJson.content + " Type: " + msgJson.content);
-
-			if (messageCallback != null)
-			{
-				messageCallback(msgJson);
-			}
-		}
-
-		private RoomCallback joinedCallback = null;
+		private Action<ChannelJson> joinedCallback = null;
 		private void OnRoomJoined(SocketIOEvent _eventArgs)
 		{
-			RoomJson roomJson = JsonUtility.FromJson<RoomJson>(_eventArgs.data.ToString());
-			DebugLog(Debugs.Log, "OnEvent: JOINED", "ID: " + roomJson.identity + " NAME: " + roomJson.cname + " VAR: " + roomJson.variant + " MAX: " + roomJson.maxconnect + " CUR: " + roomJson.users.Length);
+			ChannelJson channelJson = JsonUtility.FromJson<ChannelJson>(_eventArgs.data.ToString());
+			DebugLog(Debugs.Log, "OnMatchEvent: JOINED", "ID: " + channelJson.identity + " NAME: " + channelJson.cname 
+				+ " VAR: " + channelJson.variant + " MAX: " + channelJson.maxconnect + " CUR: " + channelJson.users.Count);
 
 			if (joinedCallback != null)
 			{
-				joinedCallback(roomJson);
+				joinedCallback(channelJson);
 			}
 		}
 
-		private RoomCallback leavedCallback = null;
+		private Action<ChannelJson> leavedCallback = null;
 		private void OnRoomLeaved(SocketIOEvent _eventArgs)
 		{
-			RoomJson roomJson = JsonUtility.FromJson<RoomJson>(_eventArgs.data.ToString());
-			DebugLog(Debugs.Log, "OnEvent: LEAVE", "ID: " + roomJson.identity + " NAME: " + roomJson.cname + " VAR: " + roomJson.variant + " MAX: " + roomJson.maxconnect + " CUR: " + roomJson.users.Length);
+			ChannelJson channelJson = JsonUtility.FromJson<ChannelJson>(_eventArgs.data.ToString());
+			DebugLog(Debugs.Log, "OnMatchEvent: LEAVED", "ID: " + channelJson.identity + " NAME: " + channelJson.cname 
+				+ " VAR: " + channelJson.variant + " MAX: " + channelJson.maxconnect + " CUR: " + channelJson.users.Count);
+
+			List<string> ids = new List<string> ();
+			foreach(ChannelUser chanUser in channelJson.users)
+			{
+				ids.Add (chanUser.identity);
+			}
+
+			socketIdentities.ForEach ((USocketView sockView) => {
+				
+				if(ids.Find(x => x == sockView.socketId) == null)
+				{
+					Destroy(sockView.gameObject);
+				}
+			});
 
 			if (leavedCallback != null)
 			{
-				leavedCallback(roomJson);
+				leavedCallback(channelJson);
 			}
 		}
 
-		private List<SocketView> socketIdentities = new List<SocketView>();
 		private void OnInstancePeer(SocketIOEvent _eventArgs)
 		{
-			Debug.Log("OnRoomEvent: " + "Instance from Peers!" + " Content: " + _eventArgs.data.ToString());
+			DebugLog(Debugs.Log, "OnEvent: INTANCE", "Instance from Peers!" + " Content: " + _eventArgs.data.ToString());
 			Instances instances = JsonUtility.FromJson<Instances>(_eventArgs.data.ToString());
 
-			SocketView curUser = Instantiate(socketPrefabs[instances.prefabIndex], instances.pos.ToVector, instances.rot.ToQuaternion);
+			USocketView curUser = Instantiate(socketPrefabs[instances.prefabIndex], instances.pos.ToVector, instances.rot.ToQuaternion);
 			curUser.IsLocalUser = false;
 			curUser.socketId = instances.identity;
 			curUser.uSocketNet = this;
@@ -688,13 +841,54 @@ namespace BytesCrafter.USocketNet
 
 				if (socketIdentities.Exists(x => x.socketId == identity && x.IsLocalUser == false))
 				{
-					SocketView sockId = socketIdentities.Find(x => x.socketId == identity);
-					sockId.Downdate(_eventArgs.data.ToString());
+					USocketView sockId = socketIdentities.Find(x => x.socketId == identity);
+
+					StateJson stateJson = JsonUtility.FromJson<StateJson>(_eventArgs.data.ToString());
+					int currentIndex = 4;
+
+					if (sockId.position.synchronize && stateJson.states[0].Equals("t"))
+					{
+						sockId.targetPos = TVector.ToVector3(stateJson.states[currentIndex]);
+						currentIndex += 1;
+					}
+
+					if (sockId.rotation.synchronize && stateJson.states[1].Equals("t"))
+					{
+						sockId.targetRot = TVector.ToVector3(stateJson.states[currentIndex]);
+						currentIndex += 1;
+					}
+
+					if (sockId.scale.synchronize && stateJson.states[2].Equals("t"))
+					{
+						sockId.targetSize = TVector.ToVector3(stateJson.states[currentIndex]);
+						currentIndex += 1;
+					}
+
+					if (sockId.states.synchronize && stateJson.states[3].Equals("t"))
+					{
+						sockId.states.syncValue = new List<string>();
+
+						for (int i = currentIndex; i < stateJson.states.Count; i++)
+						{
+							sockId.states.syncValue.Add(stateJson.states[i]);
+						}
+					}
 				}
 			}
 		}
 
+		private void OnLeaveServerRoom(JSONObject jsonObject)
+		{
+			socketIdentities.ForEach ((USocketView sockView) => {
+				Destroy(sockView.gameObject);
+			});
+
+			DebugLog(Debugs.Log, "LeaveMatchSuccess", "You successfully leaved a match!");
+		}
+
 		#endregion
+
+
 
 		#region UnityInterface - Done!
 
@@ -781,7 +975,11 @@ namespace BytesCrafter.USocketNet
 
 		void Update()
 		{
-			//Pinging();
+			if (threadset.websocket.IsConnected)
+			{
+				Pinging();
+				Synching ();
+			}
 
 			if (threadset.IsInitialized)
 			{
@@ -853,8 +1051,12 @@ namespace BytesCrafter.USocketNet
 					}
 				}
 
-				if (queueCoder.ackList.Count == 0) { return; }
-				if (DateTime.Now.Subtract (queueCoder.ackList [0].time).TotalSeconds < threadset.ackExpireTime) { return; }
+				if (queueCoder.ackList.Count == 0)
+					return;
+				
+				if (DateTime.Now.Subtract (queueCoder.ackList [0].time).TotalSeconds < threadset.ackExpireTime)
+					return;
+				
 				queueCoder.ackList.RemoveAt(0);
 			}
 		}
@@ -873,11 +1075,11 @@ namespace BytesCrafter.USocketNet
 
 			switch (packet.enginePacketType)
 			{
-			case EnginePacketType.OPEN: HandleOpen(packet); break;
-			case EnginePacketType.CLOSE: EmitEvent("close"); break;
-			case EnginePacketType.PING: HandlePing(); break;
-			case EnginePacketType.PONG: HandlePong(); break;
-			case EnginePacketType.MESSAGE: HandleMessage(packet); break;
+				case EnginePacketType.OPEN: HandleOpen(packet); break;
+				case EnginePacketType.CLOSE: EmitEvent("close"); break;
+				case EnginePacketType.PING: HandlePing(); break;
+				case EnginePacketType.PONG: HandlePong(); break;
+				case EnginePacketType.MESSAGE: HandleMessage(packet); break;
 			}
 		}
 
