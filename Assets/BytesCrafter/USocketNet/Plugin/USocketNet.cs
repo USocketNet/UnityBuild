@@ -20,7 +20,8 @@ namespace BytesCrafter.USocketNet
 
 		[Header("INSTANCE PREFAB")]
 		public List<USocketView> socketPrefabs = new List<USocketView>();
-		private List<USocketView> socketIdentities = new List<USocketView>();
+		[HideInInspector]
+		public List<USocketView> socketIdentities = new List<USocketView>();
 
 		#endregion
 
@@ -88,6 +89,9 @@ namespace BytesCrafter.USocketNet
 		enum Debugs { Log, Warn, Error }
 		private void DebugLog(Debugs debugs, string title, string details)
 		{
+			if(!bindings.debugOnLog)
+				return;
+
 			if(debugs == Debugs.Warn)
 			{
 				Debug.LogWarning(title + " - " + details);
@@ -461,13 +465,13 @@ namespace BytesCrafter.USocketNet
 
 		#region AutoChannel - Done!
 
-		private bool autoReturned = false;
+		private bool autoChannelReturned = false;
 		private Action<Returned, ChannelJson> autoChannelCallback = null;
 
-		public void AutoJoinChannel(string variant, int maxconnect, Action<Returned, ChannelJson> autoCallback)
+		public void AutoJoinChannel(string variant, int maxconnect, Action<Returned, ChannelJson> _autoChannelCallback)
 		{
-			autoChannelCallback = autoCallback;
-			autoReturned = false;
+			autoChannelCallback = _autoChannelCallback;
+			autoChannelReturned = false;
 
 			if (threadset.websocket.IsConnected)
 			{
@@ -484,11 +488,11 @@ namespace BytesCrafter.USocketNet
 			}
 		}
 
-		IEnumerator AutoServerChannel()
+		private IEnumerator AutoServerChannel()
 		{
 			yield return new WaitForSeconds(bindings.connectDelay);
 
-			if (!autoReturned)
+			if (!autoChannelReturned)
 			{
 				if (!threadset.websocket.IsConnected)
 				{
@@ -502,19 +506,21 @@ namespace BytesCrafter.USocketNet
 		{
 			StopCoroutine (AutoServerChannel());
 			ChannelJson channelJson = JsonSerializer.ToObject<ChannelJson>(jsonObject.ToString());
-			autoReturned = true;
+			autoChannelReturned = true;
 			autoChannelCallback(Returned.Success, channelJson);
 
-			foreach(ChannelUser ids in channelJson.users)
+			// Temporary
+			foreach(PeerJson peers in channelJson.users)
 			{
-				if(ids.identity != Identity)
+				if(peers.id != Identity)
 				{
-					Instances instances = new Instances (0, Vector3.zero, Vector3.zero);
-					instances.identity = ids.identity;
+					Instances instances = new Instances (0, Vector3.zero, Quaternion.identity);
+					instances.identity = peers.id;
 
 					Instantiating (instances, false);
 				}
 			}
+			// Temporary
 
 			DebugLog (Debugs.Log, "AutoChannelSuccess", "Successfully auto match a channel!");
 		}
@@ -633,14 +639,15 @@ namespace BytesCrafter.USocketNet
 
 			if (threadset.websocket.IsConnected)
 			{
-				SendEmit("leave", OnLeaveMatch);
+				string sendData = JsonUtility.ToJson(Identity);
+				SendEmit("leave", new JSONObject(sendData), OnLeaveMatch);
 				StartCoroutine (LeavingMatch());
 			}
 
 			else
 			{
 				leaveCallback (Returned.Error, new ChannelJson(String.Empty));
-				DebugLog(Debugs.Error, "LeaveMatchFailed", "You are not connected to the server!");
+				DebugLog(Debugs.Error, "LeaveMatchError", "You are not connected to the server!");
 			}
 		}
 
@@ -653,7 +660,7 @@ namespace BytesCrafter.USocketNet
 				if (leaveCallback != null)
 				{
 					leaveCallback(Returned.Failed, new ChannelJson(String.Empty));
-					DebugLog (Debugs.Error, "LeaveChannelFailed", "You are currently disconnected to the server!");
+					DebugLog (Debugs.Warn, "LeaveChannelFailed", "Server did not respond to leave event!");
 				}
 			}
 		}
@@ -673,60 +680,23 @@ namespace BytesCrafter.USocketNet
 
 		#endregion
 
-		#region INSTANTIATIONS - Done!
-
-		public void Instantiate(int prefabIndex, Vector3 position, Quaternion rotation)
-		{
-			Instances intance = new Instances(prefabIndex, position, rotation.eulerAngles);
-			string sendData = JsonUtility.ToJson(intance);
-			SendEmit("instance", new JSONObject(sendData), OnInstantiate);
-		}
-
-		private void OnInstantiate(JSONObject jsonObject)
-		{
-			Instances instances = JsonSerializer.ToObject<Instances>(jsonObject.ToString());
-
-			Instantiating (instances, true);
-
-			DebugLog(Debugs.Log, "StartedMatchSuccess", "You successfully started a match!");
-		}
-
-		private void OnInstancePeer(SocketIOEvent _eventArgs)
-		{
-			Instances instances = JsonUtility.FromJson<Instances>(_eventArgs.data.ToString());
-			Instantiating (instances, false);
-
-			DebugLog(Debugs.Log, "OnEvent: INSTANCE", "Instance from Peers!" + " Content: " + _eventArgs.data.ToString());
-		}
-
-		private void Instantiating(Instances instances, bool isLocalUser)
-		{
-			USocketView curUser = Instantiate(socketPrefabs[instances.prefabIndex], instances.pos.ToVector, instances.rot.ToQuaternion);
-			curUser.IsLocalUser = isLocalUser;
-			curUser.socketId = instances.identity;
-			curUser.uSocketNet = this;
-			socketIdentities.Add(curUser);
-		}
-			
-		#endregion
-
 		#region MatchMakingJoinedEvent - Ongoing!
 
-		private Action<ChannelUser> joinedCallback = null;
+		private Action<PeerJson> joinedCallback = null;
 
-		public void ListenMatchJoined(Action<ChannelUser> _joinedCallback)
+		public void ListenMatchJoined(Action<PeerJson> _joinedCallback)
 		{
 			joinedCallback = _joinedCallback;
 		}
 
 		private void OnChannelJoined(SocketIOEvent _eventArgs)
 		{
-			ChannelUser channelUser = JsonUtility.FromJson<ChannelUser>(_eventArgs.data.ToString());
-			DebugLog(Debugs.Log, "OnMatchEvent: JOINED", "ID: " + channelUser.identity + " STAT: " + channelUser.states);
+			PeerJson peerJson = JsonUtility.FromJson<PeerJson>(_eventArgs.data.ToString());
+			DebugLog(Debugs.Log, "OnMatchEvent: JOINED", "ID: " + peerJson.id + " POS: " + peerJson.pos);
 
 			if (joinedCallback != null)
 			{
-				joinedCallback(channelUser);
+				joinedCallback(peerJson);
 			}
 		}
 
@@ -734,238 +704,311 @@ namespace BytesCrafter.USocketNet
 
 		#region MatchMakingLeavedEvent - Ongoing!
 
-		private Action<ChannelUser> leavedCallback = null;
+		private Action<PeerJson> leavedCallback = null;
 
-		public void ListenMatchLeaved(Action<ChannelUser> _leavedCallback)
+		public void ListenMatchLeaved(Action<PeerJson> _leavedCallback)
 		{
 			leavedCallback = _leavedCallback;
 		}
 
 		private void OnRoomLeaved(SocketIOEvent _eventArgs)
 		{
-			ChannelUser channelUser = JsonUtility.FromJson<ChannelUser>(_eventArgs.data.ToString());
-			DebugLog(Debugs.Log, "OnMatchEvent: JOINED", "ID: " + channelUser.identity + " STAT: " + channelUser.states);
+			PeerJson peerJson = JsonUtility.FromJson<PeerJson>(_eventArgs.data.ToString());
+			DebugLog(Debugs.Log, "OnMatchEvent: LEAVED", "ID: " + peerJson.id + " POS: " + peerJson.pos);
 
-			if(socketIdentities.Exists(x => x.socketId == channelUser.identity))
+			if(socketIdentities.Exists(x => x.socketId == peerJson.id))
 			{
-				USocketView uView = socketIdentities.Find (x => x.socketId == channelUser.identity);
-				socketIdentities.RemoveAll (x => x.socketId == channelUser.identity);
+				USocketView uView = socketIdentities.Find (x => x.socketId == peerJson.id);
+				socketIdentities.RemoveAll (x => x.socketId == peerJson.id);
 				Destroy(uView.gameObject);
 			}
 
 			if (leavedCallback != null)
 			{
-				leavedCallback(channelUser);
+				leavedCallback(peerJson);
 			}
 		}
 
 		#endregion
 
+		#region INSTANTIATIONS - Done!
 
-
-
-
-
-
-
-
-
-		private void OnStateReceived(SocketIOEvent _eventArgs)
+		public void Instantiate(int prefabIndex, Vector3 position, Quaternion rotation)
 		{
-			if (_eventArgs.data.keys.Exists(x => x == "identity"))
+			Instances intance = new Instances(prefabIndex, position, rotation);
+			string sendData = JsonUtility.ToJson(intance);
+			SendEmit("instance", new JSONObject(sendData), OnInstantiate);
+		}
+
+		//Instantiate from LOCAL.
+		private void OnInstantiate(JSONObject jsonObject)
+		{
+			Instances instances = JsonSerializer.ToObject<Instances>(jsonObject.ToString());
+			Instantiating (instances, true);
+
+			DebugLog(Debugs.Log, "OnEvent: INSTANCE LOCAL", "ID: " + instances.identity + "POS: " + instances.pos);
+		}
+
+		//Instantiate froms SERVER.
+		private void OnInstancePeer(SocketIOEvent _eventArgs)
+		{
+			Instances instances = JsonUtility.FromJson<Instances>(_eventArgs.data.ToString());
+			Instantiating (instances, false);
+
+			DebugLog(Debugs.Log, "OnEvent: INSTANCE SERVER", "ID: " + instances.identity + "POS: " + instances.pos);
+		}
+
+		//Instantiating Mechanism.
+		private void Instantiating(Instances instances, bool isLocalUser)
+		{
+			USocketView curUser = Instantiate(socketPrefabs[instances.prefabIndex], VectorJson.ToVector3(instances.pos), VectorJson.ToQuaternion(instances.rot));
+			curUser.IsLocalUser = isLocalUser;
+			curUser.socketId = instances.identity;
+			curUser.uSocketNet = this;
+			socketIdentities.Add(curUser);
+		}
+
+		#endregion
+
+		#region SYNCHRONIZATION - Improvements!
+
+		private void SynchingOutbound()
+		{
+			socketIdentities.Remove (null);
+
+			if (socketIdentities.Count <= 0)
+				return;
+
+			if (!socketIdentities.Exists (x => x.socketId == Identity))
+				return;
+
+			bindings.sendTimer += Time.deltaTime;
+
+			if (bindings.sendTimer >= (1f / bindings.mainSendRate))
 			{
-				string identity = "";
-				_eventArgs.data.ToDictionary().TryGetValue("identity", out identity);
+				//Send all the local socket state to server.
+				USocketView usocket = socketIdentities.Find (x => x.socketId == Identity && x.IsLocalUser);
 
-				if (socketIdentities.Exists(x => x.socketId == identity && x.IsLocalUser == false))
+				//Create a minified string version of syncjson.
+				SyncJson syncJson = new SyncJson ();
+				syncJson.identity = Identity;
+				syncJson.states.AddRange (new string[4] { "f", "f", "f", "f" }); //pos, rot, sca, sta
+				//On downlink, if string state is equal to f, dont do anything.
+
+				//Check positions.
+				if (usocket.position.synchronize)
 				{
-					USocketView sockId = socketIdentities.Find(x => x.socketId == identity);
+					//usocket.position.sendTimer += Time.deltaTime;
 
-					StateJson stateJson = JsonUtility.FromJson<StateJson>(_eventArgs.data.ToString());
-					int currentIndex = 4;
+					//if (usocket.position.sendTimer >= (1f / usocket.position.sendRate))
+					//{
+						string newVstate = VectorJson.ToVectorStr (usocket.transform.position);
 
-					if (sockId.position.synchronize && stateJson.states[0].Equals("t"))
-					{
-						sockId.targetPos = TVector.ToVector3(stateJson.states[currentIndex]);
-						currentIndex += 1;
-					}
-
-					if (sockId.rotation.synchronize && stateJson.states[1].Equals("t"))
-					{
-						sockId.targetRot = TVector.ToVector3(stateJson.states[currentIndex]);
-						currentIndex += 1;
-					}
-
-					if (sockId.scale.synchronize && stateJson.states[2].Equals("t"))
-					{
-						sockId.targetSize = TVector.ToVector3(stateJson.states[currentIndex]);
-						currentIndex += 1;
-					}
-
-					if (sockId.states.synchronize && stateJson.states[3].Equals("t"))
-					{
-						sockId.states.syncValue = new List<string>();
-
-						for (int i = currentIndex; i < stateJson.states.Count; i++)
+						if(!newVstate.Equals(usocket.position.prevVstring))
 						{
-							sockId.states.syncValue.Add(stateJson.states[i]);
+							syncJson.states [0] = "t";
+							syncJson.states.Add (newVstate);
+
+							usocket.position.prevVstring = newVstate;
 						}
-					}
+
+					//	usocket.position.sendTimer = 0f;
+					//}
+				}			
+
+				//Check rotation.
+				if (usocket.rotation.synchronize)
+				{
+					//usocket.rotation.sendTimer += Time.deltaTime;
+
+					//if (usocket.rotation.sendTimer >= (1f / usocket.rotation.sendRate))
+					//{
+						string newVstate = VectorJson.ToVectorStr (usocket.transform.rotation.eulerAngles);
+
+						if(!newVstate.Equals(usocket.rotation.prevVstring))
+						{
+							syncJson.states [1] = "t";
+							syncJson.states.Add (newVstate);
+
+							usocket.rotation.prevVstring = newVstate;
+						}
+
+					//	usocket.rotation.sendTimer = 0f;
+					//}
+				}	
+
+				//Check scale.
+				if (usocket.scale.synchronize)
+				{
+					//usocket.scale.sendTimer += Time.deltaTime;
+
+					//if (usocket.scale.sendTimer >= (1f / usocket.scale.sendRate))
+					//{
+						string newVstate = VectorJson.ToVectorStr (usocket.transform.lossyScale);
+
+						if(!newVstate.Equals(usocket.scale.prevVstring))
+						{
+							syncJson.states [2] = "t";
+							syncJson.states.Add (newVstate);
+
+							usocket.scale.prevVstring = newVstate;
+						}
+
+					//	usocket.scale.sendTimer = 0f;
+					//}
 				}
+
+				//Check states.
+				if (usocket.states.synchronize)
+				{
+					//usocket.states.sendTimer += Time.deltaTime;
+
+					//if (usocket.states.sendTimer >= (1f / usocket.states.sendRate))
+					//{
+						string newCstate = string.Join("~", usocket.states.syncValue.ToArray());
+
+						if(!newCstate.Equals(usocket.states.prevVstring))
+						{
+							syncJson.states [3] = "t";
+							syncJson.states.Add (newCstate);
+
+							usocket.states.prevVstring = newCstate;
+						}
+
+					//	usocket.states.sendTimer = 0f;
+					//}
+				}
+
+				if(syncJson.states.Count > 4)
+				{
+					syncJson.syncLocal = true;
+				}
+
+				else
+				{
+					syncJson.syncLocal = false;
+				}
+
+				string sendData = JsonUtility.ToJson (syncJson);
+				SendEmit ("transtate", new JSONObject (sendData), SynchingSockets);
+
+				bindings.sendTimer = 0f;
 			}
 		}
 
-		#region SYNCHRONIZATION - Ongoing!
-
-		private void Synching()
+		//Synchronized from callback, waiting to process targets.
+		private void SynchingSockets(JSONObject jsonObject)
 		{
-			socketIdentities.ForEach ((USocketView local) => 
+			//Debug.Log (jsonObject.ToString());
+			ChanUsers chanUsers = JsonSerializer.ToObject<ChanUsers>(jsonObject.ToString());
+
+			chanUsers.users.ForEach ((PeerJson peerJson) => 
 				{
-					if (local == null)
+					if (socketIdentities.Exists(x => x.socketId == peerJson.id && x.IsLocalUser == false))
 					{
-						socketIdentities.Remove(local);
+						USocketView sockId = socketIdentities.Find(x => x.socketId == peerJson.id && x.IsLocalUser == false);
+
+						sockId.targetPos = VectorJson.ToVector3(peerJson.pos);
+
+						sockId.targetRot = VectorJson.ToVector3(peerJson.rot);
+
+						sockId.targetSize = VectorJson.ToVector3(peerJson.sca);
+
+						sockId.targetState = new List<string>();
+						sockId.targetState.AddRange(peerJson.sta.Split('~'));
+					}
+				});
+		}
+
+		private void SynchingInbound()
+		{
+			if (socketIdentities.Count <= 0)
+				return;
+
+			//Send all the local socket state to server.
+			USocketView usocket = socketIdentities.Find (x => x.socketId == Identity);
+
+			socketIdentities.ForEach ((USocketView peers) => 
+				{
+					//Check if entry is null, just remove it.
+					if (peers == null)
+					{
+						socketIdentities.Remove(peers);
 						return;
 					};
 
-					if (local.socketId == string.Empty)
+					//Check if socket id is empty, then remove it.
+					if (peers.socketId == string.Empty)
 						return;
 
-					if(local.IsLocalUser) //LocalSync on Uplink
+					//Check if local player dont sync.
+					if (peers.IsLocalUser)
+						return;
+
+					//LocalSync on DownLink
+					if (peers.position.synchronize)
 					{
-						//Send data as transform.
-						StateJson stateJson = new StateJson ();
-						stateJson.states.AddRange (new string[4] { "f", "f", "f", "f" }); //pos, rot, sca, sta
-
-						if (local.position.synchronize)
+						if (peers.position.syncMode == SocketSync.Realtime)
 						{
-							local.position.sendTimer += Time.deltaTime;
-
-							if (local.position.sendTimer >= (1f / local.position.sendRate))
-							{
-								stateJson.states [0] = "t";
-								stateJson.states.Add (TVector.ToVectorStr (local.transform.position));
-								local.scale.sendTimer = 0f;
-							}
+							peers.transform.position = peers.targetPos;
 						}
 
-						if (local.rotation.synchronize)
+						else if (peers.position.syncMode == SocketSync.AdjustToward)
 						{
-							local.rotation.sendTimer += Time.deltaTime;
-
-							if (local.rotation.sendTimer >= (1f / local.rotation.sendRate))
-							{
-								stateJson.states [1] = "t";
-								stateJson.states.Add (TVector.ToVectorStr (local.transform.rotation.eulerAngles));
-								local.rotation.sendTimer = 0f;
-							}
+							float pDamp = Vector3.Distance(peers.transform.position, peers.targetPos);
+							peers.transform.position = Vector3.MoveTowards(peers.transform.position, peers.targetPos, (pDamp + peers.posInterpolation) * peers.posSpeed * Time.deltaTime);
 						}
 
-						if (local.scale.synchronize)
+						else if (peers.position.syncMode == SocketSync.LerpValues)
 						{
-							local.scale.sendTimer += Time.deltaTime;
-
-							if (local.scale.sendTimer >= (1f / local.scale.sendRate))
-							{
-								stateJson.states [2] = "t";
-								stateJson.states.Add (TVector.ToVectorStr (local.transform.lossyScale));
-								local.scale.sendTimer = 0f;
-							}
+							float pDamp = Vector3.Distance(peers.transform.position, peers.targetPos);
+							peers.transform.position = Vector3.Lerp(peers.transform.position, peers.targetPos, (pDamp + peers.posInterpolation) * peers.posSpeed * Time.deltaTime);
 						}
-
-						if (local.states.synchronize)
-						{
-							local.states.sendTimer += Time.deltaTime;
-
-							if (local.states.sendTimer >= (1f / local.states.sendRate))
-							{
-								stateJson.states [3] = "t";
-								stateJson.states.AddRange (local.states.syncValue.ToArray ());
-								local.states.sendTimer = 0f;
-							}
-						}
-
-						//Note: First check if values is same then dont send.
-						string sendData = JsonUtility.ToJson (stateJson);
-						SendEmit ("transtate", new JSONObject (sendData));
 					}
 
-					else //LocalSync on DownLink
+					if (peers.rotation.synchronize)
 					{
-						if (local.position.synchronize)
+						if (peers.rotation.syncMode == SocketSync.Realtime)
 						{
-							if (local.position.syncMode == SocketSync.Realtime)
-							{
-								local.transform.position = local.targetPos;
-							}
-
-							else if (local.position.syncMode == SocketSync.AdjustToward)
-							{
-								float pDamp = Vector3.Distance(local.transform.position, local.targetPos);
-								local.transform.position = Vector3.MoveTowards(local.transform.position, local.targetPos, (pDamp + local.posInterpolation) * local.posSpeed * Time.deltaTime);
-							}
-
-							else if (local.position.syncMode == SocketSync.LerpValues)
-							{
-								float pDamp = Vector3.Distance(local.transform.position, local.targetPos);
-								local.transform.position = Vector3.Lerp(local.transform.position, local.targetPos, (pDamp + local.posInterpolation) * local.posSpeed * Time.deltaTime);
-							}
+							peers.transform.rotation = Quaternion.Euler(peers.targetRot);
 						}
 
-						if (local.rotation.synchronize)
+						else if (peers.rotation.syncMode == SocketSync.AdjustToward)
 						{
-							if (local.rotation.syncMode == SocketSync.Realtime)
-							{
-								local.transform.rotation = Quaternion.Euler(local.targetRot);
-							}
-
-							else if (local.rotation.syncMode == SocketSync.AdjustToward)
-							{
-								float rDamp = Quaternion.Angle(local.transform.rotation, Quaternion.Euler(local.targetRot));
-								local.transform.rotation = Quaternion.RotateTowards(local.transform.rotation, Quaternion.Euler(local.targetRot), (rDamp + local.rotInterpolation) * local.rotSpeed * Time.deltaTime);
-							}
-
-							else if (local.rotation.syncMode == SocketSync.LerpValues)
-							{
-								float rDamp = Quaternion.Angle(local.transform.rotation, Quaternion.Euler(local.targetRot));
-								local.transform.rotation = Quaternion.Lerp(local.transform.rotation, Quaternion.Euler(local.targetRot), (rDamp + local.rotInterpolation) * local.rotSpeed * Time.deltaTime);
-							}
+							float rDamp = Quaternion.Angle(peers.transform.rotation, Quaternion.Euler(peers.targetRot));
+							peers.transform.rotation = Quaternion.RotateTowards(peers.transform.rotation, Quaternion.Euler(peers.targetRot), (rDamp + peers.rotInterpolation) * peers.rotSpeed * Time.deltaTime);
 						}
 
-						if (local.scale.synchronize)
+						else if (peers.rotation.syncMode == SocketSync.LerpValues)
 						{
-							if (local.scale.syncMode == SocketSync.Realtime)
-							{
-								local.transform.localScale = local.targetSize;
-							}
+							float rDamp = Quaternion.Angle(peers.transform.rotation, Quaternion.Euler(peers.targetRot));
+							peers.transform.rotation = Quaternion.Lerp(peers.transform.rotation, Quaternion.Euler(peers.targetRot), (rDamp + peers.rotInterpolation) * peers.rotSpeed * Time.deltaTime);
+						}
+					}
 
-							else if (local.scale.syncMode == SocketSync.AdjustToward)
-							{
-								float sDamp = Vector3.Distance(local.transform.localScale, local.targetSize);
-								local.transform.localScale = Vector3.MoveTowards(local.transform.localScale, local.targetSize, (sDamp + local.sizeInterpolation) * local.sizeSpeed * Time.deltaTime);
-							}
+					if (peers.scale.synchronize)
+					{
+						if (peers.scale.syncMode == SocketSync.Realtime)
+						{
+							peers.transform.localScale = peers.targetSize;
+						}
 
-							else if (local.position.syncMode == SocketSync.LerpValues)
-							{
-								float sDamp = Vector3.Distance(local.transform.localScale, local.targetSize);
-								local.transform.localScale = Vector3.Lerp(local.transform.localScale, local.targetSize, (sDamp + local.sizeInterpolation) * local.sizeSpeed * Time.deltaTime);
-							}
+						else if (peers.scale.syncMode == SocketSync.AdjustToward)
+						{
+							float sDamp = Vector3.Distance(peers.transform.localScale, peers.targetSize);
+							peers.transform.localScale = Vector3.MoveTowards(peers.transform.localScale, peers.targetSize, (sDamp + peers.sizeInterpolation) * peers.sizeSpeed * Time.deltaTime);
+						}
+
+						else if (peers.position.syncMode == SocketSync.LerpValues)
+						{
+							float sDamp = Vector3.Distance(peers.transform.localScale, peers.targetSize);
+							peers.transform.localScale = Vector3.Lerp(peers.transform.localScale, peers.targetSize, (sDamp + peers.sizeInterpolation) * peers.sizeSpeed * Time.deltaTime);
 						}
 					}
 				});
 		}
 
 		#endregion
-
-
-
-
-
-
-
-
-
-
-
 
 		#region UnityInterface - Done!
 
@@ -1008,7 +1051,7 @@ namespace BytesCrafter.USocketNet
 			CallbackOn("messaged", OnMessageReceived);
 			CallbackOn("joined", OnChannelJoined);
 			CallbackOn("instanced", OnInstancePeer);
-			CallbackOn("transtated", OnStateReceived);
+			//CallbackOn("transtated", OnStateReceived);
 			CallbackOn("leaved", OnRoomLeaved);
 			//ADD MORE HERE!
 		}
@@ -1057,8 +1100,9 @@ namespace BytesCrafter.USocketNet
 
 			if (threadset.websocket.IsConnected)
 			{
+				SynchingOutbound ();
+				SynchingInbound ();
 				Pinging();
-				Synching ();
 			}
 
 			if (threadset.IsInitialized)

@@ -37,14 +37,20 @@ namespace BytesCrafter.USocketNet
 	[System.Serializable]
 	public class Bindings
 	{
-		[Header("AUTHENTICATION")]
+		[Header("SERVER SETTINGS")]
 		public string authenKey = "SeCuReHaSkEy123";
 		public string serverUrl = "localhost";
 		public string serverPort = "3000";
 
-		[Header("SETTINGS")]
+		[Header("CLIENT SETTINGS")]
 		[Range(0f, 1f)] public float connectDelay = 0.01f;
 		[Range(1f, 10f)] public float pingFrequency = 1f;
+
+		//Rate of sync per seconds timespan.
+		[Range(1f, 30f)] public float mainSendRate = 30f;
+		[HideInInspector] public float sendTimer = 0f;
+
+		public bool debugOnLog = true;
 		public bool runOnBackground = true;
 	}
 
@@ -176,10 +182,10 @@ namespace BytesCrafter.USocketNet
 	{
 		public string identity = string.Empty;
 		public string cname = string.Empty;
-		public string variant = "Default";
+		public string variant = string.Empty;
 		public int maxconnect = 0;
 		public string created = string.Empty;
-		public List<ChannelUser> users;
+		public List<PeerJson> users;
 
 		public ChannelJson(string _identity)
 		{
@@ -198,10 +204,19 @@ namespace BytesCrafter.USocketNet
 	}
 
 	[System.Serializable]
-	public class ChannelUser
+	public class PeerJson
 	{
-		public string identity = string.Empty;
-		public List<string> states = new List<string>();
+		public string id = string.Empty;
+		public string pos = string.Empty;
+		public string rot = string.Empty;
+		public string sca = string.Empty;
+		public string sta = string.Empty;
+	}
+
+	[System.Serializable]
+	public class ChanUsers
+	{
+		public List<PeerJson> users = new List<PeerJson>();
 	}
 
 	#endregion
@@ -214,32 +229,25 @@ namespace BytesCrafter.USocketNet
 	}
 
 	[System.Serializable]
-	public class TransAxis
+	public class VectorOption
 	{
+		//Synchronized or bypass this data!
 		public bool synchronize = true;
+
+		//Rate of sync per seconds timespan.
 		[Range(1f, 30f)] public float sendRate = 15f;
+
+		//sendTimer for synching looper.
 		[HideInInspector] public float sendTimer = 0f;
+
+		[HideInInspector] public string prevVstring = string.Empty;
+
+		//Current sync mode to follow.
 		public SocketSync syncMode = SocketSync.Realtime;
 	}
 
 	[System.Serializable]
-	public class StateList
-	{
-		public bool synchronize = true;
-		[Range(1f, 30f)] public float sendRate = 1f;
-		[HideInInspector] public float sendTimer = 0f;
-		public List<string> syncValue = new List<string>();
-	}
-
-	[System.Serializable]
-	public class StateJson
-	{
-		public string identity = string.Empty;
-		public List<string> states = new List<string>();
-	}
-
-	[System.Serializable]
-	public class TVector
+	public class VectorJson
 	{
 		public float x = 0f;
 		public float y = 0f;
@@ -270,52 +278,51 @@ namespace BytesCrafter.USocketNet
 			}
 		}
 
-		public string ToVectorStr()
+		public static string ToQuaternionStr(Quaternion rotation)
 		{
-			return x + "," + y + "," + z;
+			return rotation.eulerAngles.x + "~" + rotation.eulerAngles.y + "~" + rotation.eulerAngles.z;
 		}
 
-		public void FromVectorStr(string vectorStr)
+		public static Quaternion ToQuaternion(string vectorStr)
 		{
-			string[] vectorValues = vectorStr.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+			string[] vectorValues = vectorStr.Split(new string[] { "~" }, StringSplitOptions.RemoveEmptyEntries);
 
 			if (vectorValues.Length == 3)
 			{
-				x = Convert.ToSingle(vectorValues[0]);
-				y = Convert.ToSingle(vectorValues[1]);
-				z = Convert.ToSingle(vectorValues[2]);
+				Vector3 eulerValue = new Vector3
+					(
+						Convert.ToSingle(vectorValues[0]),
+						Convert.ToSingle(vectorValues[1]),
+						Convert.ToSingle(vectorValues[2])
+					);
+
+				return Quaternion.Euler(eulerValue);
 			}
-		}
 
-		public void FromVector3(Vector3 vector3)
-		{
-			x = vector3.x;
-			y = vector3.y;
-			z = vector3.z;
-		}
-
-		public void FromQuaternion(Quaternion quaternion)
-		{
-			x = quaternion.eulerAngles.x;
-			y = quaternion.eulerAngles.y;
-			z = quaternion.eulerAngles.z;
-		}
-
-		public Vector3 ToVector
-		{
-			get
+			else
 			{
-				return new Vector3(x, y, z);
+				return Quaternion.identity;
 			}
 		}
+	}
 
-		public Quaternion ToQuaternion
-		{
-			get
-			{
-				return Quaternion.Euler(new Vector3(x, y, z));
-			}
-		}
+	[System.Serializable]
+	public class StateOption
+	{
+		public bool synchronize = true;
+		[Range(1f, 30f)] public float sendRate = 1f;
+		[HideInInspector] public float sendTimer = 0f;
+		[HideInInspector] public string prevVstring = string.Empty;
+
+		public List<string> syncValue = new List<string>();
+	}
+
+	[System.Serializable]
+	public class SyncJson
+	{
+		public string identity = string.Empty;
+		public bool syncLocal = false;
+		public List<string> states = new List<string>();
 	}
 
 	#endregion
@@ -324,16 +331,26 @@ namespace BytesCrafter.USocketNet
 	[System.Serializable]
 	public class Instances
 	{
+		//Socket Identity of this client. by Server.
 		public string identity = string.Empty;
-		public int prefabIndex = 0;
-		public TVector pos = new TVector();
-		public TVector rot = new TVector();
 
-		public Instances(int index, Vector3 position, Vector3 rotation)
+		//Object instance id of the client. by Client.
+		//public string instance = string.Empty;
+
+		//What prefab to instantiate from the list. by Client.
+		public int prefabIndex = 0;
+
+		//Initial instance information from the prefab. by Client.
+		public string pos = string.Empty;
+		public string rot = string.Empty;
+		//public VectorJson sca = new VectorJson();
+		//public VectorJson sta = new VectorJson();
+
+		public Instances(int index, Vector3 position, Quaternion rotation)
 		{
 			prefabIndex = index;
-			pos.FromVector3(position);
-			rot.FromVector3(rotation);
+			pos = VectorJson.ToVectorStr(position);
+			rot = VectorJson.ToQuaternionStr(rotation);
 		}
 	}
 

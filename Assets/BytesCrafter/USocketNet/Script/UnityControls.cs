@@ -63,6 +63,7 @@ public class UnityControls : MonoBehaviour//, SocketInterface
 	public Text pingSocket = null; void Update()
 	{
 		pingSocket.text = netScript.PingCount + " ms";
+		//Ping ASD = new Ping ();
 	}
 
 	void Awake()
@@ -89,7 +90,7 @@ public class UnityControls : MonoBehaviour//, SocketInterface
 		}
 	}
 
-	private void ListenOnMatchJoined(ChannelUser channelUser)
+	private void ListenOnMatchJoined(PeerJson peerJson)
 	{
 
 	}

@@ -263,9 +263,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9287d064179bf5b4490460e89f8ce1e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socketId: 
   posSpeed: 7.5
   rotSpeed: 75
-  jumpHeight: 4.9
+  jumpHeight: 12
   camObject: {fileID: 20578602614342966}
   rigObject: {fileID: 54990454498827192}
   socketView: {fileID: 114799573014960534}
@@ -280,21 +281,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34b76cf9b4dba7b4fa25edb21e2851dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sendRate: 30
   socketId: 
   IsLocalUser: 0
-  rigidbody: {fileID: 0}
   position:
     synchronize: 1
+    sendRate: 1
+    sendTimer: 0
+    prevVstring: 
     syncMode: 0
   rotation:
     synchronize: 1
+    sendRate: 1
+    sendTimer: 0
+    prevVstring: 
     syncMode: 0
   scale:
     synchronize: 1
+    sendRate: 1
+    sendTimer: 0
+    prevVstring: 
     syncMode: 0
   states:
     synchronize: 1
+    sendRate: 1
+    sendTimer: 0
+    prevVstring: 
     syncValue: []
   targetPos: {x: 0, y: 0, z: 0}
   posInterpolation: 3
@@ -305,6 +316,7 @@ MonoBehaviour:
   targetSize: {x: 0, y: 0, z: 0}
   sizeInterpolation: 3
   sizeSpeed: 3
+  targetState: []
 --- !u!136 &136161943698884440
 CapsuleCollider:
   m_ObjectHideFlags: 1

@@ -4,10 +4,9 @@ using System.Collections.Generic;
 
 namespace BytesCrafter.USocketNet
 {
-	[RequireComponent(typeof(Rigidbody))]
 	public class USocketView : MonoBehaviour
 	{
-		#region Parameters
+		#region Required Reference
 
 		private USocketNet socketNet = null;
 		public USocketNet uSocketNet
@@ -21,15 +20,22 @@ namespace BytesCrafter.USocketNet
 			}
 		}
 
+		#endregion
+
+		#region Reaction Parameters
+
 		[HideInInspector] public string socketId = string.Empty;
 		[HideInInspector] public bool IsLocalUser = false;
-		[HideInInspector] public Rigidbody rigidbody = null;
 
-		[Header("MAIN TRANSFORM")]
-		public TransAxis position = new TransAxis();
-		public TransAxis rotation = new TransAxis();
-		public TransAxis scale = new TransAxis();
-		public StateList states = new StateList();
+		#endregion
+
+		#region Parameters
+
+		[Header("SYNCHRONIZATION")]
+		public VectorOption position = new VectorOption();
+		public VectorOption rotation = new VectorOption();
+		public VectorOption scale = new VectorOption();
+		public StateOption states = new StateOption();
 
 		[Header("POSITION STATUS")]
 		public Vector3 targetPos = Vector3.zero;
@@ -46,6 +52,9 @@ namespace BytesCrafter.USocketNet
 		public float sizeInterpolation = 3f;
 		public float sizeSpeed = 3f;
 
+		[Header("STATE STATUS")]
+		public List<string> targetState = new List<string> ();
+
 		#endregion
 
 		void Awake()
@@ -53,23 +62,8 @@ namespace BytesCrafter.USocketNet
 			targetPos = transform.position;
 			targetRot = transform.rotation.eulerAngles;
 			targetSize = transform.localScale;
-
-			rigidbody = GetComponent<Rigidbody>();
 		}
 
-		void Update()
-		{
-			if (IsLocalUser)
-			{
-				rigidbody.useGravity = true;
-				//rigidbody.isKinematic = false;
 
-			}
-			else
-			{
-				//rigidbody.isKinematic = true;
-				rigidbody.useGravity = false;
-			}
-		}
 	}
 }
