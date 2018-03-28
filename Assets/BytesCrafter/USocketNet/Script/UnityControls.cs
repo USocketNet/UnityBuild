@@ -162,6 +162,7 @@ public class UnityControls : MonoBehaviour//, SocketInterface
 				{
 					ChangeCanvas(2);
 					netScript.Instantiate (0, spawnPoint.position, spawnPoint.rotation);
+					netScript.Instantiate (1, spawnPoint.position, spawnPoint.rotation);
 				}
 			});
 	}

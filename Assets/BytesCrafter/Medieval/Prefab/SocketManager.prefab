@@ -3164,7 +3164,7 @@ MonoBehaviour:
     authenKey: SeCuReHaSkEy123
     serverUrl: www.bytes-crafter.com
     serverPort: 3000
-    connectDelay: 0.1
+    connectDelay: 0.2
     pingFrequency: 1
     mainSendRate: 30
     sendTimer: 0
@@ -3172,6 +3172,10 @@ MonoBehaviour:
     runOnBackground: 1
   socketPrefabs:
   - {fileID: 114799573014960534, guid: a239ee830ab412b4698127fcf7753b24, type: 2}
+  - {fileID: 114983464036886630, guid: 3d0fbbec1b2f75f4485dc23a20e7b48a, type: 2}
+  socketIdentities: []
+  localSockets: []
+  Subscribed: 0
 --- !u!114 &114402936543366976
 MonoBehaviour:
   m_ObjectHideFlags: 1

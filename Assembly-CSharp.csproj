@@ -63,6 +63,7 @@
      <Compile Include="Assets\BytesCrafter\Prototype\Script\GunScript.cs" />
      <Compile Include="Assets\BytesCrafter\Prototype\Script\ObjectDestroyer.cs" />
      <Compile Include="Assets\BytesCrafter\Prototype\Script\PlayerController.cs" />
+     <Compile Include="Assets\BytesCrafter\Simulation\CharChanger.cs" />
      <Compile Include="Assets\BytesCrafter\Simulation\SendScript.cs" />
      <Compile Include="Assets\BytesCrafter\Simulation\SocketIO\Scripts\SocketIO\SocketIOComponent.cs" />
      <Compile Include="Assets\BytesCrafter\Simulation\SocketIO\Scripts\Test\TestSocketIO.cs" />
@@ -299,7 +300,6 @@
      <None Include="Assets\ProCore\ProBuilder\Shader\pb_FacePicker.shader" />
      <None Include="Assets\ProCore\Polybrush\Shader\Example\z_UnlitTextureBlendAndSnow.shader" />
      <None Include="Assets\PostProcessing\Editor Resources\UI\Trackball.shader" />
-     <None Include="Assets\BytesCrafter\Simulation\SocketIO\Readme.txt" />
      <None Include="Assets\ProCore\Polybrush\Shader\z_StandardVertexColor.shader" />
      <None Include="Assets\PostProcessing\Resources\Shaders\Bloom.cginc" />
      <None Include="Assets\ProCore\Polybrush\Shader\Noise.cginc" />

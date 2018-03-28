@@ -43,7 +43,7 @@ namespace BytesCrafter.USocketNet
 		public string serverPort = "3000";
 
 		[Header("CLIENT SETTINGS")]
-		[Range(0f, 1f)] public float connectDelay = 0.01f;
+		[Range(0f, 1f)] public float connectDelay = 0.49f;
 		[Range(1f, 10f)] public float pingFrequency = 1f;
 
 		//Rate of sync per seconds timespan.
@@ -204,20 +204,30 @@ namespace BytesCrafter.USocketNet
 	}
 
 	[System.Serializable]
+	public class ChanUsers
+	{
+		public List<PeerJson> users = new List<PeerJson>();
+	}
+
+	[System.Serializable]
 	public class PeerJson
 	{
 		public string id = string.Empty;
+		public List<ObjJson> obj = new List<ObjJson>();
+	}
+
+	[System.Serializable]
+	public class ObjJson
+	{
+		public string id = string.Empty;
+		public int pfb = 0;
 		public string pos = string.Empty;
 		public string rot = string.Empty;
 		public string sca = string.Empty;
 		public string sta = string.Empty;
 	}
 
-	[System.Serializable]
-	public class ChanUsers
-	{
-		public List<PeerJson> users = new List<PeerJson>();
-	}
+
 
 	#endregion
 
@@ -236,6 +246,9 @@ namespace BytesCrafter.USocketNet
 
 		//Rate of sync per seconds timespan.
 		[Range(1f, 30f)] public float sendRate = 15f;
+
+		public float interpolation = 3f;
+		public float speed = 3f;
 
 		//sendTimer for synching looper.
 		[HideInInspector] public float sendTimer = 0f;
@@ -318,10 +331,20 @@ namespace BytesCrafter.USocketNet
 	}
 
 	[System.Serializable]
+	public class SyncJsons
+	{
+		//public string identity = string.Empty;
+		public List<SyncJson> obj = new List<SyncJson>();
+
+		//public SyncJsons(string _identity)
+		//{
+		//	identity = _identity;
+		//}
+	}
+
+	[System.Serializable]
 	public class SyncJson
 	{
-		public string identity = string.Empty;
-		public bool syncLocal = false;
 		public List<string> states = new List<string>();
 	}
 
@@ -335,10 +358,10 @@ namespace BytesCrafter.USocketNet
 		public string identity = string.Empty;
 
 		//Object instance id of the client. by Client.
-		//public string instance = string.Empty;
+		public string itc = string.Empty;
 
 		//What prefab to instantiate from the list. by Client.
-		public int prefabIndex = 0;
+		public int pfb = 0;
 
 		//Initial instance information from the prefab. by Client.
 		public string pos = string.Empty;
@@ -346,9 +369,9 @@ namespace BytesCrafter.USocketNet
 		//public VectorJson sca = new VectorJson();
 		//public VectorJson sta = new VectorJson();
 
-		public Instances(int index, Vector3 position, Quaternion rotation)
+		public Instances(string instance, int prefab, Vector3 position, Quaternion rotation)
 		{
-			prefabIndex = index;
+			itc = instance; pfb = prefab;
 			pos = VectorJson.ToVectorStr(position);
 			rot = VectorJson.ToQuaternionStr(rotation);
 		}
