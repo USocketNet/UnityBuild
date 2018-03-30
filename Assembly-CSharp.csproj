@@ -68,6 +68,7 @@
      <Compile Include="Assets\BytesCrafter\Simulation\SocketIO\Scripts\SocketIO\SocketIOComponent.cs" />
      <Compile Include="Assets\BytesCrafter\Simulation\SocketIO\Scripts\Test\TestSocketIO.cs" />
      <Compile Include="Assets\BytesCrafter\Simulation\TestScript.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketData.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketLib\JSONObject\JSONObject.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketLib\JSONObject\JSONTemplates.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketLib\JSONObject\VectorTemplates.cs" />

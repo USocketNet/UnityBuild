@@ -64,6 +64,8 @@ public class UnityControls : MonoBehaviour//, SocketInterface
 	{
 		pingSocket.text = netScript.PingCount + " ms";
 		//Ping ASD = new Ping ();
+
+		Updates ();
 	}
 
 	void Awake()
@@ -92,8 +94,22 @@ public class UnityControls : MonoBehaviour//, SocketInterface
 
 	private void ListenOnMatchJoined(PeerJson peerJson)
 	{
-
+		
 	}
+	float timer = 0f;
+
+	void Updates ()
+	{
+		timer += Time.deltaTime;
+
+		if(timer > 2f)
+			return;
+
+		if(netScript.localSockets.Count < 10)
+			return;
+	}
+
+
 
 	//Connecting to server with callbacks.
 	public void ConnectToServer()
@@ -156,13 +172,12 @@ public class UnityControls : MonoBehaviour//, SocketInterface
 
 	public void AutoJoinServerRoom()
 	{
-		netScript.AutoJoinChannel ("Default", 100, (Returned returned, ChannelJson channelJson) =>
+		netScript.AutoJoinChannel ("Default", 7, (Returned returned, ChannelJson channelJson) =>
 			{
 				if(returned == Returned.Success)
 				{
 					ChangeCanvas(2);
-					netScript.Instantiate (0, spawnPoint.position, spawnPoint.rotation);
-					netScript.Instantiate (1, spawnPoint.position, spawnPoint.rotation);
+					netScript.Instantiate (0, Vector3.zero, Quaternion.identity, null); // spawnPoint.position, spawnPoint.rotation);
 				}
 			});
 	}
@@ -174,7 +189,7 @@ public class UnityControls : MonoBehaviour//, SocketInterface
 				if(returned == Returned.Success)
 				{
 					ChangeCanvas(2);
-					netScript.Instantiate (0, spawnPoint.position, spawnPoint.rotation);
+					netScript.Instantiate (0, Vector3.zero, Quaternion.identity, null);
 				}
 			});
 	}
@@ -186,7 +201,7 @@ public class UnityControls : MonoBehaviour//, SocketInterface
 				if(returned == Returned.Success)
 				{
 					ChangeCanvas(2);
-					netScript.Instantiate (0, spawnPoint.position, spawnPoint.rotation);
+					netScript.Instantiate (0, Vector3.zero, Quaternion.identity, null);
 				}
 			});
 	}

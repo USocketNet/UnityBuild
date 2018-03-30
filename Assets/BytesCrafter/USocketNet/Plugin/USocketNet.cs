@@ -21,8 +21,6 @@ namespace BytesCrafter.USocketNet
 		[Header("INSTANCE PREFAB")]
 		public List<USocketView> socketPrefabs = new List<USocketView>();
 		[HideInInspector]
-		public List<USocketView> socketIdentities = new List<USocketView>();
-		[HideInInspector]
 		public List<USocketView> localSockets = new List<USocketView> ();
 
 		#endregion
@@ -689,10 +687,10 @@ namespace BytesCrafter.USocketNet
 			leaveCallback (Returned.Success, new ChannelJson(String.Empty));
 			Subscribed = false;
 
-			socketIdentities.ForEach ((USocketView sockView) => {
+			USocket.Instance.socketIdentities.ForEach ((USocketView sockView) => {
 				Destroy(sockView.gameObject);
 			});
-			socketIdentities = new List<USocketView> ();
+			USocket.Instance.socketIdentities = new List<USocketView> ();
 
 			localSockets.ForEach ((USocketView sockView) => {
 				Destroy(sockView.gameObject);
@@ -740,16 +738,16 @@ namespace BytesCrafter.USocketNet
 		{
 			PeerJson peerJson = JsonUtility.FromJson<PeerJson>(_eventArgs.data.ToString());
 
-			if(socketIdentities.Exists(x => x.Identity == peerJson.id))
+			if(USocket.Instance.socketIdentities.Exists(x => x.Identity == peerJson.id))
 			{
 				//all instance of the current peer!
-				socketIdentities.ForEach ((USocketView obj) => {
+				USocket.Instance.socketIdentities.ForEach ((USocketView obj) => {
 					if(obj.Identity == peerJson.id)
 					{
 						Destroy(obj.gameObject);
 					}
 				});
-				socketIdentities.RemoveAll (x => x == null);
+				USocket.Instance.socketIdentities.RemoveAll (x => x == null);
 			}
 
 			if (leavedCallback != null)
@@ -764,19 +762,54 @@ namespace BytesCrafter.USocketNet
 
 		#region INSTANTIATIONS - Done!
 
-		public void Instantiate(int prefabIndex, Vector3 position, Quaternion rotation)
+		private Action<Returned> instanceCallback = null;
+		private bool instanceReturned = false;
+
+		public void Instantiate(int prefabIndex, Vector3 position, Quaternion rotation, Action<Returned> _instanceCallback)
 		{
-			Instances intance = new Instances(localSockets.Count + DateTime.Now.ToString(), prefabIndex, position, rotation);
-			intance.itc = intance.GetHashCode () + "~" + localSockets.Count;
-			string sendData = JsonUtility.ToJson(intance);
-			SendEmit("instance", new JSONObject(sendData), OnInstantiate);
+			instanceCallback = _instanceCallback;
+			instanceReturned = false;
+
+			if (threadset.websocket.IsConnected)
+			{
+				Instances intance = new Instances(localSockets.Count + DateTime.Now.ToString(), prefabIndex, position, rotation);
+				intance.itc = intance.GetHashCode () + "~" + localSockets.Count;
+				string sendData = JsonUtility.ToJson(intance);
+				SendEmit("instance", new JSONObject(sendData), OnInstantiate);
+				StartCoroutine (InstantiatingInstance());
+			}
+
+			else
+			{
+				instanceCallback (Returned.Error);
+				DebugLog(Debugs.Error, "InstantiateError", "You are not connected to the server!");
+			}
+		}
+
+		IEnumerator InstantiatingInstance()
+		{
+			yield return new WaitForSeconds(bindings.connectDelay);
+
+			if (!instanceReturned)
+			{
+				if (instanceCallback != null)
+				{
+					instanceCallback(Returned.Failed);
+					DebugLog (Debugs.Warn, "InstantiateFailed", "Server did not respond to instantiate event!");
+				}
+			}
 		}
 
 		//Instantiate from LOCAL.
 		private void OnInstantiate(JSONObject jsonObject)
 		{
+			StopCoroutine (InstantiatingInstance());
+			instanceReturned = true;
+
 			Instances instances = JsonSerializer.ToObject<Instances>(jsonObject.ToString());
 			Instantiating (instances, true);
+
+			instanceCallback (Returned.Success);
 
 			DebugLog(Debugs.Log, "OnEvent: INSTANCE LOCAL", "ID: " + instances.identity + "POS: " + instances.pos);
 		}
@@ -785,9 +818,16 @@ namespace BytesCrafter.USocketNet
 		private void OnInstancePeer(SocketIOEvent _eventArgs)
 		{
 			Instances instances = JsonUtility.FromJson<Instances>(_eventArgs.data.ToString());
-			Instantiating (instances, false);
 
-			DebugLog(Debugs.Log, "OnEvent: INSTANCE SERVER", "ID: " + instances.identity + "POS: " + instances.pos);
+			if(!USocket.Instance.usocketNets.Exists(x => x.Identity == instances.identity))
+			{
+				if(!USocket.Instance.socketIdentities.Exists(x => x.Instance == instances.itc))
+				{
+					Instantiating (instances, false);
+
+					DebugLog(Debugs.Log, "OnEvent: INSTANCE SERVER", "ID: " + instances.identity + "POS: " + instances.pos);
+				}
+			}
 		}
 
 		//Instantiating Mechanism.
@@ -806,7 +846,7 @@ namespace BytesCrafter.USocketNet
 
 			else
 			{
-				socketIdentities.Add(curUser);
+				USocket.Instance.socketIdentities.Add(curUser);
 			}
 		}
 
@@ -816,7 +856,7 @@ namespace BytesCrafter.USocketNet
 
 		private void SynchingOutbound()
 		{
-			socketIdentities.Remove (null);
+			USocket.Instance.socketIdentities.Remove (null);
 			localSockets.Remove (null);
 
 			bindings.sendTimer += Time.deltaTime;
@@ -957,51 +997,65 @@ namespace BytesCrafter.USocketNet
 		{
 			ChanUsers chanUsers = JsonSerializer.ToObject<ChanUsers>(jsonObject.ToString());
 
+			//SYNCHRONIZE AND INSTANTIATE!
 			chanUsers.users.ForEach ((PeerJson peerJson) => 
 				{
 					if(peerJson.id == Identity)
 						return;
 
-					peerJson.obj.ForEach ((ObjJson objJson) => 
-						{
-							if (!socketIdentities.Exists(x => x.Identity == peerJson.id && x.Instance == objJson.id))
+					//Check if user id is local.
+					if(!USocket.Instance.usocketNets.Exists(x => x.Identity == peerJson.id))
+					{
+						peerJson.obj.ForEach ((ObjJson objJson) => 
 							{
-								Instances instance = new Instances(objJson.id, objJson.pfb, VectorJson.ToVector3(objJson.pos), VectorJson.ToQuaternion(objJson.rot));
-								instance.identity = peerJson.id;
-								Instantiating(instance, false);
-							}
+								if (USocket.Instance.socketIdentities.Exists(x => x.Identity == peerJson.id && x.Instance == objJson.id))
+								{
+									USocketView sockId = USocket.Instance.socketIdentities.Find(x => x.Identity == peerJson.id && x.Instance == objJson.id);
 
-							USocketView sockId = socketIdentities.Find(x => x.Identity == peerJson.id && x.Instance == objJson.id);
+									sockId.targetPos = VectorJson.ToVector3(objJson.pos);
+									sockId.targetRot = VectorJson.ToVector3(objJson.rot);
+									sockId.targetSize = VectorJson.ToVector3(objJson.sca);
+									sockId.targetState = new List<string>();
+									sockId.targetState.AddRange(objJson.sta.Split('~'));
+								}
 
-							sockId.targetPos = VectorJson.ToVector3(objJson.pos);
+								else
+								{
+									Instances instance = new Instances(objJson.id, objJson.pfb, VectorJson.ToVector3(objJson.pos), VectorJson.ToQuaternion(objJson.rot));
+									instance.identity = peerJson.id;
+									Instantiating(instance, false);
 
-							sockId.targetRot = VectorJson.ToVector3(objJson.rot);
-
-							sockId.targetSize = VectorJson.ToVector3(objJson.sca);
-
-							sockId.targetState = new List<string>();
-							sockId.targetState.AddRange(objJson.sta.Split('~'));
-						});
+									USocketView sockId = USocket.Instance.socketIdentities.Find(x => x.Identity == peerJson.id && x.Instance == objJson.id);
+									sockId.targetSize = VectorJson.ToVector3(objJson.sca);
+									sockId.targetState = new List<string>();
+									sockId.targetState.AddRange(objJson.sta.Split('~'));
+								}
+							});
+					}
 			});
+			
+			//SYNCHRONIZE AND DESTROY IF NOT EXIST!
+			USocket.Instance.socketIdentities.ForEach((USocketView toDestroy) =>{
 
-			socketIdentities.ForEach((USocketView toDestroy) =>{
-
-				if(!chanUsers.users.Exists(x => x.id == toDestroy.Identity))
+				if(!toDestroy.IsLocalUser)
 				{
-					Destroy(toDestroy.gameObject);
+					if(!chanUsers.users.Exists(x => x.id == toDestroy.Identity))
+					{
+						Destroy(toDestroy.gameObject);
+					}
 				}
 			});
-			socketIdentities.RemoveAll (x => x == null);
+			USocket.Instance.socketIdentities.RemoveAll (x => x == null);
 		}
 
 		private void SynchingInbound()
 		{
-			socketIdentities.ForEach ((USocketView peers) => 
+			USocket.Instance.socketIdentities.ForEach ((USocketView peers) => 
 				{
 					//Check if entry is null, just remove it.
 					if (peers == null)
 					{
-						socketIdentities.Remove(peers);
+						USocket.Instance.socketIdentities.Remove(peers);
 						return;
 					};
 
@@ -1089,6 +1143,11 @@ namespace BytesCrafter.USocketNet
 		//Initilaized all the required mechanisms.
 		void Awake()
 		{
+			if(!USocket.Instance.socketIdentities.Exists(x => x.GetInstanceID() == GetInstanceID()))
+			{
+				USocket.Instance.usocketNets.Add (this);
+			}
+
 			//CUSTOM INITIALIZATION
 			DontDestroyOnLoad(this);
 			threadset.IsInitialized = true;

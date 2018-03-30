@@ -5,32 +5,172 @@ using BytesCrafter.USocketNet;
 
 public class CharChanger : MonoBehaviour
 {
-	private USocketNet socketNet = null;
-	public USocketNet uSocketNet
-	{
-		get
-		{
-			if(socketNet == null)
-			{
-				socketNet = GameObject.FindObjectOfType<USocketNet> ();
-			}
+	[Header("USOCKETNET INSTANCE")]
+	public GameObject gobjects = null;
+	private int current = 0;
 
-			return socketNet;
+	IEnumerator Connecting ()
+	{
+		USocketNet socket = Instantiate (gobjects).GetComponent<USocketNet> ();
+		yield return socket;
+		 
+		ConnectAndJoin (socket);
+	}
+
+	private void ConnectAndJoin(USocketNet socket)
+	{
+		socket.ConnectToServer ("", (ConnStat conStat, ConnJson conJson) =>
+			{
+				if(conStat == ConnStat.Connected)
+				{
+					socket.GetComponent<UnityControls>().ChangeCanvas(1);
+
+					for(int index = 0; index < USocket.Instance.usocketNets.Count; index++)
+					{
+						USocket.Instance.usocketNets[index].GetComponent<Canvas> ().enabled = false;
+						foreach(USocketView sockV in USocket.Instance.usocketNets[index].localSockets)
+						{
+							sockV.GetComponent<UnityPlayer> ().onControl = false;
+						}
+					}
+
+					USocket.Instance.usocketNets[USocket.Instance.usocketNets.Count - 1].GetComponent<Canvas> ().enabled = true;
+					foreach(USocketView sockV in USocket.Instance.usocketNets[USocket.Instance.usocketNets.Count - 1].localSockets)
+					{
+						sockV.GetComponent<UnityPlayer> ().onControl = true;
+					}
+
+					socket.AutoJoinChannel ("Default", 10, (Returned returned, ChannelJson channelJson) =>
+						{
+							if(returned == Returned.Success)
+							{
+								socket.GetComponent<UnityControls>().ChangeCanvas(2);
+								current = USocket.Instance.usocketNets.Count - 1;
+								SetActiveSockets();
+							}
+						});
+				}
+
+				if(conStat == ConnStat.Disconnected)
+				{
+					ConnectAndJoin (socket);
+				}
+			});
+	}
+
+	private void SetActiveSockets()
+	{
+		if (USocket.Instance.usocketNets.Count == 0)
+			return;
+
+		for(int index = 0; index < USocket.Instance.usocketNets.Count; index++)
+		{
+			USocket.Instance.usocketNets[index].GetComponent<Canvas> ().enabled = false;
+			foreach(USocketView sockV in USocket.Instance.usocketNets[index].localSockets)
+			{
+				sockV.GetComponent<UnityPlayer> ().onControl = false;
+			}
+		}
+
+		instance = 0;
+		USocket.Instance.usocketNets[current].GetComponent<Canvas> ().enabled = true;
+		foreach(USocketView sockV in USocket.Instance.usocketNets[current].localSockets)
+		{
+			sockV.GetComponent<UnityPlayer> ().onControl = false;
+		}
+		if(USocket.Instance.usocketNets[current].localSockets.Count > 0)
+		{
+			USocket.Instance.usocketNets[current].localSockets[instance].GetComponent<UnityPlayer> ().onControl = true;
 		}
 	}
 
 	void Update()
 	{
-		if(Input.GetKeyDown(KeyCode.Alpha1))
+		//Connect and Join!
+		if(Input.GetKeyDown(KeyCode.F1))
 		{
-			uSocketNet.localSockets [0].GetComponent<UnityPlayer> ().onControl = true;
-			uSocketNet.localSockets [1].GetComponent<UnityPlayer> ().onControl = false;
+			StartCoroutine ( Connecting () );
 		}
 
-		if(Input.GetKeyDown(KeyCode.Alpha2))
+		//Switch Active Socket.
+		if(Input.GetKeyDown(KeyCode.F2))
 		{
-			uSocketNet.localSockets [0].GetComponent<UnityPlayer> ().onControl = false;
-			uSocketNet.localSockets [1].GetComponent<UnityPlayer> ().onControl = true;
+			int sockInt = USocket.Instance.usocketNets.FindIndex (x => x.GetComponent<Canvas> ().enabled);
+
+			if(sockInt == USocket.Instance.usocketNets.Count - 1)
+			{
+				current = 0;
+			}
+
+			else
+			{
+				current += 1;
+			}
+
+			Debug.Log ("AAAAAAAA: " + current);
+
+			SetActiveSockets ();
+		}
+
+		//Instatiate a player.
+		if(Input.GetKeyDown(KeyCode.F3))
+		{
+			USocket.Instance.usocketNets[current].Instantiate (0, Vector3.zero, Quaternion.identity, (Returned rets) => 
+				{
+					if(rets == Returned.Success)
+					{
+						if(USocket.Instance.usocketNets [current].localSockets.Count == 0)
+						{
+							instance = 0;
+						}
+
+						else
+						{
+							instance = USocket.Instance.usocketNets [current].localSockets.Count - 1;
+						}
+
+						for(int i = 0; i < USocket.Instance.usocketNets[current].localSockets.Count; i++)
+						{
+							USocket.Instance.usocketNets[current].localSockets[i].GetComponent<UnityPlayer> ().onControl = false;
+						}
+						USocket.Instance.usocketNets[current].localSockets[instance].GetComponent<UnityPlayer> ().onControl = true;
+					}
+				}); // spawnPoint.position, spawnPoint.rotation);
+		}
+
+		//Switch Instances.
+		if(Input.GetKeyDown(KeyCode.F4))
+		{
+			USocket.Instance.usocketNets[current].GetComponent<Canvas> ().enabled = true;
+
+			int playCtrl = USocket.Instance.usocketNets[current].localSockets.FindIndex (x => x.GetComponent<UnityPlayer> ().onControl == true);
+
+			Debug.Log ("Control: " + playCtrl);
+
+			if(playCtrl < USocket.Instance.usocketNets[current].localSockets.Count - 1)
+			{
+				instance += 1;
+			}
+
+			else
+			{
+				instance = 0;
+			}
+
+			for(int i = 0; i < USocket.Instance.usocketNets[current].localSockets.Count; i++)
+			{
+				if(instance == i)
+				{
+					USocket.Instance.usocketNets[current].localSockets[i].GetComponent<UnityPlayer> ().onControl = true;
+				}
+
+				else
+				{
+					USocket.Instance.usocketNets[current].localSockets[i].GetComponent<UnityPlayer> ().onControl = false;
+				}
+			}
 		}
 	}
+
+	private int instance = 0;
 }
