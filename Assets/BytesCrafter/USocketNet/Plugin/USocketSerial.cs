@@ -224,6 +224,7 @@ namespace BytesCrafter.USocketNet
 		public string pos = string.Empty;
 		public string rot = string.Empty;
 		public string sca = string.Empty;
+		public string ani = string.Empty;
 		public string sta = string.Empty;
 	}
 
@@ -346,6 +347,29 @@ namespace BytesCrafter.USocketNet
 	public class SyncJson
 	{
 		public List<string> states = new List<string>();
+	}
+
+	[System.Serializable]
+	public class AnimatorOption
+	{
+		public bool synchronize = true;
+		[Range(1f, 30f)] public float sendRate = 1f;
+		public Animator animator = null;
+		public List<AnimTypes> parameters = new List<AnimTypes> ();
+		[HideInInspector] public float sendTimer = 0f;
+		[HideInInspector] public string prevVstring = string.Empty;
+	}
+
+	public enum APType
+	{
+		Float, Int, Bool
+	}
+
+	[System.Serializable]
+	public class AnimTypes
+	{
+		public APType apType = APType.Float;
+		public string apValue = string.Empty;
 	}
 
 	#endregion

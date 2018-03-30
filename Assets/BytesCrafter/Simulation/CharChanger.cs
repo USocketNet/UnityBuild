@@ -129,11 +129,22 @@ public class CharChanger : MonoBehaviour
 							instance = USocket.Instance.usocketNets [current].localSockets.Count - 1;
 						}
 
+						UnityPlayer uPlayer = null;
+
 						for(int i = 0; i < USocket.Instance.usocketNets[current].localSockets.Count; i++)
 						{
-							USocket.Instance.usocketNets[current].localSockets[i].GetComponent<UnityPlayer> ().onControl = false;
+							uPlayer = USocket.Instance.usocketNets[current].localSockets[i].GetComponent<UnityPlayer> ();
+
+							if(uPlayer != null)
+							{
+								uPlayer.onControl = false;
+							}
+
 						}
-						USocket.Instance.usocketNets[current].localSockets[instance].GetComponent<UnityPlayer> ().onControl = true;
+						if(uPlayer != null)
+						{
+							USocket.Instance.usocketNets[current].localSockets[instance].GetComponent<UnityPlayer> ().onControl = true;
+						}
 					}
 				}); // spawnPoint.position, spawnPoint.rotation);
 		}

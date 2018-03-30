@@ -873,30 +873,9 @@ namespace BytesCrafter.USocketNet
 						SyncJson syncJson = new SyncJson ();
 
 						//On downlink, if string state is equal to f, dont do anything.
-						syncJson.states.AddRange (new string[4] { "f", "f", "f", "f" }); //pos, rot, sca, sta
+						syncJson.states.AddRange (new string[5] { "f", "f", "f", "f", "f" }); //pos, rot, sca, ani, sta
 
 						syncJson.states.Add (usocket.Instance);
-
-						//Check positions.
-						if (usocket.position.synchronize)
-						{
-							//usocket.position.sendTimer += Time.deltaTime;
-
-							//if (usocket.position.sendTimer >= (1f / usocket.position.sendRate))
-							//{
-							string newVstate = VectorJson.ToVectorStr (usocket.transform.position);
-
-							if(!newVstate.Equals(usocket.position.prevVstring))
-							{
-								syncJson.states [0] = "t";
-								syncJson.states.Add (newVstate);
-
-								usocket.position.prevVstring = newVstate;
-							}
-
-							//	usocket.position.sendTimer = 0f;
-							//}
-						}	
 
 						//Check positions.
 						if (usocket.position.synchronize)
@@ -961,6 +940,52 @@ namespace BytesCrafter.USocketNet
 							//}
 						}
 
+						//Check animator.
+						if (usocket.animator.synchronize)
+						{
+							//usocket.animator.sendTimer += Time.deltaTime;
+
+							//if (usocket.animator.sendTimer >= (1f / usocket.animator.sendRate))
+							//{
+
+							string[] anims = new string[usocket.animator.parameters.Count];
+							for(int i = 0; i < usocket.animator.parameters.Count; i++)
+							{
+								if(usocket.animator.parameters[i].apType == APType.Float)
+								{
+									anims [i] = usocket.animator.animator.GetFloat (usocket.animator.parameters[i].apValue) + "";
+								}
+
+								else if(usocket.animator.parameters[i].apType == APType.Int)
+								{
+									anims [i] = usocket.animator.animator.GetInteger (usocket.animator.parameters[i].apValue) + "";
+								}
+
+								else if(usocket.animator.parameters[i].apType == APType.Bool)
+								{
+									anims [i] = usocket.animator.animator.GetBool (usocket.animator.parameters[i].apValue) + "";
+								}
+
+								else
+								{
+
+								}
+							}
+
+							string newCstate = string.Join("~", anims);
+
+							if(!newCstate.Equals(usocket.animator.prevVstring))
+							{
+								syncJson.states [3] = "t";
+								syncJson.states.Add (newCstate);
+
+								usocket.animator.prevVstring = newCstate;
+							}
+
+							//	usocket.animator.sendTimer = 0f;
+							//}
+						}
+
 						//Check states.
 						if (usocket.states.synchronize)
 						{
@@ -972,7 +997,7 @@ namespace BytesCrafter.USocketNet
 
 							if(!newCstate.Equals(usocket.states.prevVstring))
 							{
-								syncJson.states [3] = "t";
+								syncJson.states [4] = "t";
 								syncJson.states.Add (newCstate);
 
 								usocket.states.prevVstring = newCstate;
@@ -1015,6 +1040,8 @@ namespace BytesCrafter.USocketNet
 									sockId.targetPos = VectorJson.ToVector3(objJson.pos);
 									sockId.targetRot = VectorJson.ToVector3(objJson.rot);
 									sockId.targetSize = VectorJson.ToVector3(objJson.sca);
+									sockId.targetAni = new List<string>();
+									sockId.targetAni.AddRange(objJson.ani.Split('~'));
 									sockId.targetState = new List<string>();
 									sockId.targetState.AddRange(objJson.sta.Split('~'));
 								}
@@ -1027,6 +1054,8 @@ namespace BytesCrafter.USocketNet
 
 									USocketView sockId = USocket.Instance.socketIdentities.Find(x => x.Identity == peerJson.id && x.Instance == objJson.id);
 									sockId.targetSize = VectorJson.ToVector3(objJson.sca);
+									sockId.targetAni = new List<string>();
+									sockId.targetAni.AddRange(objJson.ani.Split('~'));
 									sockId.targetState = new List<string>();
 									sockId.targetState.AddRange(objJson.sta.Split('~'));
 								}
@@ -1132,6 +1161,46 @@ namespace BytesCrafter.USocketNet
 							peers.transform.localScale = Vector3.Lerp(peers.transform.localScale, peers.targetSize, 
 								(sDamp + peers.scale.interpolation) * peers.scale.speed * Time.deltaTime);
 						}
+					}
+
+					if (peers.animator.synchronize)
+					{
+						if(peers.animator.parameters.Count > 0)
+						{
+							if(peers.targetAni.Count == peers.animator.parameters.Count)
+							{
+								for(int i = 0; i < peers.targetAni.Count; i++)
+								{
+									if(peers.animator.parameters[i].apType == APType.Float)
+									{
+										float floatings = System.Convert.ToSingle(peers.targetAni [i]);
+										peers.animator.animator.SetFloat(peers.animator.parameters[i].apValue, floatings);
+									}
+
+									else if(peers.animator.parameters[i].apType == APType.Int)
+									{
+										int integers = System.Convert.ToInt16(peers.targetAni [i]);
+										peers.animator.animator.SetInteger(peers.animator.parameters[i].apValue, integers);
+									}
+
+									else if(peers.animator.parameters[i].apType == APType.Bool)
+									{
+										bool booleans = System.Convert.ToBoolean(peers.targetAni [i]);
+										peers.animator.animator.SetBool(peers.animator.parameters[i].apValue, booleans);
+									}
+
+									else
+									{
+
+									}
+								}
+							}
+						}
+					}
+
+					if (peers.states.synchronize)
+					{
+						peers.states.syncValue = peers.targetState;
 					}
 				});
 		}

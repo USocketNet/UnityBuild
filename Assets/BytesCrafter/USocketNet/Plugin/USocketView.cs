@@ -36,11 +36,13 @@ namespace BytesCrafter.USocketNet
 		public VectorOption position = new VectorOption();
 		public VectorOption rotation = new VectorOption();
 		public VectorOption scale = new VectorOption();
+		public AnimatorOption animator = new AnimatorOption();
 		public StateOption states = new StateOption();
 
 		[HideInInspector] public Vector3 targetPos = Vector3.zero;
 		[HideInInspector] public Vector3 targetRot = Vector3.zero;
 		[HideInInspector] public Vector3 targetSize = Vector3.zero;
+		[HideInInspector] public List<string> targetAni = new List<string> ();
 		[HideInInspector] public List<string> targetState = new List<string> ();
 
 		#endregion
