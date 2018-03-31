@@ -41,6 +41,7 @@ GameObject:
   - component: {fileID: 54990454498827192}
   - component: {fileID: 114799573014960534}
   - component: {fileID: 114577269107602516}
+  - component: {fileID: 95287079890346128}
   m_Layer: 0
   m_Name: PlayerBlue
   m_TagString: Untagged
@@ -252,6 +253,23 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!95 &95287079890346128
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1743767937772186}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &114577269107602516
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -283,43 +301,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34b76cf9b4dba7b4fa25edb21e2851dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Identity: 
-  Instance: 
-  IsLocalUser: 0
   position:
     synchronize: 1
     sendRate: 1
+    interpolation: 3
+    speed: 3
     sendTimer: 0
     prevVstring: 
     syncMode: 0
   rotation:
-    synchronize: 1
+    synchronize: 0
     sendRate: 1
+    interpolation: 3
+    speed: 3
     sendTimer: 0
     prevVstring: 
     syncMode: 0
   scale:
-    synchronize: 1
+    synchronize: 0
     sendRate: 1
+    interpolation: 3
+    speed: 3
     sendTimer: 0
     prevVstring: 
     syncMode: 0
+  animator:
+    synchronize: 0
+    sendRate: 1
+    reference: {fileID: 0}
+    parameters: []
+    sendTimer: 0
+    prevVstring: 
   states:
     synchronize: 1
     sendRate: 1
     sendTimer: 0
     prevVstring: 
     syncValue: []
-  targetPos: {x: 0, y: 0, z: 0}
-  posInterpolation: 3
-  posSpeed: 3
-  targetRot: {x: 0, y: 0, z: 0}
-  rotInterpolation: 3
-  rotSpeed: 3
-  targetSize: {x: 0, y: 0, z: 0}
-  sizeInterpolation: 3
-  sizeSpeed: 3
-  targetState: []
+  Identity: 
+  Instance: 
+  IsLocalUser: 0
 --- !u!136 &136161943698884440
 CapsuleCollider:
   m_ObjectHideFlags: 1

@@ -68,7 +68,6 @@
      <Compile Include="Assets\BytesCrafter\Simulation\SocketIO\Scripts\SocketIO\SocketIOComponent.cs" />
      <Compile Include="Assets\BytesCrafter\Simulation\SocketIO\Scripts\Test\TestSocketIO.cs" />
      <Compile Include="Assets\BytesCrafter\Simulation\TestScript.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketData.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketLib\JSONObject\JSONObject.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketLib\JSONObject\JSONTemplates.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketLib\JSONObject\VectorTemplates.cs" />
@@ -81,6 +80,8 @@
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketLib\Scripts\SocketIO\SocketIOEvent.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketLib\Scripts\SocketIO\SocketIOException.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketLib\Scripts\SocketIO\SocketPacketType.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketLib\USocketData.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketLib\USocketSerial.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketLib\WebsocketSharp\AssemblyInfo.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketLib\WebsocketSharp\ByteOrder.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketLib\WebsocketSharp\CloseEventArgs.cs" />
@@ -148,7 +149,6 @@
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketLib\WebsocketSharp\WebSocketState.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketLib\WebsocketSharp\WebSocketStream.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketSerial.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketView.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Script\DebugViewer.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Script\Elasticity.cs" />

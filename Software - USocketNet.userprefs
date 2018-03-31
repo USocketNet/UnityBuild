@@ -1,25 +1,21 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\BytesCrafter\USocketNet\Plugin\USocketView.cs">
     <Files>
-      <File FileName="Assets\BytesCrafter\USocketNet\Script\UnityControls.cs" Line="204" Column="71" />
-      <File FileName="Assets\BytesCrafter\Simulation\CharChanger.cs" Line="136" Column="18" />
-      <File FileName="Assets\SampleScenes\Network\Script\CharSet.cs" Line="5" Column="30" />
-      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" Line="1017" Column="16" />
-      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\USocketView.cs" Line="39" Column="1" />
-      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\USocketSerial.cs" Line="220" Column="2" />
-      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\USocketData.cs" Line="23" Column="43" />
-      <File FileName="Assets\BytesCrafter\USocketNet\Script\UnityPlayer.cs" Line="1" Column="1" />
-      <File FileName="Assets\Standard Assets\Characters\ThirdPersonCharacter\Scripts\ThirdPersonUserControl.cs" Line="71" Column="28" />
-      <File FileName="Assets\Standard Assets\Characters\ThirdPersonCharacter\Scripts\ThirdPersonCharacter.cs" Line="152" Column="5" />
+      <File FileName="Assets\BytesCrafter\USocketNet\Script\UnityControls.cs" Line="1" Column="1" />
+      <File FileName="Assets\BytesCrafter\Simulation\CharChanger.cs" Line="1" Column="1" />
+      <File FileName="Assets\SampleScenes\Network\Script\CharSet.cs" Line="1" Column="1" />
+      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" Line="1" Column="1" />
+      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\USocketView.cs" Line="173" Column="19" />
+      <File FileName="Assets\BytesCrafter\USocketNet\Editor\USocketEditor.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="D:\Projects\Software - USocketNet\Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" line="591" column="13" />
-      <Breakpoint file="D:\Projects\Software - USocketNet\Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" line="541" column="1" />
-      <Breakpoint file="D:\Projects\Software - USocketNet\Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" line="525" column="1" />
-      <Breakpoint file="D:\Projects\Software - USocketNet\Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" line="536" column="16" />
+      <Breakpoint file="D:\Projects\Software - USocketNet\Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" line="1968" column="13" />
+      <Breakpoint file="D:\Projects\Software - USocketNet\Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" line="1918" column="1" />
+      <Breakpoint file="D:\Projects\Software - USocketNet\Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" line="1902" column="1" />
+      <Breakpoint file="D:\Projects\Software - USocketNet\Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" line="1913" column="16" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

@@ -2580,11 +2580,6 @@ MonoBehaviour:
     sendTimer: 0
     prevVstring: 
     syncValue: []
-  targetPos: {x: 0, y: 0, z: 0}
-  targetRot: {x: 0, y: 0, z: 0}
-  targetSize: {x: 0, y: 0, z: 0}
-  targetAni: []
-  targetState: []
 --- !u!114 &114849486206329098
 MonoBehaviour:
   m_ObjectHideFlags: 1
