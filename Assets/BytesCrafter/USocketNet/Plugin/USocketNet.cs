@@ -36,7 +36,8 @@ namespace BytesCrafter.USocketNet
 			get { return threadset.IsConnected; }
 		}
 
-		[HideInInspector] public bool Subscribed = false;
+		[HideInInspector]
+		public bool Subscribed = false;
 
 		/// <summary>
 		/// Sockets identity of the current user's connection to the server.
@@ -153,6 +154,7 @@ namespace BytesCrafter.USocketNet
 
 				if (!connectReturn)
 				{
+					ForceDisconnect();
 					connectCallback(ConnStat.InternetAccess, new ConnJson());
 					DebugLog(Debugs.Error, "ConnectionNoInternet", "Detected no internet connection!");
 				}
@@ -207,6 +209,7 @@ namespace BytesCrafter.USocketNet
 
 			else
 			{
+				ForceDisconnect();
 				disconnectCallback(ConnStat.Disconnected);
 				DebugLog (Debugs.Warn, "CantDisconnect", "You are not connected to server!");
 			}
@@ -248,6 +251,11 @@ namespace BytesCrafter.USocketNet
 		IEnumerator OnListeningConnectionStatus(ConnStat connStat)
 		{
 			onListeningReturn = false;
+
+			if(connStat != ConnStat.Connected)
+			{
+				Subscribed = false;
+			}
 
 			if (connStat == ConnStat.Reconnected)
 			{
@@ -521,7 +529,7 @@ namespace BytesCrafter.USocketNet
 			ChannelJson channelJson = JsonSerializer.ToObject<ChannelJson>(jsonObject.ToString());
 			autoChannelReturned = true;
 			autoChannelCallback(Returned.Success, channelJson);
-			Subscribed = false;
+			Subscribed = true;
 
 			DebugLog (Debugs.Log, "AutoChannelSuccess", "Successfully auto match a channel!");
 		}
@@ -546,7 +554,7 @@ namespace BytesCrafter.USocketNet
 
 			else
 			{
-				createCallback(Returned.Error, new ChannelJson(String.Empty));
+				createCallback(Returned.Error, new ChannelJson(string.Empty));
 				DebugLog (Debugs.Error, "CreateChannelFailed", "You are currently disconnected to the server!");
 			}
 		}
@@ -559,7 +567,7 @@ namespace BytesCrafter.USocketNet
 			{
 				if (!threadset.websocket.IsConnected)
 				{
-					createCallback(Returned.Failed, new ChannelJson(String.Empty));
+					createCallback(Returned.Failed, new ChannelJson(string.Empty));
 					DebugLog (Debugs.Error, "CreateChannelFailed", "You are currently disconnected to the server!");
 				}
 			}
@@ -571,7 +579,7 @@ namespace BytesCrafter.USocketNet
 			ChannelJson channelJson = JsonSerializer.ToObject<ChannelJson>(jsonObject.ToString());
 			createReturned = true;
 			createCallback(Returned.Success, channelJson);
-			Subscribed = false;
+			Subscribed = true;
 
 			DebugLog (Debugs.Log, "CreateChannelSuccess", "Successfully create match a channel!");
 		}
@@ -598,7 +606,7 @@ namespace BytesCrafter.USocketNet
 
 			else
 			{
-				joinCallback(Returned.Error, new ChannelJson(String.Empty));
+				joinCallback(Returned.Error, new ChannelJson(string.Empty));
 				DebugLog (Debugs.Error, "JoinChannelFailed", "You are currently disconnected to the server!");
 			}
 		}
@@ -611,7 +619,7 @@ namespace BytesCrafter.USocketNet
 			{
 				if (joinCallback != null)
 				{
-					joinCallback(Returned.Failed, new ChannelJson(String.Empty));
+					joinCallback(Returned.Failed, new ChannelJson(string.Empty));
 					DebugLog (Debugs.Error, "JoinChannelFailed", "You are currently disconnected to the server!");
 				}
 			}
@@ -623,7 +631,7 @@ namespace BytesCrafter.USocketNet
 			ChannelJson channelJson = JsonSerializer.ToObject<ChannelJson>(jsonObject.ToString());
 			joinReturned = true;
 			joinCallback(Returned.Success, channelJson);
-			Subscribed = false;
+			Subscribed = true;
 
 			DebugLog (Debugs.Log, "JoinChannelSuccess", "Successfully join match a channel!");
 		}
@@ -649,7 +657,7 @@ namespace BytesCrafter.USocketNet
 
 			else
 			{
-				leaveCallback (Returned.Error, new ChannelJson(String.Empty));
+				leaveCallback (Returned.Error, new ChannelJson(string.Empty));
 				DebugLog(Debugs.Error, "LeaveMatchError", "You are not connected to the server!");
 			}
 		}
@@ -662,7 +670,7 @@ namespace BytesCrafter.USocketNet
 			{
 				if (leaveCallback != null)
 				{
-					leaveCallback(Returned.Failed, new ChannelJson(String.Empty));
+					leaveCallback(Returned.Failed, new ChannelJson(string.Empty));
 					DebugLog (Debugs.Warn, "LeaveChannelFailed", "Server did not respond to leave event!");
 				}
 			}
@@ -672,7 +680,7 @@ namespace BytesCrafter.USocketNet
 		{
 			StopCoroutine (LeavingMatch());
 			leaveReturned = true;
-			leaveCallback (Returned.Success, new ChannelJson(String.Empty));
+			leaveCallback (Returned.Success, new ChannelJson(string.Empty));
 			Subscribed = false;
 
 			USocket.Instance.socketIdentities.ForEach ((USocketView sockView) => {
@@ -866,8 +874,8 @@ namespace BytesCrafter.USocketNet
 					}
 				}
 
-				string sendData = JsonUtility.ToJson (syncJsons);
-				SendEmit ("transtate", new JSONObject (sendData), SynchingSockets);
+				string sendDataS = JsonUtility.ToJson (syncJsons);
+				SendEmit ("transtate", new JSONObject (sendDataS), SynchingSockets);
 
 				bindings.sendTimer = 0f;
 			}
@@ -927,9 +935,87 @@ namespace BytesCrafter.USocketNet
 						USocket.Instance.socketIdentities.Remove(peers);
 						return;
 					};
-
-					peers.SyncViewData();
 				});
+		}
+
+		#endregion
+
+		#region TriggeringEvents - Ongoing!
+
+		private Action<Returned> triggerCallback = null;
+		private bool triggerReturned = false;
+
+		public void SendTriggerEvent(TriggerJson tJson, Action<Returned> tCallback)
+		{
+			triggerCallback = tCallback;
+			triggerReturned = false;
+
+			if (threadset.websocket.IsConnected)
+			{
+				string sendData = JsonUtility.ToJson(tJson);
+				SendEmit("trigger", new JSONObject(sendData), OnTriggerCallback);
+				StartCoroutine(SendingTriggerEvent());
+			}
+
+			else
+			{
+				if(triggerCallback != null)
+				{
+					triggerCallback(Returned.Error);
+				}
+				DebugLog (Debugs.Error, "TriggerEventError", "You are currently disconnected to the server!");
+			}
+		}
+
+		IEnumerator SendingTriggerEvent()
+		{
+			yield return new WaitForSeconds(bindings.connectDelay);
+
+			if (!triggerReturned)
+			{
+				if (!threadset.websocket.IsConnected)
+				{
+					if (triggerCallback != null)
+					{
+						triggerCallback (Returned.Failed);
+					}
+					DebugLog (Debugs.Error, "TriggerEventFailed", "The server did not respond to the event!");
+				}
+			}
+		}
+
+		private void OnTriggerCallback(JSONObject jsonObject)
+		{
+			StopCoroutine (SendingTriggerEvent());
+			Returning returned = JsonSerializer.ToObject<Returning>(jsonObject.ToString());
+			triggerReturned = true;
+
+			if(triggerCallback != null)
+			{
+				triggerCallback(returned.returned);
+			}
+			DebugLog (Debugs.Log, "TriggerEventSuccess", "Successfully sent a event trigger!");
+		}
+
+		#endregion
+
+		#region TriggeringESents - Ongoing!
+
+		private Triggered triggerListens = null;
+		public void ListenTriggersEvent(Triggered triggersListener)
+		{
+			triggerListens = triggersListener;
+		}
+
+		private void OnTriggersReceived(SocketIOEvent _eventArgs)
+		{
+			TriggerJson tJson = JsonUtility.FromJson<TriggerJson>(_eventArgs.data.ToString());
+
+			if (triggerListens != null)
+			{
+				triggerListens(tJson);
+			}
+			DebugLog(Debugs.Log, "OnTriggerEvent: RECEIVED", "ID: " + tJson.itc + "Key: " + tJson.tKy +  " Content: " + tJson.tVl);
 		}
 
 		#endregion
@@ -984,6 +1070,7 @@ namespace BytesCrafter.USocketNet
 			CallbackOn("messaged", OnMessageReceived);
 			CallbackOn("joined", OnChannelJoined);
 			CallbackOn("instanced", OnInstancePeer);
+			CallbackOn("triggered", OnTriggersReceived);
 			CallbackOn("leaved", OnRoomLeaved);
 			//ADD MORE HERE!
 		}
@@ -1032,8 +1119,12 @@ namespace BytesCrafter.USocketNet
 
 			if (threadset.websocket.IsConnected)
 			{
-				SynchingOutbound ();
-				SynchingInbound ();
+				if(Subscribed)
+				{
+					SynchingOutbound ();
+					SynchingInbound ();
+				}
+
 				Pinging();
 			}
 
@@ -1121,17 +1212,17 @@ namespace BytesCrafter.USocketNet
 
 		#region DefaultSocketEvent - Done!
 
-		public void OnReceivedOpen(SocketIOEvent e)
+		private void OnReceivedOpen(SocketIOEvent e)
 		{
 			DebugLog(Debugs.Warn, "[SocketIO]", " Open received: " + e.name + " " + e.data);
 		}
 
-		public void OnReceivedError(SocketIOEvent e)
+		private void OnReceivedError(SocketIOEvent e)
 		{
 			DebugLog(Debugs.Warn, "[SocketIO]", " Error received: " + e.name + " " + e.data);
 		}
 
-		public void OnReceivedClose(SocketIOEvent e)
+		private void OnReceivedClose(SocketIOEvent e)
 		{	
 			DebugLog(Debugs.Warn, "[SocketIO]", " Close received: " + e.name + " " + e.data);
 		}
@@ -1317,7 +1408,7 @@ namespace BytesCrafter.USocketNet
 
 		#endregion
 
-		#region MethodsInterface - Done!
+		#region EventInterface - Done!
 
 		private void CallbackOn(string events, Action<SocketIOEvent> callback)
 		{

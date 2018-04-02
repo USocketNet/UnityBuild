@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/SampleScenes/Scenes/CharacterThirdPerson.unity
+- path: Assets/TanksByUnity/_Complete-Game.unity
   isLoaded: 1
   isActive: 1

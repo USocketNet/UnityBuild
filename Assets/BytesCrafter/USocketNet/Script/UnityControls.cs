@@ -50,14 +50,8 @@ public class UnityControls : MonoBehaviour//, SocketInterface
 	public InputField chanMsgContent = null;
 	public DebugViewer channelViewer = null;
 
-
 	[Header("Server Room")]
 	public InputField roomname = null;
-	public Transform spawnPoint = null;
-
-
-
-
 
 	[Header("PING MECHANISM")]
 	public Text pingSocket = null; void Update()
