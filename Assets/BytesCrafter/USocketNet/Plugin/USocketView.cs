@@ -12,6 +12,29 @@ namespace BytesCrafter.USocketNet
 		[HideInInspector] public string Instance = string.Empty;
 		[HideInInspector] public bool IsLocalUser = false;
 
+		#region Public Variables
+
+		[Header("SYNCHRONIZATION")]
+		public VectorOption position = new VectorOption();
+		public VectorOption rotation = new VectorOption();
+		public VectorOption scale = new VectorOption();
+		public AnimatorOption animator = new AnimatorOption();
+		public StateOption states = new StateOption();
+		public SocketChild childs = new SocketChild();
+
+		#endregion
+
+		#region Private Variables
+
+		private Vector3 targetPos = Vector3.zero;
+		private Vector3 targetRot = Vector3.zero;
+		private Vector3 targetSize = Vector3.zero;
+		private List<string> targetAni = new List<string> ();
+		private List<string> targetState = new List<string> ();
+		private ChildTrans targetChilds = new ChildTrans();
+
+		#endregion
+
 		#region Required Reference
 
 		private USocketNet socketNet = null;
@@ -28,34 +51,18 @@ namespace BytesCrafter.USocketNet
 
 		#endregion
 
-		#region Public Variables
-
-		[Header("SYNCHRONIZATION")]
-		public VectorOption position = new VectorOption();
-		public VectorOption rotation = new VectorOption();
-		public VectorOption scale = new VectorOption();
-		public AnimatorOption animator = new AnimatorOption();
-		public StateOption states = new StateOption();
-		public SocketChild childs = new SocketChild();
-		#endregion
-
-		#region Private Variables
-
-		private Vector3 targetPos = Vector3.zero;
-		private Vector3 targetRot = Vector3.zero;
-		private Vector3 targetSize = Vector3.zero;
-		private List<string> targetAni = new List<string> ();
-		private List<string> targetState = new List<string> ();
-		private ChildTrans targetChilds = new ChildTrans();
-
-		#endregion
-
 		void Awake()
 		{
-			//This is for parent!
+			//Parent position set default!
 			targetPos = transform.position;
+
+			//Parent rotation set default!
 			targetRot = transform.rotation.eulerAngles;
+
+			//Parent scale set default!
 			targetSize = transform.localScale;
+
+			//Parent animator set default!
 			if(animator.parameters.Count > 0)
 			{
 				if (animator != null)
@@ -90,7 +97,11 @@ namespace BytesCrafter.USocketNet
 					}
 				}
 			}
+
+			//Parent states set default!
 			states.syncValue = targetState;
+
+			//Parent childs set default!
 			targetChilds.lists = new List<ChildTran> ();
 			for(int i = 0; i < childs.childList.Count; i++)
 			{
@@ -102,8 +113,6 @@ namespace BytesCrafter.USocketNet
 					targetChilds.lists[i].scale = childs.childList[i].reference.localScale;
 				}
 			}
-
-			//This is for child!
 		}
 
 		void Update()
@@ -310,7 +319,7 @@ namespace BytesCrafter.USocketNet
 			//On downlink, if string state is equal to f, dont do anything.
 			syncJson.states.AddRange (new string[6] { "f", "f", "f", "f", "f", "f" }); //pos, rot, sca, ani, sta, chi
 
-			//Check positions.
+			//Check positions values if theres an update.
 			if (position.synchronize)
 			{
 				//usocket.position.sendTimer += Time.deltaTime;
@@ -331,7 +340,7 @@ namespace BytesCrafter.USocketNet
 				//}
 			}			
 
-			//Check rotation.
+			//Check rotation values if theres an update.
 			if (rotation.synchronize)
 			{
 				//usocket.rotation.sendTimer += Time.deltaTime;
@@ -352,7 +361,7 @@ namespace BytesCrafter.USocketNet
 				//}
 			}	
 
-			//Check scale.
+			//Check scale values if theres an update.
 			if (scale.synchronize)
 			{
 				//usocket.scale.sendTimer += Time.deltaTime;
@@ -373,7 +382,7 @@ namespace BytesCrafter.USocketNet
 				//}
 			}
 
-			//Check animator.
+			//Check animator values if theres an update.
 			if (animator.synchronize)
 			{
 				if (animator.reference != null)
@@ -422,7 +431,7 @@ namespace BytesCrafter.USocketNet
 				}
 			}
 
-			//Check states.
+			//Check states values if theres an update.
 			if (states.synchronize)
 			{
 				//usocket.states.sendTimer += Time.deltaTime;
@@ -443,7 +452,7 @@ namespace BytesCrafter.USocketNet
 				//}
 			}
 
-			//Check check childs.
+			//Check check childs values if theres an update.
 			if (childs.synchronize)
 			{
 				//usocket.childs.sendTimer += Time.deltaTime;
@@ -474,9 +483,16 @@ namespace BytesCrafter.USocketNet
 				//}
 			}
 
-			syncJson.states.Add (Instance);
+			//Check if sync json are all false send empty array.
+			if(syncJson.states.Count > 6)
+			{
+				syncJson.states.Add (Instance);
+			}
 
-			//Debug.Log(JsonUtility.ToJson(syncJson));
+			else
+			{
+				syncJson = new SyncJson ();
+			}
 			return syncJson;
 		}
 

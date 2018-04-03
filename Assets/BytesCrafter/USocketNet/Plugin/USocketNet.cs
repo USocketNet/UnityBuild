@@ -870,12 +870,20 @@ namespace BytesCrafter.USocketNet
 				{
 					foreach(USocketView usocket in localSockets)
 					{
-						syncJsons.obj.Add (usocket.GetViewData());
+						SyncJson syncJson = usocket.GetViewData ();
+						if(syncJson.states.Count > 0)
+						{
+							syncJsons.obj.Add (syncJson);
+						}
 					}
 				}
 
-				string sendDataS = JsonUtility.ToJson (syncJsons);
-				SendEmit ("transtate", new JSONObject (sendDataS), SynchingSockets);
+				string sendData = "0";
+				if(syncJsons.obj.Count > 0)
+				{
+					sendData = JsonUtility.ToJson (syncJsons);
+				}
+				SendEmit ("transtate", new JSONObject (sendData), SynchingSockets);
 
 				bindings.sendTimer = 0f;
 			}
