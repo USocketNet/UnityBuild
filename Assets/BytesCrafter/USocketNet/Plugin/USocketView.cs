@@ -27,7 +27,7 @@ namespace BytesCrafter.USocketNet
 		#region Private Variables
 
 		private Vector3 targetPos = Vector3.zero;
-		private Vector3 targetRot = Vector3.zero;
+		private Quaternion targetRot = Quaternion.identity;
 		private Vector3 targetSize = Vector3.zero;
 		private List<string> targetAni = new List<string> ();
 		private List<string> targetState = new List<string> ();
@@ -57,7 +57,7 @@ namespace BytesCrafter.USocketNet
 			targetPos = transform.position;
 
 			//Parent rotation set default!
-			targetRot = transform.rotation.eulerAngles;
+			targetRot = transform.rotation;
 
 			//Parent scale set default!
 			targetSize = transform.localScale;
@@ -99,7 +99,7 @@ namespace BytesCrafter.USocketNet
 			}
 
 			//Parent states set default!
-			states.syncValue = targetState;
+			//states.syncValue = targetState;
 
 			//Parent childs set default!
 			targetChilds.lists = new List<ChildTran> ();
@@ -152,20 +152,20 @@ namespace BytesCrafter.USocketNet
 			{
 				if (rotation.syncMode == SocketSync.Realtime)
 				{
-					transform.rotation = Quaternion.Euler(targetRot);
+					transform.rotation = targetRot;
 				}
 
 				else if (rotation.syncMode == SocketSync.AdjustToward)
 				{
-					float rDamp = Quaternion.Angle(transform.rotation, Quaternion.Euler(targetRot));
-					transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(targetRot), 
+					float rDamp = Quaternion.Angle(transform.rotation, targetRot);
+					transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, 
 						(rDamp + rotation.interpolation) * rotation.speed * Time.deltaTime);
 				}
 
 				else if (rotation.syncMode == SocketSync.LerpValues)
 				{
-					float rDamp = Quaternion.Angle(transform.rotation, Quaternion.Euler(targetRot));
-					transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(targetRot), 
+					float rDamp = Quaternion.Angle(transform.rotation, targetRot);
+					transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, 
 						(rDamp + rotation.interpolation) * rotation.speed * Time.deltaTime);
 				}
 			}
@@ -565,7 +565,7 @@ namespace BytesCrafter.USocketNet
 			}
 			if (!objJson.rot.Equals ("f"))
 			{
-				targetRot = VectorJson.ToVector3(objJson.rot);
+				targetRot = VectorJson.ToQuaternion(objJson.rot);
 			}
 			if (!objJson.sca.Equals ("f"))
 			{

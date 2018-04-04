@@ -1,4 +1,5 @@
 using UnityEngine;
+using BytesCrafter.USocketNet;
 
 namespace Complete
 {
@@ -39,7 +40,7 @@ namespace Complete
             // Go through all the colliders...
             for (int i = 0; i < colliders.Length; i++)
             {
-				if(colliders[i].transform.root.Equals(rootings))
+				if(colliders[i].transform.root.GetComponent<USocketView>().IsLocalUser)
 					continue;
 
 				// ... and find their rigidbody.

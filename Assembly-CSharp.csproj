@@ -152,8 +152,8 @@
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketView.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Script\DebugViewer.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Script\Elasticity.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Script\UnityControls.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Script\UnityPlayer.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Script\USocketNet_UIDemo.cs" />
      <Compile Include="Assets\PostProcessing\Runtime\Attributes\GetSetAttribute.cs" />
      <Compile Include="Assets\PostProcessing\Runtime\Attributes\MinAttribute.cs" />
      <Compile Include="Assets\PostProcessing\Runtime\Attributes\TrackballAttribute.cs" />

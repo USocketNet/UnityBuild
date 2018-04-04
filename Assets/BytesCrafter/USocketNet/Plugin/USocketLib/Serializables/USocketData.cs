@@ -19,6 +19,10 @@ public class USocket
 		}
 	}
 
+	public int synchRate = 0;
+	public float uploadRate = 0f;
+	public float downloadRate = 0f;
+
 	/// <summary>
 	/// The usocket nets client in this local machine.
 	/// </summary>

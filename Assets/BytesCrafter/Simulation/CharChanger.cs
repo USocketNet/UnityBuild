@@ -23,7 +23,7 @@ public class CharChanger : MonoBehaviour
 			{
 				if(conStat == ConnStat.Connected)
 				{
-					socket.GetComponent<UnityControls>().ChangeCanvas(1);
+					socket.GetComponent<USocketNet_UIDemo>().ChangeCanvas(1);
 
 					for(int index = 0; index < USocket.Instance.usocketNets.Count; index++)
 					{
@@ -44,7 +44,7 @@ public class CharChanger : MonoBehaviour
 						{
 							if(returned == Returned.Success)
 							{
-								socket.GetComponent<UnityControls>().ChangeCanvas(2);
+								socket.GetComponent<USocketNet_UIDemo>().ChangeCanvas(2);
 								current = USocket.Instance.usocketNets.Count - 1;
 								SetActiveSockets();
 							}

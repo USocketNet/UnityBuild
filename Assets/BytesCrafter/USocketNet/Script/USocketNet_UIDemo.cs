@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 using BytesCrafter.USocketNet;
 
-public class UnityControls : MonoBehaviour//, SocketInterface
+public class USocketNet_UIDemo : MonoBehaviour//, SocketInterface
 {
 	private USocketNet netScpt = null;
 	public USocketNet netScript
@@ -166,7 +166,7 @@ public class UnityControls : MonoBehaviour//, SocketInterface
 
 	public void AutoJoinServerRoom()
 	{
-		netScript.AutoJoinChannel ("Default", 7, (Returned returned, ChannelJson channelJson) =>
+		netScript.AutoJoinChannel ("Default", 10, (Returned returned, ChannelJson channelJson) =>
 			{
 				if(returned == Returned.Success)
 				{

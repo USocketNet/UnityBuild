@@ -892,11 +892,12 @@ MonoBehaviour:
     sendTimer: 0
     prevVstring: 
   states:
-    synchronize: 0
-    sendRate: 1
+    synchronize: 1
+    sendRate: 15
     sendTimer: 0
     prevVstring: 
-    syncValue: []
+    syncValue:
+    - 100
   childs:
     synchronize: 1
     childList:
@@ -1122,7 +1123,10 @@ MonoBehaviour:
   m_FullHealthColor: {r: 0, g: 1, b: 0, a: 1}
   m_ZeroHealthColor: {r: 1, g: 0, b: 0, a: 1}
   m_ExplosionPrefab: {fileID: 151086, guid: 6bc6d0dd8b8428e4ca316513f2cf13c6, type: 2}
+  m_CurrentHealth: 0
   view: {fileID: 114152153951235138}
+  ctrl: {fileID: 114648166460409606}
+  shoot: {fileID: 114323279179503188}
 --- !u!114 &114970231592234238
 MonoBehaviour:
   m_ObjectHideFlags: 1

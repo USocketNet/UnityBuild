@@ -53,7 +53,7 @@ namespace BytesCrafter.USocketNet
 		[Range(1f, 10f)] public float pingFrequency = 1f;
 
 		//Rate of sync per seconds timespan.
-		[Range(1f, 30f)] public float mainSendRate = 30f;
+		[Range(1f, 30f)] public int mainSendRate = 30;
 		[HideInInspector] public float sendTimer = 0f;
 
 		public bool debugOnLog = true;
@@ -207,26 +207,26 @@ namespace BytesCrafter.USocketNet
 	[System.Serializable]
 	public class ChannelJson
 	{
-		public string identity = string.Empty;
-		public string cname = string.Empty;
-		public string variant = string.Empty;
-		public int maxconnect = 0;
-		public string created = string.Empty;
-		public List<PeerJson> users;
+		public string id = string.Empty;
+		public string cn = string.Empty;
+		public string vt = string.Empty;
+		public int mc = 0;
+		public string ct = string.Empty;
+		public List<PeerJson> us;
 
 		public ChannelJson(string _identity)
 		{
-			identity = _identity;
+			id = _identity;
 		}
 
 		public ChannelJson(string _variant, int _maxconnect)
 		{
-			variant = _variant; maxconnect = _maxconnect;
+			vt = _variant; mc = _maxconnect;
 		}
 
 		public ChannelJson(string _channelName, string _variant, int _maxconnect)
 		{
-			cname = _channelName; variant = _variant; maxconnect = _maxconnect;
+			cn = _channelName; vt = _variant; mc = _maxconnect;
 		}
 	}
 
@@ -295,9 +295,114 @@ namespace BytesCrafter.USocketNet
 		public float y = 0f;
 		public float z = 0f;
 
+		private static string Minified(float floatings, int significant)
+		{
+			string final = "";
+			bool foundDot = false;
+			int countingSigna = 0;
+			string axis = floatings.ToString ();
+			for (int i = 0; i < axis.Length; i++)
+			{
+				if(foundDot)
+				{
+					if(countingSigna < significant) //significant
+					{
+						final = final + axis [i];
+						countingSigna += 1;
+					}
+
+					else
+					{
+						break;
+					}
+				}
+
+				else
+				{
+					if(significant == 0)
+					{
+						if(axis[i] == '.')
+						{
+							if(axis.ToLower().IndexOf('e') != -1)
+							{
+								bool foundEs = false;
+								for (int it = 0; it < axis.Length; it++)
+								{
+									if(axis[it] == 'E')
+									{
+										foundEs = true;
+									}
+
+									if(foundEs)
+									{
+										final = final + axis [it];
+									}
+								}
+
+								break;
+							}
+
+							else
+							{
+								break;
+							}
+						}
+
+						else
+						{
+							final = final + axis [i];
+						}
+					}
+
+					if(significant > 0)
+					{
+						if(axis.ToLower().IndexOf('e') != -1)
+						{
+							if(axis[i] == '.')
+							{
+								bool foundEs = false;
+								for (int it = i; it < axis.Length; it++)
+								{
+									if(axis[it] == 'E')
+									{
+										foundEs = true;
+									}
+
+									if(foundEs)
+									{
+										final = final + axis [it];
+									}
+								}
+
+								break;
+							}
+
+							else
+							{
+								final = final + axis [i];
+							}
+
+						}
+
+						else
+						{
+							final = final + axis [i];
+
+							if(axis[i] == '.')
+							{
+								foundDot = true;
+							}
+						}
+					}
+				}
+			}
+
+			return final;
+		}
+
 		public static string ToVectorStr(Vector3 vector3)
 		{
-			return vector3.x + "~" + vector3.y + "~" + vector3.z;
+			return Minified(vector3.x, 3) + "~" + Minified(vector3.y, 3) + "~" + Minified(vector3.z, 3);
 		}
 
 		public static Vector3 ToVector3(string vectorStr)
@@ -322,7 +427,7 @@ namespace BytesCrafter.USocketNet
 
 		public static string ToQuaternionStr(Quaternion rotation)
 		{
-			return rotation.eulerAngles.x + "~" + rotation.eulerAngles.y + "~" + rotation.eulerAngles.z;
+			return Minified(rotation.eulerAngles.x, 0) + "~" + Minified(rotation.eulerAngles.y, 0) + "~" + Minified(rotation.eulerAngles.z, 0);
 		}
 
 		public static Quaternion ToQuaternion(string vectorStr)
@@ -362,13 +467,8 @@ namespace BytesCrafter.USocketNet
 	[System.Serializable]
 	public class SyncJsons
 	{
-		//public string identity = string.Empty;
+		public string identity = string.Empty;
 		public List<SyncJson> obj = new List<SyncJson>();
-
-		//public SyncJsons(string _identity)
-		//{
-		//	identity = _identity;
-		//}
 	}
 
 	[System.Serializable]
