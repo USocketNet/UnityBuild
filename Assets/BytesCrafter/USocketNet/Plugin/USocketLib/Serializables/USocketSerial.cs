@@ -49,8 +49,8 @@ namespace BytesCrafter.USocketNet
 		public string serverPort = "3000";
 
 		[Header("CLIENT SETTINGS")]
-		[Range(0f, 1f)] public float connectDelay = 0.49f;
-		[Range(1f, 10f)] public float pingFrequency = 1f;
+		[Range(1f, 10f)] public float connectDelay = 0.49f;
+		[Range(1f, 60f)] public float pingFrequency = 1f;
 
 		//Rate of sync per seconds timespan.
 		[Range(1f, 30f)] public int mainSendRate = 30;
@@ -205,6 +205,13 @@ namespace BytesCrafter.USocketNet
 	#region CHANNEL JSON FORMAT
 
 	[System.Serializable]
+	public class ChanReturn
+	{
+		public bool rt = false;
+		public string ch = string.Empty;
+	}
+
+	[System.Serializable]
 	public class ChannelJson
 	{
 		public string id = string.Empty;
@@ -214,26 +221,35 @@ namespace BytesCrafter.USocketNet
 		public string ct = string.Empty;
 		public List<PeerJson> us;
 
-		public ChannelJson(string _identity)
+		public ChannelJson(string _channelName)
 		{
-			id = _identity;
+			cn = _channelName;
+		}
+
+		public ChannelJson(string _channelName, string _variant)
+		{
+			cn = _channelName;
+			vt = _variant;
 		}
 
 		public ChannelJson(string _variant, int _maxconnect)
 		{
-			vt = _variant; mc = _maxconnect;
+			vt = _variant;
+			mc = _maxconnect;
 		}
 
 		public ChannelJson(string _channelName, string _variant, int _maxconnect)
 		{
-			cn = _channelName; vt = _variant; mc = _maxconnect;
+			cn = _channelName;
+			vt = _variant;
+			mc = _maxconnect;
 		}
 	}
 
 	[System.Serializable]
 	public class ChanUsers
 	{
-		public List<PeerJson> users = new List<PeerJson>();
+		public List<PeerJson> us = new List<PeerJson>();
 	}
 
 	[System.Serializable]
@@ -402,7 +418,7 @@ namespace BytesCrafter.USocketNet
 
 		public static string ToVectorStr(Vector3 vector3)
 		{
-			return Minified(vector3.x, 3) + "~" + Minified(vector3.y, 3) + "~" + Minified(vector3.z, 3);
+			return Minified(vector3.x, 4) + "~" + Minified(vector3.y, 4) + "~" + Minified(vector3.z, 4);
 		}
 
 		public static Vector3 ToVector3(string vectorStr)
@@ -467,7 +483,6 @@ namespace BytesCrafter.USocketNet
 	[System.Serializable]
 	public class SyncJsons
 	{
-		public string identity = string.Empty;
 		public List<SyncJson> obj = new List<SyncJson>();
 	}
 

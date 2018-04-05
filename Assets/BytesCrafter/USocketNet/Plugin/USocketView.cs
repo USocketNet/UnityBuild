@@ -625,13 +625,12 @@ namespace BytesCrafter.USocketNet
 		private IEnumerator SettingTriggers(Triggered triggersListener)
 		{
 			yield return new WaitForSeconds (1f);
-			triggerSubscribers = triggersListener;
+			triggerSubscribers += triggersListener;
 			socketNet.ListenTriggersEvent(ReceivedTriggers);
 		}
 
 		private void ReceivedTriggers(TriggerJson tJson)
 		{
-			Debug.LogError(JsonUtility.ToJson(tJson));
 			//tJson.id is id of the cur user other action.
 			if(Instance == tJson.itc)
 			{
@@ -648,9 +647,8 @@ namespace BytesCrafter.USocketNet
 			trigger.tKy = key;
 			trigger.tVl = content;
 
-			socketNet.SendTriggerEvent (trigger, (Returned returned) => {
-
-				Debug.LogWarning(returned.ToString());
+			socketNet.SendTriggerEvent (trigger, (Returned returned) => 
+				{
 
 				if(returned == Returned.Failed)
 				{

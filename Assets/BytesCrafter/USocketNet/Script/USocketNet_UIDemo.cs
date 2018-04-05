@@ -39,16 +39,16 @@ public class USocketNet_UIDemo : MonoBehaviour//, SocketInterface
 
 	[Header("PUBLIC MESSAGE")]
 	public InputField pubMsgContent = null;
-	public DebugViewer publicViewer = null;
+	public USocketNet_MsgLog publicViewer = null;
 
 	[Header("PRIVATE MESSAGE")]
 	public InputField priMsgContent = null;
 	public InputField priMsgReceiver = null;
-	public DebugViewer privateViewer = null;
+	public USocketNet_MsgLog privateViewer = null;
 
 	[Header("CHANNEL MESSAGE")]
 	public InputField chanMsgContent = null;
-	public DebugViewer channelViewer = null;
+	public USocketNet_MsgLog channelViewer = null;
 
 	[Header("Server Room")]
 	public InputField roomname = null;
@@ -166,7 +166,7 @@ public class USocketNet_UIDemo : MonoBehaviour//, SocketInterface
 
 	public void AutoJoinServerRoom()
 	{
-		netScript.AutoJoinChannel ("Default", 10, (Returned returned, ChannelJson channelJson) =>
+		netScript.AutoMatchChannel ("Default", 10, (Returned returned, ChannelJson channelJson) =>
 			{
 				if(returned == Returned.Success)
 				{
@@ -178,7 +178,7 @@ public class USocketNet_UIDemo : MonoBehaviour//, SocketInterface
 
 	public void CreateServerRoom()
 	{
-		netScript.CreateServerRoom (roomname.text, "Default", 2, (Returned returned, ChannelJson roomJson) => 
+		netScript.CreateChannel (roomname.text, "Default", 2, (Returned returned, ChannelJson roomJson) => 
 			{
 				if(returned == Returned.Success)
 				{
@@ -190,7 +190,7 @@ public class USocketNet_UIDemo : MonoBehaviour//, SocketInterface
 
 	public void JoinServerRoom()
 	{
-		netScript.JoinServerRoom (roomname.text, (Returned returned, ChannelJson roomJson) =>
+		netScript.JoinChannel (roomname.text, "Default", (Returned returned, ChannelJson roomJson) =>
 			{
 				if(returned == Returned.Success)
 				{
