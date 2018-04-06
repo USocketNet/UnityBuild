@@ -30,14 +30,14 @@ public class USocketNet_Multiple : MonoBehaviour
 						USocket.Instance.usocketNets[index].GetComponent<Canvas> ().enabled = false;
 						foreach(USocketView sockV in USocket.Instance.usocketNets[index].localSockets)
 						{
-							sockV.GetComponent<USocketNet_CtrlDemo> ().onControl = false;
+							sockV.GetComponent<SimpleControl> ().onControl = false;
 						}
 					}
 
 					USocket.Instance.usocketNets[USocket.Instance.usocketNets.Count - 1].GetComponent<Canvas> ().enabled = true;
 					foreach(USocketView sockV in USocket.Instance.usocketNets[USocket.Instance.usocketNets.Count - 1].localSockets)
 					{
-						sockV.GetComponent<USocketNet_CtrlDemo> ().onControl = true;
+						sockV.GetComponent<SimpleControl> ().onControl = true;
 					}
 
 					socket.AutoMatchChannel ("Default", 10, (Returned returned, ChannelJson channelJson) =>
@@ -68,7 +68,7 @@ public class USocketNet_Multiple : MonoBehaviour
 			USocket.Instance.usocketNets[index].GetComponent<Canvas> ().enabled = false;
 			foreach(USocketView sockV in USocket.Instance.usocketNets[index].localSockets)
 			{
-				sockV.GetComponent<USocketNet_CtrlDemo> ().onControl = false;
+				sockV.GetComponent<SimpleControl> ().onControl = false;
 			}
 		}
 
@@ -76,11 +76,11 @@ public class USocketNet_Multiple : MonoBehaviour
 		USocket.Instance.usocketNets[current].GetComponent<Canvas> ().enabled = true;
 		foreach(USocketView sockV in USocket.Instance.usocketNets[current].localSockets)
 		{
-			sockV.GetComponent<USocketNet_CtrlDemo> ().onControl = false;
+			sockV.GetComponent<SimpleControl> ().onControl = false;
 		}
 		if(USocket.Instance.usocketNets[current].localSockets.Count > 0)
 		{
-			USocket.Instance.usocketNets[current].localSockets[instance].GetComponent<USocketNet_CtrlDemo> ().onControl = true;
+			USocket.Instance.usocketNets[current].localSockets[instance].GetComponent<SimpleControl> ().onControl = true;
 		}
 	}
 
@@ -129,11 +129,11 @@ public class USocketNet_Multiple : MonoBehaviour
 							instance = USocket.Instance.usocketNets [current].localSockets.Count - 1;
 						}
 
-						USocketNet_CtrlDemo uPlayer = null;
+						SimpleControl uPlayer = null;
 
 						for(int i = 0; i < USocket.Instance.usocketNets[current].localSockets.Count; i++)
 						{
-							uPlayer = USocket.Instance.usocketNets[current].localSockets[i].GetComponent<USocketNet_CtrlDemo> ();
+							uPlayer = USocket.Instance.usocketNets[current].localSockets[i].GetComponent<SimpleControl> ();
 
 							if(uPlayer != null)
 							{
@@ -143,7 +143,7 @@ public class USocketNet_Multiple : MonoBehaviour
 						}
 						if(uPlayer != null)
 						{
-							USocket.Instance.usocketNets[current].localSockets[instance].GetComponent<USocketNet_CtrlDemo> ().onControl = true;
+							USocket.Instance.usocketNets[current].localSockets[instance].GetComponent<SimpleControl> ().onControl = true;
 						}
 					}
 				}); // spawnPoint.position, spawnPoint.rotation);
@@ -154,7 +154,7 @@ public class USocketNet_Multiple : MonoBehaviour
 		{
 			USocket.Instance.usocketNets[current].GetComponent<Canvas> ().enabled = true;
 
-			int playCtrl = USocket.Instance.usocketNets[current].localSockets.FindIndex (x => x.GetComponent<USocketNet_CtrlDemo> ().onControl == true);
+			int playCtrl = USocket.Instance.usocketNets[current].localSockets.FindIndex (x => x.GetComponent<SimpleControl> ().onControl == true);
 
 			Debug.Log ("Control: " + playCtrl);
 
@@ -172,12 +172,12 @@ public class USocketNet_Multiple : MonoBehaviour
 			{
 				if(instance == i)
 				{
-					USocket.Instance.usocketNets[current].localSockets[i].GetComponent<USocketNet_CtrlDemo> ().onControl = true;
+					USocket.Instance.usocketNets[current].localSockets[i].GetComponent<SimpleControl> ().onControl = true;
 				}
 
 				else
 				{
-					USocket.Instance.usocketNets[current].localSockets[i].GetComponent<USocketNet_CtrlDemo> ().onControl = false;
+					USocket.Instance.usocketNets[current].localSockets[i].GetComponent<SimpleControl> ().onControl = false;
 				}
 			}
 		}

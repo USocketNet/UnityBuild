@@ -5,9 +5,12 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
-    path: Assets/BytesCrafter/USocketNet/Demoguy/Scene/Main.unity
+  - enabled: 0
+    path: Assets/BytesCrafter/USocketNet/Demoguy/Scene/Multiple.unity
     guid: 301a367ad3887254989ea876cd2a5604
+  - enabled: 1
+    path: Assets/BytesCrafter/USocketNet/Demoguy/Scene/Single.unity
+    guid: ee2dbb34103da044ea8a09e20085e951
   - enabled: 0
     path: Assets/BytesCrafter/Simulation/Prototype/Scene/Game.unity
     guid: acf6be658edaedd4db385c47d37d4e03
@@ -15,11 +18,11 @@ EditorBuildSettings:
     path: Assets/BytesCrafter/Simulation/Medieval/Scene/Medieval.unity
     guid: a9625f298530ee2468739ea1b6f3210d
   - enabled: 0
-    path: Assets/Unity Assets/SampleScenes/Scenes/Car.unity
-    guid: 41b8fdb98491fab48a0cd641d4c0e3b1
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 0
-    path: Assets/Unity Assets/SampleScenes/Scenes/CharacterThirdPerson.unity
-    guid: 0cb5d44a4c963f145acdb0a0c95d9d1b
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 0
-    path: Assets/Unity Assets/TanksByUnity/_Complete-Game.unity
+    path: Assets/TanksByUnity/_Complete-Game.unity
     guid: 37961ba4d27bd46428d20c2ffe403dc3

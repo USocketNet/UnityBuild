@@ -928,10 +928,10 @@ namespace BytesCrafter.USocketNet
 			}
 
 			//Destroy all sockets views assoc in this socket net.
-			localSockets.ForEach ((USocketView sockView) => {
-				Destroy(sockView.gameObject);
-			});
-			localSockets = new List<USocketView> ();
+			//localSockets.ForEach ((USocketView sockView) => {
+			//	Destroy(sockView.gameObject);
+			//});
+			//localSockets = new List<USocketView> ();
 
 			if (leavedCallback != null)
 			{

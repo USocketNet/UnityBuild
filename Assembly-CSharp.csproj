@@ -158,7 +158,7 @@
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Library\Websocket\WebSocketStream.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketView.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Script\USocketNet_CtrlDemo.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Script\SimpleControl.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Script\USocketNet_MsgLog.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Script\USocketNet_Multiple.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Script\USocketNet_UIDemo.cs" />
