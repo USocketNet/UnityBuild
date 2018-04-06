@@ -606,7 +606,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 84
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!65 &65763662907104804
 BoxCollider:
@@ -867,7 +867,7 @@ MonoBehaviour:
     speed: 3
     sendTimer: 0
     prevVstring: 
-    syncMode: 0
+    syncMode: 1
   rotation:
     synchronize: 1
     sendRate: 15
@@ -875,7 +875,7 @@ MonoBehaviour:
     speed: 3
     sendTimer: 0
     prevVstring: 
-    syncMode: 0
+    syncMode: 1
   scale:
     synchronize: 0
     sendRate: 15
@@ -1124,6 +1124,7 @@ MonoBehaviour:
   m_ZeroHealthColor: {r: 1, g: 0, b: 0, a: 1}
   m_ExplosionPrefab: {fileID: 151086, guid: 6bc6d0dd8b8428e4ca316513f2cf13c6, type: 2}
   m_CurrentHealth: 1000
+  m_Dead: 0
   view: {fileID: 114152153951235138}
   ctrl: {fileID: 114648166460409606}
   shoot: {fileID: 114323279179503188}

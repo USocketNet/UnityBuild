@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using BytesCrafter.USocketNet;
+using Complete;
 
-namespace Complete
-{
     public class TankHealth : MonoBehaviour
     {
         public float m_StartingHealth = 100f;               // The amount of health each tank starts with.
@@ -16,7 +15,7 @@ namespace Complete
         private AudioSource m_ExplosionAudio;               // The audio source to play when the tank explodes.
         private ParticleSystem m_ExplosionParticles;        // The particle system the will play when the tank is destroyed.
 		public float m_CurrentHealth = 100f;                      // How much health the tank currently has.
-        private bool m_Dead = false;                                // Has the tank been reduced beyond zero health yet?
+		public bool m_Dead = false;                                // Has the tank been reduced beyond zero health yet?
 
 		public USocketView view = null;
 		public TankMovement ctrl = null;
@@ -43,19 +42,6 @@ namespace Complete
 			if(view.IsLocalUser)
 			{
 				view.states.syncValue [0] = m_CurrentHealth + "";
-
-				if(m_Dead)
-				{
-					if(Input.GetKeyDown(KeyCode.Insert))
-					{
-						view.TriggerEvents ("Revived", "", (Returned returned) => {
-							if(returned == Returned.Success)
-							{
-								Revived ();
-							}
-						});
-					}
-				}
 			}
 
 			else
@@ -67,7 +53,7 @@ namespace Complete
 			m_FillImage.color = Color.Lerp (m_ZeroHealthColor, m_FullHealthColor, m_CurrentHealth / m_StartingHealth);
 		}
 
-		private void Revived()
+		public void Revived()
 		{
 			// When the tank is enabled, reset the tank's health and whether or not it's dead.
 			m_CurrentHealth = m_StartingHealth;
@@ -101,8 +87,6 @@ namespace Complete
 			{
 				Revived ();
 			}
-
-			Debug.Log (triggerJson.tKy + ": " + triggerJson.tVl);
 		}
 
 		public void TakeDamage (float amount)
@@ -173,4 +157,3 @@ namespace Complete
 			}
         }
     }
-}

@@ -116,8 +116,15 @@ namespace BytesCrafter.USocketNet
 			}
 		}
 
+		private bool initialized = false;
 		void Update()
 		{
+			if(socketNet != null && !initialized)
+			{
+				socketNet.ListenTriggersEvent(ReceivedTriggers);
+				initialized = true;
+			}
+
 			//Check if socket id is empty, then remove it.
 			if (Identity == string.Empty)
 				return;
@@ -617,17 +624,7 @@ namespace BytesCrafter.USocketNet
 		private Triggered triggerSubscribers = null;
 		public void ListenTriggers(Triggered triggersListener)
 		{
-			//if (IsLocalUser)
-			//{
-				StartCoroutine (SettingTriggers(triggersListener));
-			//}
-		}
-
-		private IEnumerator SettingTriggers(Triggered triggersListener)
-		{
-			yield return new WaitForSeconds (1f);
 			triggerSubscribers += triggersListener;
-			socketNet.ListenTriggersEvent(ReceivedTriggers);
 		}
 
 		private void ReceivedTriggers(TriggerJson tJson)

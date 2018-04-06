@@ -1,24 +1,17 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\BytesCrafter\USocketNet\Plugin\Library\USocketNet\Editor\USocketNetEditor.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs">
     <Files>
-      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" Line="1674" Column="1" />
-      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\USocketView.cs" Line="7" Column="45" />
-      <File FileName="Assets\BytesCrafter\USocketNet\Script\USocketNet_UIDemo.cs" Line="44" Column="41" />
-      <File FileName="Assets\BytesCrafter\USocketNet\Script\USocketNet_MsgLog.cs" Line="1" Column="1" />
-      <File FileName="Assets\BytesCrafter\USocketNet\Script\USocketNet_CtrlDemo.cs" Line="31" Column="20" />
-      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\Library\USocketNet\Serials\SyncJsons.cs" Line="10" Column="2" />
-      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\Library\USocketNet\Editor\USocketNetEditor.cs" Line="8" Column="1" />
-      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\Library\USocketNet\Editor\USocketNetWindow.cs" Line="9" Column="1" />
-      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\Library\USocketNet\Editor\USocketViewEditor.cs" Line="348" Column="1" />
+      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" Line="1201" Column="3" />
+      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\USocketView.cs" Line="599" Column="28" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="D:\Projects\Software - USocketNet\Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" line="2176" column="13" />
-      <Breakpoint file="D:\Projects\Software - USocketNet\Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" line="2126" column="1" />
-      <Breakpoint file="D:\Projects\Software - USocketNet\Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" line="2110" column="1" />
-      <Breakpoint file="D:\Projects\Software - USocketNet\Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" line="2121" column="16" />
+      <Breakpoint file="D:\Projects\Software - USocketNet\Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" line="2172" column="13" />
+      <Breakpoint file="D:\Projects\Software - USocketNet\Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" line="2122" column="1" />
+      <Breakpoint file="D:\Projects\Software - USocketNet\Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" line="2106" column="1" />
+      <Breakpoint file="D:\Projects\Software - USocketNet\Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" line="2117" column="16" />
       <Breakpoint file="D:\Projects\Software - USocketNet\Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" line="452" column="3" />
       <Breakpoint file="D:\Projects\Software - USocketNet\Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" line="856" column="1" />
     </BreakpointStore>

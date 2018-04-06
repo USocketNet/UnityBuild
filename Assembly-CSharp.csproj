@@ -256,14 +256,6 @@
      <Compile Include="Assets\TanksByUnity\_Completed-Assets\Scripts\Tank\TankMovement.cs" />
      <Compile Include="Assets\TanksByUnity\_Completed-Assets\Scripts\Tank\TankShooting.cs" />
      <Compile Include="Assets\TanksByUnity\_Completed-Assets\Scripts\UI\UIDirectionControl.cs" />
-     <Compile Include="Assets\TanksByUnity\Scripts\Camera\CameraControl.cs" />
-     <Compile Include="Assets\TanksByUnity\Scripts\Managers\GameManager.cs" />
-     <Compile Include="Assets\TanksByUnity\Scripts\Managers\TankManager.cs" />
-     <Compile Include="Assets\TanksByUnity\Scripts\Shell\ShellExplosion.cs" />
-     <Compile Include="Assets\TanksByUnity\Scripts\Tank\TankHealth.cs" />
-     <Compile Include="Assets\TanksByUnity\Scripts\Tank\TankMovement.cs" />
-     <Compile Include="Assets\TanksByUnity\Scripts\Tank\TankShooting.cs" />
-     <Compile Include="Assets\TanksByUnity\Scripts\UI\UIDirectionControl.cs" />
      <Compile Include="Assets\TanksByUnity\TutorialInfo\Scripts\Readme.cs" />
      <None Include="Assets\BytesCrafter\USocketNet\Plugin\Library\JSONObject\readme.txt" />
      <None Include="Assets\PostProcessing\Resources\Shaders\DepthOfField.shader" />

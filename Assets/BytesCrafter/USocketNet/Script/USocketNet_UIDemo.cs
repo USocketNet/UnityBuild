@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using BytesCrafter.USocketNet;
@@ -56,8 +55,40 @@ public class USocketNet_UIDemo : MonoBehaviour
 	public Text pingSocket = null;
 	float timer = 0f;
 
+	public List<Transform> spawnPoint = null;
+
+	public string gameVariant = "Default";
+
 	void Update()
 	{
+		if(Input.GetKeyDown(KeyCode.F5))
+		{
+			netScript.localSockets.ForEach ((USocketView viewss) => {
+
+				if(viewss.IsLocalUser)
+				{
+					TankHealth thealth = viewss.GetComponent<TankHealth>();
+					if(viewss != null)
+					{
+						if(thealth.m_Dead)
+						{
+							int spawning = Random.Range (0, spawnPoint.Count);
+							viewss.transform.position = spawnPoint[0].position;
+
+							viewss.TriggerEvents ("Revived", "", (Returned returned) => {
+								if(returned == Returned.Success)
+								{
+									thealth.Revived ();
+								}
+							});
+
+						}
+
+					}
+				}
+			});
+		}
+
 		pingSocket.text = netScript.PingCount + " ms";
 		//Ping ASD = new Ping ();
 
@@ -113,12 +144,12 @@ public class USocketNet_UIDemo : MonoBehaviour
 
 	private void ListenOnMatchJoined(PeerJson peerJson)
 	{
-		channelViewer.Logs(peerJson.id + " had joined this channel.");
+		channelViewer.Logs(peerJson.id + " had joined.");
 	}
 
 	private void listenOnLeaved(PeerJson peerJson)
 	{
-		channelViewer.Logs(peerJson.id + " had leaved this channel.");
+		channelViewer.Logs(peerJson.id + " had leaved.");
 	}
 
 	#endregion
@@ -190,7 +221,7 @@ public class USocketNet_UIDemo : MonoBehaviour
 
 	public void AutoJoinServerRoom()
 	{
-		netScript.AutoMatchChannel ("Default", 10, (Returned returned, ChannelJson channelJson) =>
+		netScript.AutoMatchChannel (gameVariant, 10, (Returned returned, ChannelJson channelJson) =>
 			{
 				if(returned == Returned.Success)
 				{
@@ -202,7 +233,7 @@ public class USocketNet_UIDemo : MonoBehaviour
 
 	public void CreateServerRoom()
 	{
-		netScript.CreateChannel (roomname.text, "Default", 2, (Returned returned, ChannelJson roomJson) => 
+		netScript.CreateChannel (roomname.text, gameVariant, 2, (Returned returned, ChannelJson roomJson) => 
 			{
 				if(returned == Returned.Success)
 				{
@@ -214,7 +245,7 @@ public class USocketNet_UIDemo : MonoBehaviour
 
 	public void JoinServerRoom()
 	{
-		netScript.JoinChannel (roomname.text, "Default", (Returned returned, ChannelJson roomJson) =>
+		netScript.JoinChannel (roomname.text, gameVariant, (Returned returned, ChannelJson roomJson) =>
 			{
 				if(returned == Returned.Success)
 				{

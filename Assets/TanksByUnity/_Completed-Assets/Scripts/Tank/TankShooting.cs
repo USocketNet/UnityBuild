@@ -93,12 +93,15 @@ namespace Complete
 		void Awake()
 		{
 			//Add listeners for damage!
-			view.ListenTriggers(ReceivedTriggers);
+			if(!view.IsLocalUser)
+			{
+				view.ListenTriggers(ReceivedTriggers);
+			}
 		}
 
 		private void ReceivedTriggers(TriggerJson triggerJson)
 		{
-			if(triggerJson.tKy == "Fire")
+			if(!view.IsLocalUser)
 			{
 				float firePower = System.Convert.ToSingle(triggerJson.tVl);
 

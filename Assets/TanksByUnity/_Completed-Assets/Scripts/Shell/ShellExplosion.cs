@@ -56,7 +56,7 @@ namespace Complete
 				if (rootings.GetComponent<USocketView> ().IsLocalUser)
 				{
 					// Add an explosion force.
-					targetRigidbody.AddExplosionForce (m_ExplosionForce, transform.position, m_ExplosionRadius);
+					//targetRigidbody.AddExplosionForce (m_ExplosionForce, transform.position, m_ExplosionRadius);
 				}
 
                 // Find the TankHealth script associated with the rigidbody.
@@ -87,7 +87,10 @@ namespace Complete
             Destroy (m_ExplosionParticles.gameObject, mainModule.duration);
 
             // Destroy the shell.
-            //Destroy (gameObject);
+			//if(rootings.GetComponent<USocketView> ().IsLocalUser)
+			//{
+				Destroy (gameObject);
+			//}
         }
 
 

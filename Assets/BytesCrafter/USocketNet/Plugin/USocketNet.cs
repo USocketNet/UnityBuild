@@ -1669,7 +1669,3 @@ namespace BytesCrafter.USocketNet
 		#endregion
 	}
 }
-
-#region EditorScript
-
-#endregion
