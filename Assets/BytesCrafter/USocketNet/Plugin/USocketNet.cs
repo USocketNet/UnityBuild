@@ -6,9 +6,12 @@ using System.Collections.Generic;
 using SocketIO;
 using WebSocketSharp;
 using UnityEngine;
-using UnityEngine.UI;
-using BytesCrafter.USocketNet;
 
+using UnityEngine.UI;
+
+using BytesCrafter.USocketNet.Serializables;
+using BytesCrafter.USocketNet.Networks;
+using BytesCrafter.USocketNet.Toolsets;
 namespace BytesCrafter.USocketNet
 {
 	public class USocketNet : MonoBehaviour
@@ -130,7 +133,7 @@ namespace BytesCrafter.USocketNet
 					cvs.sortingOrder = 100;
 					blocker.AddComponent<CanvasScaler> ();
 					Image img = blocker.AddComponent<Image> ();
-					img.color = new Color (0f, 0f, 0f, 0.20f);
+					img.color = new Color (0f, 0f, 0f, 0.29f);
 				}
 
 				else
@@ -178,7 +181,10 @@ namespace BytesCrafter.USocketNet
 
 			else
 			{
-				connectCallback(ConnStat.Connected, new ConnJson());
+				if(connectCallback != null)
+				{
+					connectCallback(ConnStat.Connected, new ConnJson());
+				}
 				DebugLog(Debugs.Warn, "ConnectionSuccess", "Already connected to the server!");
 			}
 		}
@@ -187,7 +193,6 @@ namespace BytesCrafter.USocketNet
 		IEnumerator ConnectingToServer(string username)
 		{
 			lastUsername = username;
-			yield return IsConnected;
 			yield return new WaitForSeconds(bindings.connectDelay);
 
 			if (threadset.websocket.IsConnected)
@@ -201,8 +206,12 @@ namespace BytesCrafter.USocketNet
 				if (!connectReturn)
 				{
 					AbortConnection ();
-					connectCallback(ConnStat.InternetAccess, new ConnJson());
 					UIBlocker (false);
+
+					if(connectCallback != null)
+					{
+						connectCallback(ConnStat.InternetAccess, new ConnJson());
+					}
 					DebugLog(Debugs.Error, "ConnectionNoInternet", "Detected no internet connection!");
 				}
 			}
@@ -210,7 +219,11 @@ namespace BytesCrafter.USocketNet
 			else
 			{
 				AbortConnection ();
-				connectCallback(ConnStat.Maintainance, new ConnJson());
+
+				if(connectCallback != null)
+				{
+					connectCallback(ConnStat.Maintainance, new ConnJson());
+				}
 				UIBlocker (false);
 
 			}
@@ -224,21 +237,26 @@ namespace BytesCrafter.USocketNet
 			ConnJson connJson = JsonSerializer.ToObject<ConnJson>(jsonObject.ToString());
 			lastUsername = connJson.username;
 			netIdentity = connJson.identity;
-			connectCallback(ConnStat.Connected, connJson);
 			UIBlocker (false);
+
+			if(connectCallback != null)
+			{
+				connectCallback(ConnStat.Connected, connJson);
+			}
 			DebugLog(Debugs.Log, "ConnectionSuccess", "Successfully connected to server!");
 		}
 
 		//Done! User rejections if authKey is not valid!
 		private void OnUserRejected(SocketIOEvent _eventArgs)
 		{
-			ConnJson connJson = JsonUtility.FromJson<ConnJson>(_eventArgs.data.ToString());
-
 			ForceDisconnect();
-			disconnectCallback(ConnStat.Disconnected);
 			UIBlocker (false);
 			pingValue = 0;
 
+			if(disconnectCallback != null)
+			{
+				disconnectCallback(ConnStat.Disconnected);
+			}
 			DebugLog (Debugs.Error, "ConnectForbidden", "Your authentication key is not authorized!");
 		}
 
@@ -256,13 +274,18 @@ namespace BytesCrafter.USocketNet
 
 			if (threadset.websocket.IsConnected)
 			{
+				UIBlocker (true);
 				StartCoroutine(DisconnectingToServer());
 			}
 
 			else
 			{
 				ForceDisconnect();
-				disconnectCallback(ConnStat.Disconnected);
+
+				if(disconnectCallback != null)
+				{
+					disconnectCallback(ConnStat.Disconnected);
+				}
 				DebugLog (Debugs.Warn, "CantDisconnect", "You are not connected to server!");
 			}
 		}
@@ -273,8 +296,13 @@ namespace BytesCrafter.USocketNet
 
 			if (!disconnectReturn)
 			{
+				UIBlocker (false);
 				ForceDisconnect();
-				disconnectCallback(ConnStat.Disconnected);
+
+				if(disconnectCallback != null)
+				{
+					disconnectCallback(ConnStat.Disconnected);
+				}
 			}
 		}
 
@@ -282,10 +310,14 @@ namespace BytesCrafter.USocketNet
 		{
 			StopCoroutine("DisconnectingToServer");
 			disconnectReturn = true;
-
 			ForceDisconnect();
-			disconnectCallback(ConnStat.Disconnected);
 			pingValue = 0;
+			UIBlocker (false);
+
+			if(disconnectCallback != null)
+			{
+				disconnectCallback(ConnStat.Disconnected);
+			}
 		}
 
 		#endregion
@@ -311,6 +343,7 @@ namespace BytesCrafter.USocketNet
 
 			if (connStat == ConnStat.Reconnected)
 			{
+				UIBlocker (true);
 				UserJson userJson = new UserJson(bindings.authenKey, lastUsername);
 				string sendData = JsonUtility.ToJson(userJson);
 				SendEmit("reconnect", new JSONObject(sendData), OnServerReconnect);
@@ -320,6 +353,8 @@ namespace BytesCrafter.USocketNet
 
 			if (!onListeningReturn)
 			{
+				UIBlocker (false);
+
 				if (connectionStats != null)
 				{
 					connectionStats(connStat, null);
@@ -334,6 +369,7 @@ namespace BytesCrafter.USocketNet
 			StopCoroutine ("OnListeningConnectionStatus");
 			ConnJson connJson = JsonSerializer.ToObject<ConnJson>(jsonObject.ToString());
 			onListeningReturn = true;
+			UIBlocker (false);
 
 			if (connectionStats != null)
 			{
@@ -346,9 +382,9 @@ namespace BytesCrafter.USocketNet
 		#region PublicMessage - Done!
 
 		private bool publicReturned = false;
-		private Action<MsgStat> publicCallback = null;
+		private Action<Returned> publicCallback = null;
 
-		public void SendPublicMessage(string message, Action<MsgStat> _publicCallback)
+		public void SendPublicMessage(string message, Action<Returned> _publicCallback)
 		{
 			publicCallback = _publicCallback;
 			publicReturned = false;
@@ -363,8 +399,10 @@ namespace BytesCrafter.USocketNet
 
 			else
 			{
-				MsgJson msgJson = new MsgJson();
-				publicCallback(MsgStat.Failed);
+				if(publicCallback != null)
+				{
+					publicCallback(Returned.Failed);
+				}
 				DebugLog (Debugs.Error, "PubMsgError", "You are currently disconnected to the server!");
 			}
 		}
@@ -377,7 +415,7 @@ namespace BytesCrafter.USocketNet
 			{
 				if (publicCallback != null)
 				{
-					publicCallback(MsgStat.Failed);
+					publicCallback(Returned.Failed);
 				}
 
 				DebugLog (Debugs.Warn, "PubMsgFailed", "Server did not respond to leave event!");
@@ -387,11 +425,26 @@ namespace BytesCrafter.USocketNet
 		private void OnPublicMessageSent(JSONObject jsonObject)
 		{
 			StopCoroutine (SendingPublicMessage());
-			MsgCallback msgJson = JsonSerializer.ToObject<MsgCallback>(jsonObject.ToString());
 			publicReturned = true;
-			publicCallback(MsgStat.Success);
 
-			DebugLog (Debugs.Log, "PubMsgSuccess", "Successfully sent a lobby message!");
+			MsgCallback msgJson = JsonSerializer.ToObject<MsgCallback>(jsonObject.ToString());
+			if(msgJson.msgStat == Returned.Success)
+			{
+				if(publicCallback != null)
+				{
+					publicCallback(Returned.Success);
+				}
+				DebugLog (Debugs.Log, "PubMsgSuccess", "Successfully sent a lobby message!");
+			}
+
+			else
+			{
+				if(publicCallback != null)
+				{
+					publicCallback(Returned.Failed);
+				}
+				DebugLog (Debugs.Log, "PubMsgFailed", "Server did failed to send to peers.");
+			}
 		}
 
 		#endregion
@@ -399,11 +452,12 @@ namespace BytesCrafter.USocketNet
 		#region PrivateMessage - Done!
 
 		private bool privateReturned = false;
-		private Action<MsgStat> privateMessage = null;
+		private Action<Returned> privateMessage = null;
 
-		public void SendPrivateMessage(string receiver, string message, Action<MsgStat> _privateMessage)
+		public void SendPrivateMessage(string receiver, string message, Action<Returned> _privateMessage)
 		{
-			privateMessage = _privateMessage; privateReturned = false;
+			privateMessage = _privateMessage;
+			privateReturned = false;
 
 			if (threadset.websocket.IsConnected)
 			{
@@ -415,9 +469,11 @@ namespace BytesCrafter.USocketNet
 
 			else
 			{
-				MsgJson msgJson = new MsgJson();
-				privateMessage(MsgStat.Failed);
-				DebugLog (Debugs.Error, "PrivateMsgError", "You are currently disconnected to the server!");
+				if(privateMessage != null)
+				{
+					privateMessage(Returned.Failed);
+				}
+				DebugLog (Debugs.Error, "PriMsgError", "You are currently disconnected to the server!");
 			}
 		}
 
@@ -427,25 +483,37 @@ namespace BytesCrafter.USocketNet
 
 			if (!privateReturned)
 			{
-				MsgJson msgJson = new MsgJson();
-
 				if (privateMessage != null)
 				{
-					privateMessage(MsgStat.Failed);
+					privateMessage(Returned.Failed);
 				}
-
-				DebugLog (Debugs.Warn, "PrivateMsgFailed", "Server did not respond to leave event!");
+				DebugLog (Debugs.Warn, "PriMsgFailed", "Server did not respond to leave event!");
 			}
 		}
 
 		private void OnPrivateMessageSent(JSONObject jsonObject)
 		{
 			StopCoroutine (SendingPrivateMessage());
-			MsgJson msgJson = JsonSerializer.ToObject<MsgJson>(jsonObject.ToString());
 			privateReturned = true;
-			privateMessage(MsgStat.Failed);
 
-			DebugLog (Debugs.Log, "PrivateMsgSuccess", "Successfully sent a private message!");
+			MsgCallback msgJson = JsonSerializer.ToObject<MsgCallback>(jsonObject.ToString());
+			if(msgJson.msgStat == Returned.Success)
+			{
+				if(privateMessage != null)
+				{
+					privateMessage(Returned.Success);
+				}
+				DebugLog (Debugs.Log, "PriMsgSuccess", "Successfully sent a private message!");
+			}
+
+			else
+			{
+				if(privateMessage != null)
+				{
+					privateMessage(Returned.Failed);
+				}
+				DebugLog (Debugs.Log, "PriMsgFailed", "Server did failed to send to peers.");
+			}
 		}
 
 		#endregion
@@ -453,9 +521,9 @@ namespace BytesCrafter.USocketNet
 		#region ChannelMessage - Done!
 
 		private bool channelReturned = false;
-		private Action<MsgStat> channelCallback = null;
+		private Action<Returned> channelCallback = null;
 
-		public void SendChannelMessage(string message, Action<MsgStat> _channelCallback)
+		public void SendChannelMessage(string message, Action<Returned> _channelCallback)
 		{
 			channelCallback = _channelCallback;
 			channelReturned = false;
@@ -470,9 +538,11 @@ namespace BytesCrafter.USocketNet
 
 			else
 			{
-				MsgJson msgJson = new MsgJson();
-				channelCallback(MsgStat.Failed);
-				DebugLog (Debugs.Error, "ChannelMsgError", "You are currently disconnected to the server!");
+				if(channelCallback != null)
+				{
+					channelCallback(Returned.Failed);
+				}
+				DebugLog (Debugs.Error, "ChaMsgError", "You are currently disconnected to the server!");
 			}
 		}
 
@@ -482,24 +552,37 @@ namespace BytesCrafter.USocketNet
 
 			if (!channelReturned)
 			{
-				MsgJson msgJson = new MsgJson();
-
 				if (channelCallback != null)
 				{
-					channelCallback(MsgStat.Failed);
-					DebugLog (Debugs.Error, "ChannelMsgFailed", "Server did not respond to leave event!");
+					channelCallback(Returned.Failed);
 				}
+				DebugLog (Debugs.Warn, "ChaMsgFailed", "Server did not respond to leave event!");
 			}
 		}
 
 		private void OnChannelMessageSent(JSONObject jsonObject)
 		{
 			StopCoroutine (SendingChannelMessage());
-			MsgJson msgJson = JsonSerializer.ToObject<MsgJson>(jsonObject.ToString());
 			channelReturned = true;
-			channelCallback(MsgStat.Success);
 
-			DebugLog (Debugs.Log, "ChannelMsgSuccess", "Successfully sent a channel message!");
+			MsgCallback msgJson = JsonSerializer.ToObject<MsgCallback>(jsonObject.ToString());
+			if(msgJson.msgStat == Returned.Success)
+			{
+				if(channelCallback != null)
+				{
+					channelCallback(Returned.Success);
+				}
+				DebugLog (Debugs.Log, "ChaMsgSuccess", "Successfully sent a lobby message!");
+			}
+
+			else
+			{
+				if(channelCallback != null)
+				{
+					channelCallback(Returned.Failed);
+				}
+				DebugLog (Debugs.Warn, "ChaMsgFailed", "Server did failed to send to peers.");
+			}
 		}
 
 		#endregion
@@ -516,12 +599,11 @@ namespace BytesCrafter.USocketNet
 		private void OnMessageReceived(SocketIOEvent _eventArgs)
 		{
 			MsgJson msgJson = JsonUtility.FromJson<MsgJson>(_eventArgs.data.ToString());
-			DebugLog(Debugs.Log, "OnEvent: MESSAGE", "Sender: " + msgJson.sender + " Type: " + msgJson.content);
-
 			if (messageCallback != null)
 			{
 				messageCallback(msgJson);
 			}
+			DebugLog(Debugs.Log, "OnEvent: MESSAGE", "Sender: " + msgJson.sender + " Type: " + msgJson.msgtype + " Content: " + msgJson.content);
 		}
 
 		#endregion
@@ -546,7 +628,10 @@ namespace BytesCrafter.USocketNet
 
 			else
 			{
-				autoChannelCallback(Returned.Error, new ChannelJson(string.Empty));
+				if(autoChannelCallback != null)
+				{
+					autoChannelCallback(Returned.Error, null);
+				}
 				DebugLog (Debugs.Error, "AutoChannelError", "You are currently disconnected to the server!");
 			}
 		}
@@ -559,7 +644,7 @@ namespace BytesCrafter.USocketNet
 			{
 				if (autoChannelCallback != null)
 				{
-					autoChannelCallback(Returned.Failed, new ChannelJson(string.Empty));
+					autoChannelCallback(Returned.Failed, null);
 				}
 
 				DebugLog (Debugs.Error, "AutoChannelFailed", "Server did not respond to leave event!");
@@ -569,11 +654,14 @@ namespace BytesCrafter.USocketNet
 		private void OnAutoChannel(JSONObject jsonObject)
 		{
 			StopCoroutine (AutoingChannel());
-			ChannelJson channelJson = JsonSerializer.ToObject<ChannelJson>(jsonObject.ToString());
 			autoChannelReturned = true;
-			autoChannelCallback(Returned.Success, channelJson);
 			Subscribed = true;
 
+			ChannelJson channelJson = JsonSerializer.ToObject<ChannelJson>(jsonObject.ToString());
+			if(autoChannelCallback != null)
+			{
+				autoChannelCallback(Returned.Success, channelJson);
+			}
 			DebugLog (Debugs.Log, "AutoChannelSuccess", "Successfully auto match a channel!");
 		}
 
@@ -597,7 +685,10 @@ namespace BytesCrafter.USocketNet
 
 			else
 			{
-				createCallback(Returned.Error, new ChannelJson(string.Empty));
+				if(createCallback != null)
+				{
+					createCallback(Returned.Error, new ChannelJson(string.Empty));
+				}
 				DebugLog (Debugs.Error, "CreateChannelError", "You are currently disconnected to the server!");
 			}
 		}
@@ -612,7 +703,6 @@ namespace BytesCrafter.USocketNet
 				{
 					createCallback(Returned.Failed, new ChannelJson(string.Empty));
 				}
-
 				DebugLog (Debugs.Warn, "CreateChannelFailed", "Server did not respond to leave event!");
 			}
 		}
@@ -620,19 +710,25 @@ namespace BytesCrafter.USocketNet
 		private void OnCreatedChannel(JSONObject jsonObject)
 		{
 			StopCoroutine (CreatingChannel());
-			ChanReturn channelJson = JsonSerializer.ToObject<ChanReturn>(jsonObject.ToString());
 			createReturned = true;
 
+			ChanReturn channelJson = JsonSerializer.ToObject<ChanReturn>(jsonObject.ToString());
 			if(channelJson.rt)
 			{
-				createCallback(Returned.Success, JsonUtility.FromJson<ChannelJson>(channelJson.ch) );
 				Subscribed = true;
+				if(createCallback != null)
+				{
+					createCallback(Returned.Success, JsonUtility.FromJson<ChannelJson>(channelJson.ch) );
+				}
 				DebugLog (Debugs.Log, "CreateChannelSuccess", "Successfully create match a channel!");
 			}
 
 			else
 			{
-				createCallback(Returned.Failed, null);
+				if(createCallback != null)
+				{
+					createCallback(Returned.Failed, null);
+				}
 				DebugLog (Debugs.Warn, "CreateChannelFailed", "Channel name is already exist or full or not same variant!");
 			}
 		}
@@ -659,7 +755,10 @@ namespace BytesCrafter.USocketNet
 
 			else
 			{
-				joinCallback(Returned.Error, new ChannelJson(string.Empty));
+				if(joinCallback != null)
+				{
+					joinCallback(Returned.Error, new ChannelJson(string.Empty));
+				}
 				DebugLog (Debugs.Error, "JoinChannelError", "You are currently disconnected to the server!");
 			}
 		}
@@ -674,27 +773,32 @@ namespace BytesCrafter.USocketNet
 				{
 					joinCallback(Returned.Failed, new ChannelJson(string.Empty));
 				}
-
 				DebugLog (Debugs.Warn, "JoinChannelFailed", "Server did not respond to leave event!");
 			}
 		}
 
 		private void OnJoinedChannel(JSONObject jsonObject)
 		{
-			joinReturned = true;
 			StopCoroutine (JoiningChannel());
-			ChanReturn channelJson = JsonSerializer.ToObject<ChanReturn>(jsonObject.ToString());
+			joinReturned = true;
 
+			ChanReturn channelJson = JsonSerializer.ToObject<ChanReturn>(jsonObject.ToString());
 			if(channelJson.rt)
 			{
-				joinCallback(Returned.Success, JsonUtility.FromJson<ChannelJson>(channelJson.ch) );
 				Subscribed = true;
+				if(joinCallback != null)
+				{
+					joinCallback(Returned.Success, JsonUtility.FromJson<ChannelJson>(channelJson.ch) );
+				}
 				DebugLog (Debugs.Log, "JoinChannelSuccess", "Successfully join match a channel!");
 			}
 
 			else
 			{
-				joinCallback(Returned.Failed, null);
+				if(joinCallback != null)
+				{
+					joinCallback(Returned.Failed, null);
+				}
 				DebugLog (Debugs.Warn, "JoinChannelFailed", "Channel name is does not exist or full or not same variant!");
 			}
 		}
@@ -720,7 +824,10 @@ namespace BytesCrafter.USocketNet
 
 			else
 			{
-				leaveCallback (Returned.Error, new ChannelJson(string.Empty));
+				if(leaveCallback != null)
+				{
+					leaveCallback (Returned.Error, new ChannelJson(string.Empty));
+				}
 				DebugLog(Debugs.Error, "LeaveMatchError", "You are not connected to the server!");
 			}
 		}
@@ -735,7 +842,6 @@ namespace BytesCrafter.USocketNet
 				{
 					leaveCallback(Returned.Failed, new ChannelJson(string.Empty));
 				}
-
 				DebugLog (Debugs.Warn, "LeaveChannelFailed", "Server did not respond to leave event!");
 			}
 		}
@@ -744,20 +850,31 @@ namespace BytesCrafter.USocketNet
 		{
 			StopCoroutine (LeavingMatch());
 			leaveReturned = true;
-			leaveCallback (Returned.Success, new ChannelJson(string.Empty));
 			Subscribed = false;
+			leaveCallback (Returned.Success, null);
 
+			//Must only destroy peers that is assoc with this net.
 			USocket.Instance.socketIdentities.ForEach ((USocketView sockView) => {
 				Destroy(sockView.gameObject);
 			});
 			USocket.Instance.socketIdentities = new List<USocketView> ();
 
+			//For each local socket view of this socket net must be destroy.
 			localSockets.ForEach ((USocketView sockView) => {
 				Destroy(sockView.gameObject);
 			});
 			localSockets = new List<USocketView> ();
 
-			DebugLog(Debugs.Log, "LeaveMatchSuccess", "You successfully leaved a match!");
+			LeavedCallback leavedCb = JsonSerializer.ToObject<LeavedCallback>(jsonObject.ToString());
+			if(leavedCb.result == LeavedResult.Updated)
+			{
+				DebugLog(Debugs.Log, "LeaveMatchSuccess", "You successfully leaved a match! Previous channel has been updated.");
+			}
+
+			else
+			{
+				DebugLog(Debugs.Log, "LeaveMatchSuccess", "You successfully leaved a match! Previous channel has been closed.");
+			}
 		}
 
 		#endregion
@@ -779,7 +896,6 @@ namespace BytesCrafter.USocketNet
 			{
 				joinedCallback(peerJson);
 			}
-
 			DebugLog(Debugs.Log, "OnMatchEvent: JOINED", "ID: " + peerJson.id + " OBJ: " + peerJson.obj.Count);
 		}
 
@@ -798,9 +914,10 @@ namespace BytesCrafter.USocketNet
 		{
 			PeerJson peerJson = JsonUtility.FromJson<PeerJson>(_eventArgs.data.ToString());
 
+			//Destroy only socket views that is assoc in thi socket net.
 			if(USocket.Instance.socketIdentities.Exists(x => x.Identity == peerJson.id))
 			{
-				//all instance of the current peer!
+				//all instance of the socket net's current peer!
 				USocket.Instance.socketIdentities.ForEach ((USocketView obj) => {
 					if(obj.Identity == peerJson.id)
 					{
@@ -810,6 +927,7 @@ namespace BytesCrafter.USocketNet
 				USocket.Instance.socketIdentities.RemoveAll (x => x == null);
 			}
 
+			//Destroy all sockets views assoc in this socket net.
 			localSockets.ForEach ((USocketView sockView) => {
 				Destroy(sockView.gameObject);
 			});
@@ -819,7 +937,6 @@ namespace BytesCrafter.USocketNet
 			{
 				leavedCallback(peerJson);
 			}
-
 			DebugLog(Debugs.Log, "OnMatchEvent: LEAVED", "ID: " + peerJson.id + " OBJ: " + peerJson.obj.Count);
 		}
 		//instance event.
@@ -840,6 +957,7 @@ namespace BytesCrafter.USocketNet
 				Instances intance = new Instances(localSockets.Count + DateTime.Now.ToString(), prefabIndex, position, rotation);
 				string itcss = localSockets.Count + intance.GetHashCode ().ToString();
 				intance.itc = itcss[1] + itcss[0] + itcss[1] + itcss[2] + "";
+
 				string sendData = JsonUtility.ToJson(intance);
 				SendEmit("instance", new JSONObject(sendData), OnInstantiate);
 				StartCoroutine (InstantiatingInstance());
@@ -847,7 +965,10 @@ namespace BytesCrafter.USocketNet
 
 			else
 			{
-				instanceCallback (Returned.Error);
+				if (instanceCallback != null)
+				{
+					instanceCallback (Returned.Error);
+				}
 				DebugLog(Debugs.Error, "InstantiateError", "You are not connected to the server!");
 			}
 		}
@@ -861,8 +982,8 @@ namespace BytesCrafter.USocketNet
 				if (instanceCallback != null)
 				{
 					instanceCallback(Returned.Failed);
-					DebugLog (Debugs.Warn, "InstantiateFailed", "Server did not respond to instantiate event!");
 				}
+				DebugLog (Debugs.Warn, "InstantiateFailed", "Server did not respond to instantiate event!");
 			}
 		}
 
@@ -879,7 +1000,6 @@ namespace BytesCrafter.USocketNet
 			{
 				instanceCallback (Returned.Success);
 			}
-
 			DebugLog(Debugs.Log, "OnEvent: INSTANCE LOCAL", "ID: " + instances.identity + " POS: " + instances.pos);
 		}
 
@@ -1549,3 +1669,7 @@ namespace BytesCrafter.USocketNet
 		#endregion
 	}
 }
+
+#region EditorScript
+
+#endregion

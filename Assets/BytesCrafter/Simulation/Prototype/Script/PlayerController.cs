@@ -279,7 +279,7 @@ public class PlayerController : MonoBehaviour
 		transform.Rotate (Vector3.up * lookValue.x * camSentivity.x * Time.deltaTime); 
 
 		camPivot.Rotate(-Vector3.right * lookValue.y * camSentivity.y * Time.deltaTime);
-		float clampYmouse = Mathf.Clamp (camPivot.eulerAngles.z, lookClampY.x, lookClampY.y);
+		//float clampYmouse = Mathf.Clamp (camPivot.eulerAngles.z, lookClampY.x, lookClampY.y);
 		//camPivot.eulerAngles = new Vector3 (camPivot.eulerAngles.x, clampYmouse, camPivot.eulerAngles.z); 
 
 		if(xAxis == 0f && yAxis == 0f)

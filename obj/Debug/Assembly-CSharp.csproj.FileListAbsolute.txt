@@ -129,4 +129,3 @@ D:\Projects\Software - USocketNet\Temp\bin\Debug\pb_Stl.dll
 D:\Projects\Software - USocketNet\Temp\bin\Debug\Poly2Tri.dll
 D:\Projects\Software - USocketNet\Temp\bin\Debug\ProBuilderCore-Unity5.dll
 D:\Projects\Software - USocketNet\Temp\bin\Debug\ProBuilderMeshOps-Unity5.dll
-D:\Projects\Software - USocketNet\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb

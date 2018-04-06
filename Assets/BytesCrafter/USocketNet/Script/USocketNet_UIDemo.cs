@@ -3,10 +3,9 @@ using UnityEngine.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
 using BytesCrafter.USocketNet;
 
-public class USocketNet_UIDemo : MonoBehaviour//, SocketInterface
+public class USocketNet_UIDemo : MonoBehaviour
 {
 	private USocketNet netScpt = null;
 	public USocketNet netScript
@@ -54,18 +53,44 @@ public class USocketNet_UIDemo : MonoBehaviour//, SocketInterface
 	public InputField roomname = null;
 
 	[Header("PING MECHANISM")]
-	public Text pingSocket = null; void Update()
+	public Text pingSocket = null;
+	float timer = 0f;
+
+	void Update()
 	{
 		pingSocket.text = netScript.PingCount + " ms";
 		//Ping ASD = new Ping ();
 
-		Updates ();
+		timer += Time.deltaTime;
+
+		if(timer > 2f)
+			return;
+
+		if(netScript.localSockets.Count < 10)
+			return;
 	}
+
+	#region LISTENERS
 
 	void Awake()
 	{
+		netScript.ListenConnectionStatus (listenOnConnection);
 		netScript.ListenMessagesEvent (ListenOnMessage);
 		netScript.ListenMatchJoined (ListenOnMatchJoined);
+		netScript.ListenMatchLeaved (listenOnLeaved);
+	}
+
+	private void listenOnConnection(ConnStat con, ConnJson connect)
+	{
+		if(con == ConnStat.Connected)
+		{
+			ChangeCanvas(1);
+		}
+
+		else
+		{
+			ChangeCanvas(0);
+		}
 	}
 
 	private void ListenOnMessage(MsgJson msgJson)
@@ -88,22 +113,17 @@ public class USocketNet_UIDemo : MonoBehaviour//, SocketInterface
 
 	private void ListenOnMatchJoined(PeerJson peerJson)
 	{
-		
+		channelViewer.Logs(peerJson.id + " had joined this channel.");
 	}
-	float timer = 0f;
 
-	void Updates ()
+	private void listenOnLeaved(PeerJson peerJson)
 	{
-		timer += Time.deltaTime;
-
-		if(timer > 2f)
-			return;
-
-		if(netScript.localSockets.Count < 10)
-			return;
+		channelViewer.Logs(peerJson.id + " had leaved this channel.");
 	}
 
+	#endregion
 
+	#region CONNECTION
 
 	//Connecting to server with callbacks.
 	public void ConnectToServer()
@@ -112,7 +132,7 @@ public class USocketNet_UIDemo : MonoBehaviour//, SocketInterface
 			{
 				if(conStat == ConnStat.Connected)
 				{
-					ChangeCanvas(1);
+					publicViewer.Logs("Connected with id: " + conJson.identity);
 				}
 			});
 	}
@@ -124,18 +144,20 @@ public class USocketNet_UIDemo : MonoBehaviour//, SocketInterface
 			{
 				if(connStat == ConnStat.Disconnected)
 				{
-					ChangeCanvas(0);
+					publicViewer.Logs("Disconnected from the server.");
 				}
 			});
 	}
+
+	#endregion
 
 	#region MESSAGINGS
 	//Send a public message on the server.
 	public void SendPublicMessage()
 	{
-		netScript.SendPublicMessage (pubMsgContent.text, (MsgStat msgStat) =>
+		netScript.SendPublicMessage (pubMsgContent.text, (Returned msgStat) =>
 		{
-				if(msgStat == MsgStat.Success)
+				if(msgStat == Returned.Success)
 				{
 					publicViewer.Logs("Me: " + pubMsgContent.text);
 					pubMsgContent.text = string.Empty;
@@ -146,7 +168,7 @@ public class USocketNet_UIDemo : MonoBehaviour//, SocketInterface
 	//Send a private message on the server.
 	public void SendPrivateMessage()
 	{
-		netScript.SendPrivateMessage (priMsgReceiver.text, priMsgContent.text, (MsgStat msgStat) =>
+		netScript.SendPrivateMessage (priMsgReceiver.text, priMsgContent.text, (Returned msgStat) =>
 		{
 			privateViewer.Logs("Me: " + pubMsgContent.text);
 			priMsgContent.text = string.Empty;
@@ -156,13 +178,15 @@ public class USocketNet_UIDemo : MonoBehaviour//, SocketInterface
 
 	public void SendChannelMessage()
 	{
-		netScript.SendChannelMessage (chanMsgContent.text, (MsgStat msgStat) =>
+		netScript.SendChannelMessage (chanMsgContent.text, (Returned msgStat) =>
 		{
 			channelViewer.Logs("Me: " + chanMsgContent.text);
 			chanMsgContent.text = string.Empty;
 		});
 	}
 	#endregion
+
+	#region CHANNELS
 
 	public void AutoJoinServerRoom()
 	{
@@ -211,4 +235,6 @@ public class USocketNet_UIDemo : MonoBehaviour//, SocketInterface
 			});
 		
 	}
+
+	#endregion
 }

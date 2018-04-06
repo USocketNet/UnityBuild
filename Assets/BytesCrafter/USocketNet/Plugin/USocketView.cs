@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+using BytesCrafter.USocketNet.Serializables;
 namespace BytesCrafter.USocketNet
 {
 	public class USocketView : MonoBehaviour
