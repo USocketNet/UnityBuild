@@ -5,14 +5,19 @@ using BytesCrafter.USocketNet;
 
 public class Med_Char_Control : MonoBehaviour
 {
+	[Header("PROFILE")]
+	public float health = 1000f;
+
 	[Header("MOVEMENT")]
 	public float jumpHeight = 3f;
 	public Vector2 moveSpeed = Vector2.one;
 	public float rotationSpeed = 3f;
+	public bool onControl = true;
+	private bool showCursor = true;
 
 	[Header("REFERENCES")]
 	public Animator animator = null;
-	public Rigidbody rigidbody = null;
+	public Rigidbody rigidBody = null;
 	public Camera camObject = null;
 	public USocketView socketView = null;
 
@@ -51,9 +56,36 @@ public class Med_Char_Control : MonoBehaviour
 		}
 	}
 
+	public Vector3 prevPosition = Vector3.zero;
 	void Update ()
 	{
-		if(socketView.IsLocalUser)
+		if(Input.GetKeyDown(KeyCode.Tab))
+		{
+			showCursor = !showCursor; Cursor.visible = showCursor;
+			if(showCursor) { Cursor.lockState = CursorLockMode.None; }
+			else { Cursor.lockState = CursorLockMode.Locked; }
+
+			Debug.LogWarning ( " Cursor has been set to " + Cursor.lockState.ToString() );
+		}
+
+		if(socketView != null)
+		{
+			if(socketView.IsLocalUser)
+			{
+				onControl = true;
+				camObject.enabled = true;
+				rigidBody.useGravity = true;
+			}
+
+			else
+			{
+				onControl = false;
+				camObject.enabled = false;
+				rigidBody.useGravity = false;
+			}
+		}
+
+		if(onControl)
 		{
 			AnimatorStateInfo animStateInfo = animator.GetCurrentAnimatorStateInfo (0);
 
@@ -66,18 +98,23 @@ public class Med_Char_Control : MonoBehaviour
 
 			//Rotation
 			transform.Rotate(Vector3.up * Input.GetAxis("Horizontal") * rotationSpeed * Time.deltaTime);
+			//if(prevPosition == Vector3.zero)
+			//{
+			//	prevPosition = Input.mousePosition;
+			//}
+			//Vector3 deltaRota = Input.mousePosition - prevPosition;
+			//transform.Rotate(Vector3.up * deltaRota.x * rotationSpeed * Time.deltaTime);
+			//prevPosition = Input.mousePosition;
 
 			//Animation
 			animator.SetFloat("Horizontal", direction.x);
 			animator.SetFloat("Vertical", direction.y);
 
-
-
 			if(animStateInfo.fullPathHash == Animator.StringToHash("Primary.Walking"))
 			{
 				if(jumping)
 				{
-					rigidbody.velocity = new Vector3 (0f, jumpHeight, 0f);
+					rigidBody.velocity = new Vector3 (0f, jumpHeight, 0f);
 					animator.SetTrigger("Jump");
 				}
 
@@ -93,17 +130,15 @@ public class Med_Char_Control : MonoBehaviour
 			}
 
 			debugger = animStateInfo.fullPathHash.ToString();
-
-			camObject.enabled = true;
-			rigidbody.useGravity = true;
 		}
+	}
 
-		else
+	void OnTriggerEnter(Collider other)
+	{
+		if(other.transform.root.GetInstanceID() != transform.GetInstanceID())
 		{
-			camObject.enabled = false;
-			rigidbody.useGravity = false;
+			Debug.LogError ("Hitter");
+			health -= 10f;
 		}
-
-
 	}
 }

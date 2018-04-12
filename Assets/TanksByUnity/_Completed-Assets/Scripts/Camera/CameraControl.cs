@@ -5,7 +5,7 @@ namespace Complete
 {
     public class CameraControl : MonoBehaviour
     {
-		public USocketNet uscoketNet = null;
+		public USocketClient uscoketNet = null;
 
 		public float m_DampTime = 0.2f;                 // Approximate time for the camera to refocus.
         public float m_ScreenEdgeBuffer = 4f;           // Space between the top/bottom most target and the screen edge.

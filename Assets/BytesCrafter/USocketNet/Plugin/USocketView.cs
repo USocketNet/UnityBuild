@@ -38,8 +38,8 @@ namespace BytesCrafter.USocketNet
 
 		#region Required Reference
 
-		private USocketNet socketNet = null;
-		public USocketNet uSocketNet
+		private USocketClient socketNet = null;
+		public USocketClient uSocketNet
 		{
 			set
 			{

@@ -1,8 +1,8 @@
-Android
+WindowsStandalone
 PlayerPath?
-D:/Projects/Software - USocketNet/Build/DemoguySingle/DemoguySingle.apk
+D:/Projects/Software - USocketNet/Build/Medieval.exe
 SceneListBegin?
-Assets/BytesCrafter/USocketNet/Demoguy/Scene/Single.unity
+Assets/BytesCrafter/Simulation/Medieval/Scene/Medieval.unity
 SceneListEnd?
 30c72be3d5b74da7f89f676bf97aa111 Assembly-CSharp.dll:.Crosshair
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
@@ -238,7 +238,7 @@ e9bdabf9265d758d56f01bb188916fa8 UnityEngine.Networking.dll:UnityEngine.Networki
 841c5256a96a9c12aaa0be359e7a7433 Assembly-CSharp.dll:BytesCrafter.USocketNet.USocketView
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ObjectDestroyer
 ba1edf34d6ea5f8e5f5ef44e45383adf Assembly-CSharp.dll:.USocketNet_MsgLog
-6fe93f3a5c9160c59673958b4acb50d9 Assembly-CSharp.dll:.Med_Char_Control
+0d3125983bebf83189261d6cb06ca835 Assembly-CSharp.dll:.Med_Char_Control
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.Callbacks.PlayModeRunnerCallback
 96d0fbde9fd209878a0a291f82c9bcdd UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.PlaymodeTestsController
 64eb32cc721b1cc68a91ed57461e188c UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.Callbacks.RemoteTestResultSender

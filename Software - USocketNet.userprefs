@@ -1,9 +1,16 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\BytesCrafter\USocketNet\Plugin\Library\USocketNet\Editor\USocketNetWindow.cs">
     <Files>
-      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\USocketNet.cs" Line="1201" Column="3" />
-      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\USocketView.cs" Line="599" Column="28" />
+      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\USocketView.cs" Line="42" Column="23" />
+      <File FileName="Assets\BytesCrafter\Simulation\Medieval\Script\Med_Char_Control.cs" Line="138" Column="71" />
+      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\USocketClient.cs" Line="17" Column="28" />
+      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\Library\USocketNet\USocket.cs" Line="31" Column="66" />
+      <File FileName="Assets\BytesCrafter\USocketNet\Script\USocketNet_Multiple.cs" Line="14" Column="75" />
+      <File FileName="Assets\BytesCrafter\USocketNet\Script\USocketNet_UIDemo.cs" Line="15" Column="56" />
+      <File FileName="Assets\TanksByUnity\_Completed-Assets\Scripts\Camera\CameraControl.cs" Line="8" Column="23" />
+      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\Library\USocketNet\Editor\USocketNetEditor.cs" Line="22" Column="17" />
+      <File FileName="Assets\BytesCrafter\USocketNet\Plugin\Library\USocketNet\Editor\USocketNetWindow.cs" Line="89" Column="25" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
