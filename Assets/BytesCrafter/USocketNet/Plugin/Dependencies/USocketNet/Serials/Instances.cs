@@ -8,7 +8,7 @@ namespace BytesCrafter.USocketNet.Serializables
 	public class Instances
 	{
 		//Socket Identity of this client. by Server.
-		public string identity = string.Empty;
+		public string id = string.Empty;
 
 		//Object instance id of the client. by Client.
 		public string itc = string.Empty;
@@ -24,7 +24,8 @@ namespace BytesCrafter.USocketNet.Serializables
 
 		public Instances(string instance, int prefab, Vector3 position, Quaternion rotation)
 		{
-			itc = instance; pfb = prefab;
+			itc = instance;
+			pfb = prefab;
 			pos = VectorJson.ToVectorStr(position);
 			rot = VectorJson.ToQuaternionStr(rotation);
 		}

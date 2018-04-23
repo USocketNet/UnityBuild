@@ -21,21 +21,29 @@ namespace BytesCrafter.USocketNet.Serializables
 			{
 				if(foundDot)
 				{
-					if(countingSigna < significant) //significant
+					if(significant <= 0)
 					{
-						final = final + axis [i];
-						countingSigna += 1;
+						break;
 					}
 
 					else
 					{
-						break;
+						if(countingSigna < significant) //significant
+						{
+							final = final + axis [i];
+							countingSigna += 1;
+						}
+
+						else
+						{
+							break;
+						}
 					}
 				}
 
 				else
 				{
-					if(significant == 0)
+					if(significant <= 0)
 					{
 						if(axis[i] == '.')
 						{
@@ -70,7 +78,7 @@ namespace BytesCrafter.USocketNet.Serializables
 						}
 					}
 
-					if(significant > 0)
+					else
 					{
 						if(axis.ToLower().IndexOf('e') != -1)
 						{
@@ -118,12 +126,45 @@ namespace BytesCrafter.USocketNet.Serializables
 
 		public static string ToVectorStr(Vector3 vector3)
 		{
-			return Minified(vector3.x, 4) + "~" + Minified(vector3.y, 4) + "~" + Minified(vector3.z, 4);
+			return Minified(vector3.x, 7) + "~" + Minified(vector3.y, 7) + "~" + Minified(vector3.z, 7);
+		}
+
+		public static string ToVectorStr(Vector3 vector3, SocketAxis axises, Floatings significants)
+		{
+			string vString = string.Empty;
+
+			if(axises.xAxis)
+			{
+				vString = Minified(vector3.x, significants.xPoints);
+			}
+
+			if(axises.yAxis)
+			{
+				if(vString != string.Empty)
+				{
+					vString = vString + "~";
+				}
+
+				vString = vString + Minified(vector3.y, significants.yPoints) ;
+			}
+
+			if(axises.zAxis)
+			{
+				if(vString != string.Empty)
+				{
+					vString = vString + "~";
+				}
+
+				vString = vString + Minified(vector3.z, significants.zPoints);
+			}
+
+			return vString;
 		}
 
 		public static Vector3 ToVector3(string vectorStr)
 		{
 			string[] vectorValues = vectorStr.Split(new string[] { "~" }, StringSplitOptions.RemoveEmptyEntries);
+
 
 			if (vectorValues.Length == 3)
 			{
@@ -141,14 +182,73 @@ namespace BytesCrafter.USocketNet.Serializables
 			}
 		}
 
-		public static string ToQuaternionStr(Quaternion rotation)
-		{
-			return Minified(rotation.eulerAngles.x, 0) + "~" + Minified(rotation.eulerAngles.y, 0) + "~" + Minified(rotation.eulerAngles.z, 0);
-		}
-
-		public static Quaternion ToQuaternion(string vectorStr)
+		public static Vector3 ToVector3(string vectorStr, Vector3 position, SocketAxis axises)
 		{
 			string[] vectorValues = vectorStr.Split(new string[] { "~" }, StringSplitOptions.RemoveEmptyEntries);
+
+			Vector3 vectors = position;
+			int curAxis = 0;
+
+			if(axises.xAxis)
+			{
+				vectors.x = Convert.ToSingle(vectorValues[curAxis]);
+				curAxis += 1;
+			}
+
+			if(axises.yAxis)
+			{
+				vectors.y = Convert.ToSingle(vectorValues[curAxis]);
+				curAxis += 1;
+			}
+
+			if(axises.zAxis)
+			{
+				vectors.z = Convert.ToSingle(vectorValues[curAxis]);
+			}
+
+			return vectors;
+		}
+
+		public static string ToQuaternionStr(Quaternion rotation)
+		{
+			return Minified(rotation.eulerAngles.x, 7) + "~" + Minified(rotation.eulerAngles.y, 7) + "~" + Minified(rotation.eulerAngles.z, 7);
+		}
+
+		public static string ToQuaternionStr(Quaternion rotation, SocketAxis axises, Floatings significants)
+		{
+			string qString = string.Empty;
+
+			if(axises.xAxis)
+			{
+				qString = qString + Minified(rotation.eulerAngles.x, significants.xPoints);
+			}
+
+			if(axises.yAxis)
+			{
+				if(qString != string.Empty)
+				{
+					qString = qString + "~";
+				}
+
+				qString = qString + Minified(rotation.eulerAngles.y, significants.yPoints) ;
+			}
+
+			if(axises.zAxis)
+			{
+				if(qString != string.Empty)
+				{
+					qString = qString + "~";
+				}
+
+				qString = qString + Minified(rotation.eulerAngles.z, significants.zPoints);
+			}
+
+			return qString;
+		}
+
+		public static Quaternion ToQuaternion(string eulerString)
+		{
+			string[] vectorValues = eulerString.Split(new string[] { "~" }, StringSplitOptions.RemoveEmptyEntries);
 
 			if (vectorValues.Length == 3)
 			{
@@ -166,6 +266,33 @@ namespace BytesCrafter.USocketNet.Serializables
 			{
 				return Quaternion.identity;
 			}
+		}
+
+		public static Quaternion ToQuaternion(string eulerString, Quaternion rotation, SocketAxis axises)
+		{
+			string[] eulerValues = eulerString.Split(new string[] { "~" }, StringSplitOptions.RemoveEmptyEntries);
+
+			Vector3 eulerAngle = rotation.eulerAngles;
+			int curAxis = 0;
+
+			if(axises.xAxis)
+			{
+				eulerAngle.x = Convert.ToSingle(eulerValues[curAxis]);
+				curAxis += 1;
+			}
+
+			if(axises.yAxis)
+			{
+				eulerAngle.y = Convert.ToSingle(eulerValues[curAxis]);
+				curAxis += 1;
+			}
+
+			if(axises.zAxis)
+			{
+				eulerAngle.z = Convert.ToSingle(eulerValues[curAxis]);
+			}
+
+			return Quaternion.Euler(eulerAngle);
 		}
 	}
 }

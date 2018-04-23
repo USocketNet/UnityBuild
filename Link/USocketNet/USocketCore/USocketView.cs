@@ -3,8 +3,8 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using BytesCrafter.USocketNet.Serializables;
 
+using BytesCrafter.USocketNet.Serializables;
 namespace BytesCrafter.USocketNet
 {
 	public class USocketView : MonoBehaviour
@@ -334,7 +334,7 @@ namespace BytesCrafter.USocketNet
 
 				//if (usocket.position.sendTimer >= (1f / usocket.position.sendRate))
 				//{
-				string newVstate = VectorJson.ToVectorStr (transform.position);
+				string newVstate = VectorJson.ToVectorStr (transform.position, position.axises);
 
 				if(!newVstate.Equals(position.prevVstring))
 				{
@@ -355,7 +355,7 @@ namespace BytesCrafter.USocketNet
 
 				//if (usocket.rotation.sendTimer >= (1f / usocket.rotation.sendRate))
 				//{
-				string newVstate = VectorJson.ToVectorStr (transform.rotation.eulerAngles);
+				string newVstate = VectorJson.ToQuaternionStr (transform.rotation, rotation.axises);
 
 				if(!newVstate.Equals(rotation.prevVstring))
 				{
@@ -376,7 +376,7 @@ namespace BytesCrafter.USocketNet
 
 				//if (usocket.scale.sendTimer >= (1f / usocket.scale.sendRate))
 				//{
-				string newVstate = VectorJson.ToVectorStr (transform.localScale);
+				string newVstate = VectorJson.ToVectorStr (transform.localScale, scale.axises);
 
 				if(!newVstate.Equals(scale.prevVstring))
 				{
@@ -569,15 +569,15 @@ namespace BytesCrafter.USocketNet
 		{
 			if (!objJson.pos.Equals ("f"))
 			{
-				targetPos = VectorJson.ToVector3(objJson.pos);
+				targetPos = VectorJson.ToVector3(objJson.pos, transform.position, position.axises);
 			}
 			if (!objJson.rot.Equals ("f"))
 			{
-				targetRot = VectorJson.ToQuaternion(objJson.rot);
+				targetRot = VectorJson.ToQuaternion(objJson.rot, transform.rotation, rotation.axises);
 			}
 			if (!objJson.sca.Equals ("f"))
 			{
-				targetSize = VectorJson.ToVector3(objJson.sca);
+				targetSize = VectorJson.ToVector3(objJson.sca, transform.localScale, scale.axises);
 			}
 			if(!objJson.ani.Equals("f"))
 			{
@@ -602,19 +602,19 @@ namespace BytesCrafter.USocketNet
 
 						if(childit[0].Equals("t"))
 						{
-							targetChilds.lists[i].position = VectorJson.ToVector3 (childit[childindex]);
+							targetChilds.lists[i].position = VectorJson.ToVector3 (childit[childindex], transform.position, position.axises);
 							childindex += 1;
 						}
 
 						if(childit[1].Equals("t"))
 						{
-							targetChilds.lists[i].rotation = VectorJson.ToQuaternion (childit[childindex]);
+							targetChilds.lists[i].rotation = VectorJson.ToQuaternion (childit[childindex], transform.rotation, rotation.axises);
 							childindex += 1;
 						}
 
 						if(childit[2].Equals("t"))
 						{
-							targetChilds.lists[i].scale = VectorJson.ToVector3 (childit[childindex]);
+							targetChilds.lists[i].scale = VectorJson.ToVector3 (childit[childindex], transform.localScale, scale.axises);
 						}
 					}
 				}

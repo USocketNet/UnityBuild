@@ -9,11 +9,35 @@ namespace BytesCrafter.USocketNet.Serializables
 		Realtime, AdjustToward, LerpValues
 	}
 
+	public enum SyncGroup
+	{
+		Single, Multiple
+	}
+
+	[System.Serializable]
+	public class SocketAxis
+	{
+		public bool xAxis = true;
+		public bool yAxis = true;
+		public bool zAxis = true;
+	}
+
+	[System.Serializable]
+	public class Floatings
+	{
+		public int xPoints = 4;
+		public int yPoints = 4;
+		public int zPoints = 4;
+	}
+
 	[System.Serializable]
 	public class VectorOption
 	{
 		//Synchronized or bypass this data!
 		public bool synchronize = true;
+
+		public SocketAxis axises = new SocketAxis();
+		public Floatings floatings = new Floatings();
 
 		//Rate of sync per seconds timespan.
 		[Range(1f, 30f)] public float sendRate = 15f;

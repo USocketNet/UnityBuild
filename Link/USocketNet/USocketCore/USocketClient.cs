@@ -6,12 +6,12 @@ using System.Collections.Generic;
 using SocketIO;
 using WebSocketSharp;
 using UnityEngine;
+
 using UnityEngine.UI;
 
 using BytesCrafter.USocketNet.Serializables;
 using BytesCrafter.USocketNet.Networks;
 using BytesCrafter.USocketNet.Toolsets;
-
 namespace BytesCrafter.USocketNet
 {
 	public class USocketClient : MonoBehaviour
@@ -1085,7 +1085,7 @@ namespace BytesCrafter.USocketNet
 		private void SynchingSockets(JSONObject jsonObject)
 		{
 			ChanUsers chanUsers = JsonSerializer.ToObject<ChanUsers>(jsonObject.ToString());
-			USocket.Instance.uploadRate = jsonObject.ToString().Length;
+			USocket.Instance.downloadRate = jsonObject.ToString().Length;
 
 			//SYNCHRONIZE AND INSTANTIATE!
 			chanUsers.us.ForEach ((PeerJson peerJson) => 

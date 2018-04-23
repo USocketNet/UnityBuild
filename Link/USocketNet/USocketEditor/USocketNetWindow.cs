@@ -63,9 +63,26 @@ namespace BytesCrafter.USocketNet
 			Repaint ();
 		}
 
+		//Texture2D headerTexture;
+		//Rect headerRect;
+
 		void OnGUI ()
 		{
+			/*
 			EditorGUIUtility.labelWidth = 70f;
+
+			headerTexture = new Texture2D (1, 1);
+			headerTexture.SetPixel (0, 0, Color.grey);
+			headerTexture.Apply ();
+			headerRect = new Rect ();
+
+			headerRect.x = 0;
+			headerRect.y = 0;
+			headerRect.width = Screen.width;
+			headerRect.height = 49;
+
+			GUI.DrawTexture (headerRect, headerTexture);
+			*/
 
 			#region Header Helpbox
 			EditorGUILayout.Separator ();

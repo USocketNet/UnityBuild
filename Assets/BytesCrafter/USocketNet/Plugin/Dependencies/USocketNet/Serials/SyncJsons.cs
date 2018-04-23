@@ -29,6 +29,19 @@ namespace BytesCrafter.USocketNet.Serializables
 	}
 
 	[System.Serializable]
+	public class SingleJson
+	{
+		public string i = string.Empty; //instance identity
+		public string v = string.Empty; //string data value
+
+		public SingleJson(string instanceId, string dataString)
+		{
+			i = instanceId;
+			v = dataString;
+		}
+	}
+
+	[System.Serializable]
 	public class ChanUsers
 	{
 		public List<PeerJson> us = new List<PeerJson>();

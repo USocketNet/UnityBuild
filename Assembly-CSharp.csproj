@@ -86,6 +86,7 @@
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\USocketNet\Serials\InspOption.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\USocketNet\Serials\Instances.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\USocketNet\Serials\LeavedJson.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\USocketNet\Serials\MatchMake.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\USocketNet\Serials\MsgJson.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\USocketNet\Serials\QueueCoder.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\USocketNet\Serials\SyncJsons.cs" />

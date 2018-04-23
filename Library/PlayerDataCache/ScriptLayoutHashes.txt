@@ -1,8 +1,8 @@
 WindowsStandalone
 PlayerPath?
-D:/Projects/Software - USocketNet/Build/Medieval.exe
+D:/Projects/Software - USocketNet/Build/DemoguySingle/Single.exe
 SceneListBegin?
-Assets/BytesCrafter/Simulation/Medieval/Scene/Medieval.unity
+Assets/BytesCrafter/USocketNet/Demoguy/Scene/Single.unity
 SceneListEnd?
 30c72be3d5b74da7f89f676bf97aa111 Assembly-CSharp.dll:.Crosshair
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
@@ -85,7 +85,7 @@ c63db43c730fa2cbb8ca07de15898cb6 UnityEngine.UI.dll:UnityEngine.UI.Toggle
 f61c0793411f10cf5fbfa1473fef5ef2 UnityEngine.UI.dll:UnityEngine.UI.ToggleGroup
 86d36c43c53541d667100dc90b89cfba UnityEngine.UI.dll:UnityEngine.EventSystems.TouchInputModule
 1b8c02d0aa82fbf036a2b9b2d713eec3 UnityEngine.UI.dll:UnityEngine.UI.VerticalLayoutGroup
-8901307297cb296a31093d9f31f8a246 Assembly-CSharp.dll:Complete.CameraControl
+cc24f1c93acfeec836170c9a34ddf62f Assembly-CSharp.dll:Complete.CameraControl
 3ecea0c2e43f5d97a17c441bfcf59a7d Assembly-CSharp.dll:UnityEngine.PostProcessing.PostProcessingBehaviour
 e33ba2077c1680b06f99036c4a8c8905 Assembly-CSharp.dll:Complete.TankMovement
 9008bdf459020f5356e69af2650f275e Assembly-CSharp.dll:ProBuilder2.Examples.IcoBumpin
@@ -199,7 +199,7 @@ d2a2bd333db22f480a8589e167314ecc Vuforia.UnityExtensions.dll:Vuforia.UserDefined
 15bea26698002c6c4a3087131232ce5c Vuforia.UnityExtensions.dll:Vuforia.WordBehaviour
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:ProBuilder2.Examples.HueCube
 aab8140e26c301fe81e17bb53e77bb9c Assembly-CSharp.dll:.FreeCameraLook
-a5bf9d26961dcf13814e445fa1edf8e9 Assembly-CSharp.dll:.USocketNet_UIDemo
+29905e6547b5007d3c9086fb5aad7059 Assembly-CSharp.dll:.USocketNet_UIDemo
 205965134a5874db410d674ebdf33ba7 Assembly-CSharp.dll:.ExampleWheelController
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Advertisements.dll:UnityEngine.Advertisements.CallbackExecutor
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Advertisements.dll:UnityEngine.Advertisements.Editor.Placeholder
@@ -235,14 +235,14 @@ e9bdabf9265d758d56f01bb188916fa8 UnityEngine.Networking.dll:UnityEngine.Networki
 3f32f08a64daf40b09ed864d96fe3840 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransform
 73843688b51256aed059f049c540bca8 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformChild
 528ea1fd7c01796fc60c4e2f172ea229 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformVisualizer
-841c5256a96a9c12aaa0be359e7a7433 Assembly-CSharp.dll:BytesCrafter.USocketNet.USocketView
+4012e4e9dfc352320605f9318e45929b Assembly-CSharp.dll:BytesCrafter.USocketNet.USocketView
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.ObjectDestroyer
 ba1edf34d6ea5f8e5f5ef44e45383adf Assembly-CSharp.dll:.USocketNet_MsgLog
 0d3125983bebf83189261d6cb06ca835 Assembly-CSharp.dll:.Med_Char_Control
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.Callbacks.PlayModeRunnerCallback
 96d0fbde9fd209878a0a291f82c9bcdd UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.PlaymodeTestsController
 64eb32cc721b1cc68a91ed57461e188c UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.Callbacks.RemoteTestResultSender
-fb5952119a3c4e3de2ec500b332dce8a Assembly-CSharp.dll:BytesCrafter.USocketNet.USocketNet
+46b549f567cb7e4b039adcf45a5634e1 Assembly-CSharp.dll:BytesCrafter.USocketNet.USocketClient
 9e0ef5bf862444b5dc48b5a99554ce7c UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioListenerExtension
 e0f7ffd5d5c2abe4b2e16569a21163da UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
 67a5f2c97205d2e41a8ed7c7ce898f6e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSoundfieldExtension

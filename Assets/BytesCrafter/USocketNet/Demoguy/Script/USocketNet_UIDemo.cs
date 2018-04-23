@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using BytesCrafter.USocketNet;
+using BytesCrafter.USocketNet.Compression;
 
 public class USocketNet_UIDemo : MonoBehaviour
 {
@@ -34,6 +35,7 @@ public class USocketNet_UIDemo : MonoBehaviour
 
 	[Header("Connections")]
 	public InputField username = null;
+	public InputField password = null;
 
 	[Header("PUBLIC MESSAGE")]
 	public InputField pubMsgContent = null;
@@ -111,9 +113,9 @@ public class USocketNet_UIDemo : MonoBehaviour
 		netScript.ListenMatchLeaved (listenOnLeaved);
 	}
 
-	private void listenOnConnection(ConnStat con, ConnJson connect)
+	private void listenOnConnection(ConnStat conStat)
 	{
-		if(con == ConnStat.Connected)
+		if(conStat == ConnStat.Connected || conStat == ConnStat.Reconnected)
 		{
 			ChangeCanvas(1);
 		}
@@ -126,19 +128,19 @@ public class USocketNet_UIDemo : MonoBehaviour
 
 	private void ListenOnMessage(MsgJson msgJson)
 	{
-		if(msgJson.msgtype == MsgType.Public)
+		if(msgJson.mt == MsgType.Public)
 		{
-			publicViewer.Logs(msgJson.sender + ": " + msgJson.content);
+			publicViewer.Logs(msgJson.sd + ": " + msgJson.ct);
 		}
 
-		else if(msgJson.msgtype == MsgType.Private)
+		else if(msgJson.mt == MsgType.Private)
 		{
-			privateViewer.Logs(msgJson.sender + ": " + msgJson.content);
+			privateViewer.Logs(msgJson.sd + ": " + msgJson.ct);
 		}
 
 		else
 		{
-			channelViewer.Logs(msgJson.sender + ": " + msgJson.content);
+			channelViewer.Logs(msgJson.sd + ": " + msgJson.ct);
 		}
 	}
 
@@ -159,11 +161,11 @@ public class USocketNet_UIDemo : MonoBehaviour
 	//Connecting to server with callbacks.
 	public void ConnectToServer()
 	{
-		netScript.ConnectToServer (username.text, (ConnStat conStat, ConnJson conJson) =>
+		netScript.ConnectToServer (username.text, password.text, (ConnStat conStat, ConnAuth connAuth) =>
 			{
-				if(conStat == ConnStat.Connected)
+				if(conStat == ConnStat.Connected && connAuth == ConnAuth.Success)
 				{
-					publicViewer.Logs("Connected with id: " + conJson.identity);
+					publicViewer.Logs("Connected with id: " + netScpt.Identity);
 				}
 			});
 	}
@@ -221,9 +223,9 @@ public class USocketNet_UIDemo : MonoBehaviour
 
 	public void AutoJoinServerRoom()
 	{
-		netScript.AutoMatchChannel (gameVariant, 10, (Returned returned, ChannelJson channelJson) =>
+		netScript.AutoMatchChannel (gameVariant, 10, (MatchRes matchRes, MatchMake matchMake) =>
 			{
-				if(returned == Returned.Success)
+				if(matchRes == MatchRes.Success)
 				{
 					ChangeCanvas(2);
 					netScript.Instantiate (0, Vector3.zero, Quaternion.identity, null); // spawnPoint.position, spawnPoint.rotation);

@@ -321,6 +321,16 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114250161575234646, guid: 2960126293d1e874cbd19fad233696c0,
+        type: 2}
+      propertyPath: bindings.serverUrl
+      value: www.bytes-crafter.com
+      objectReference: {fileID: 0}
+    - target: {fileID: 114250161575234646, guid: 2960126293d1e874cbd19fad233696c0,
+        type: 2}
+      propertyPath: bindings.serverPort
+      value: 3000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2960126293d1e874cbd19fad233696c0, type: 2}
   m_IsPrefabParent: 0

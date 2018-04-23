@@ -19,7 +19,8 @@ public class USocketNet_Multiple : MonoBehaviour
 
 	private void ConnectAndJoin(USocketClient socket)
 	{
-		socket.ConnectToServer ("", (ConnStat conStat, ConnJson conJson) =>
+		/*
+		socket.ConnectToServer ("", "", (ConnStat conStat, ConnAuth connAuth) =>
 			{
 				if(conStat == ConnStat.Connected)
 				{
@@ -56,10 +57,12 @@ public class USocketNet_Multiple : MonoBehaviour
 					ConnectAndJoin (socket);
 				}
 			});
+		*/
 	}
 
 	private void SetActiveSockets()
 	{
+		/*
 		if (USocket.Instance.usocketNets.Count == 0)
 			return;
 
@@ -82,10 +85,12 @@ public class USocketNet_Multiple : MonoBehaviour
 		{
 			USocket.Instance.usocketNets[current].localSockets[instance].GetComponent<SimpleControl> ().onControl = true;
 		}
+		*/
 	}
 
 	void Update()
 	{
+		/*
 		//Connect and Join!
 		if(Input.GetKeyDown(KeyCode.F1))
 		{
@@ -181,6 +186,7 @@ public class USocketNet_Multiple : MonoBehaviour
 				}
 			}
 		}
+		*/
 	}
 
 	private int instance = 0;
