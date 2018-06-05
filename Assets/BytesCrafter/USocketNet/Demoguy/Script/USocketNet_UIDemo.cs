@@ -63,34 +63,6 @@ public class USocketNet_UIDemo : MonoBehaviour
 
 	void Update()
 	{
-		if(Input.GetKeyDown(KeyCode.F5))
-		{
-			netScript.localSockets.ForEach ((USocketView viewss) => {
-
-				if(viewss.IsLocalUser)
-				{
-					TankHealth thealth = viewss.GetComponent<TankHealth>();
-					if(viewss != null)
-					{
-						if(thealth.m_Dead)
-						{
-							int spawning = Random.Range (0, spawnPoint.Count);
-							viewss.transform.position = spawnPoint[0].position;
-
-							viewss.TriggerEvents ("Revived", "", (Returned returned) => {
-								if(returned == Returned.Success)
-								{
-									thealth.Revived ();
-								}
-							});
-
-						}
-
-					}
-				}
-			});
-		}
-
 		pingSocket.text = netScript.PingCount + " ms";
 		//Ping ASD = new Ping ();
 

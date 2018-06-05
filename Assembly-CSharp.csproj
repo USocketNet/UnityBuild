@@ -51,27 +51,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\BytesCrafter\Simulation\CameraScript\Scripts\CameraScripts\FollowTarget.cs" />
-     <Compile Include="Assets\BytesCrafter\Simulation\CameraScript\Scripts\CameraScripts\FreeCameraLook.cs" />
-     <Compile Include="Assets\BytesCrafter\Simulation\CameraScript\Scripts\CameraScripts\Perlin.cs" />
-     <Compile Include="Assets\BytesCrafter\Simulation\CameraScript\Scripts\CameraScripts\Pivot.cs" />
-     <Compile Include="Assets\BytesCrafter\Simulation\CameraScript\Scripts\CameraScripts\ShakeCamera.cs" />
-     <Compile Include="Assets\BytesCrafter\Simulation\CameraScript\Scripts\Crosshair.cs" />
-     <Compile Include="Assets\BytesCrafter\Simulation\CameraScript\Scripts\CrosshairManager.cs" />
-     <Compile Include="Assets\BytesCrafter\Simulation\Medieval\Script\Med_Char_Control.cs" />
-     <Compile Include="Assets\BytesCrafter\Simulation\Prototype\Script\DamageReport.cs" />
-     <Compile Include="Assets\BytesCrafter\Simulation\Prototype\Script\GunScript.cs" />
-     <Compile Include="Assets\BytesCrafter\Simulation\Prototype\Script\ObjectDestroyer.cs" />
-     <Compile Include="Assets\BytesCrafter\Simulation\Prototype\Script\PlayerController.cs" />
-     <Compile Include="Assets\BytesCrafter\Simulation\TanksByUnity\_Completed-Assets\Scripts\Camera\CameraControl.cs" />
-     <Compile Include="Assets\BytesCrafter\Simulation\TanksByUnity\_Completed-Assets\Scripts\Managers\GameManager.cs" />
-     <Compile Include="Assets\BytesCrafter\Simulation\TanksByUnity\_Completed-Assets\Scripts\Managers\TankManager.cs" />
-     <Compile Include="Assets\BytesCrafter\Simulation\TanksByUnity\_Completed-Assets\Scripts\Shell\ShellExplosion.cs" />
-     <Compile Include="Assets\BytesCrafter\Simulation\TanksByUnity\_Completed-Assets\Scripts\Tank\TankHealth.cs" />
-     <Compile Include="Assets\BytesCrafter\Simulation\TanksByUnity\_Completed-Assets\Scripts\Tank\TankMovement.cs" />
-     <Compile Include="Assets\BytesCrafter\Simulation\TanksByUnity\_Completed-Assets\Scripts\Tank\TankShooting.cs" />
-     <Compile Include="Assets\BytesCrafter\Simulation\TanksByUnity\_Completed-Assets\Scripts\UI\UIDirectionControl.cs" />
-     <Compile Include="Assets\BytesCrafter\Simulation\TanksByUnity\TutorialInfo\Scripts\Readme.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Demoguy\Script\SimpleControl.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Demoguy\Script\TrackPoints.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Demoguy\Script\USocketNet_MsgLog.cs" />
@@ -174,8 +153,6 @@
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketClient.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketView.cs" />
      <None Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\JSONObject\readme.txt" />
-     <None Include="Assets\BytesCrafter\Simulation\TanksByUnity\Fonts\Bowlby_One\OFL.txt" />
-     <None Include="Assets\BytesCrafter\Simulation\Prototype\Model\Weapons Pack(LOW POLY)\Weapons Pack info.txt" />
  <Reference Include="Unity.ProBuilder.AddOns.Editor">
  <HintPath>D:/Projects/Plugin - USocketNet/Library/ScriptAssemblies/Unity.ProBuilder.AddOns.Editor.dll</HintPath>
  </Reference>
