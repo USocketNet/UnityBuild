@@ -111,7 +111,7 @@ public class PlayerController : MonoBehaviour
 			actions = PlayerCtlrAction.ChooseAction;
 		}
 
-		camObject.enabled = socket.IsLocalUser;
+		//camObject.enabled = socket.IsLocalUser;
 	}
 
 	private void LookRot()
@@ -121,9 +121,9 @@ public class PlayerController : MonoBehaviour
 
 	void Update()
 	{
-		camObject.enabled = socket.IsLocalUser;
-		isWatching = socket.IsLocalUser;
-		audiListener.enabled = isWatching;
+		//camObject.enabled = socket.IsLocalUser;
+		//isWatching = socket.IsLocalUser;
+		//audiListener.enabled = isWatching;
 
 		if(gunPrefab == null){ gunPrefab = Instantiate(gunsList[0], rightHand); }
 
@@ -160,7 +160,7 @@ public class PlayerController : MonoBehaviour
 
 		animator.enabled = !isDead;
 
-		if(!socket.IsLocalUser) { return; }
+		//if(!socket.IsLocalUser) { return; }
 
 		if(!isDead)
 		{
@@ -192,7 +192,7 @@ public class PlayerController : MonoBehaviour
 		Grounding ();
 		CameraAdjust ();
 
-		if(!socket.IsLocalUser) { return; }
+		//if(!socket.IsLocalUser) { return; }
 
 		Shooting ();
 	}

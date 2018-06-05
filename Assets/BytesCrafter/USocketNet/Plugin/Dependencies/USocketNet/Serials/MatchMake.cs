@@ -14,7 +14,7 @@ namespace BytesCrafter.USocketNet
 		/// </summary>
 		Success, 
 		/// <summary>
-		/// Failed to subscribed, you are current subrscribed to other channel.
+		/// Failed to subscribed, you are current subrscribed to other channel or channel name exist or full.
 		/// </summary>
 		Failed, 
 		/// <summary>

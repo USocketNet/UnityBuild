@@ -106,26 +106,26 @@ AnimatorController:
     m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
-    m_Name: UpperPart
-    m_StateMachine: {fileID: 1107381580816836754}
-    m_Mask: {fileID: 31900000, guid: b6a3543ffbbb62d4cbf6649fcd2787d4, type: 2}
+    m_Name: LowerPart
+    m_StateMachine: {fileID: 1107647929592670680}
+    m_Mask: {fileID: 0}
     m_Motions: []
     m_Behaviours: []
     m_BlendingMode: 0
     m_SyncedLayerIndex: -1
-    m_DefaultWeight: 1
+    m_DefaultWeight: 0
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
   - serializedVersion: 5
-    m_Name: LowerPart
-    m_StateMachine: {fileID: 1107647929592670680}
-    m_Mask: {fileID: 31900000, guid: f1c671dc5dc280041a41fe8d16a635fe, type: 2}
+    m_Name: UpperPart
+    m_StateMachine: {fileID: 1107381580816836754}
+    m_Mask: {fileID: 31900000, guid: 5dd76fb2d71fe3349b9c014b0723a806, type: 2}
     m_Motions: []
     m_Behaviours: []
     m_BlendingMode: 0
     m_SyncedLayerIndex: -1
-    m_DefaultWeight: 1
+    m_DefaultWeight: 0
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
@@ -137,7 +137,7 @@ AnimatorController:
     m_Behaviours: []
     m_BlendingMode: 0
     m_SyncedLayerIndex: -1
-    m_DefaultWeight: 1
+    m_DefaultWeight: 0
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
@@ -150,7 +150,7 @@ BlendTree:
   m_Childs:
   - serializedVersion: 2
     m_Motion: {fileID: 7400002, guid: c8f32f8d84c361a42978e81ff2808607, type: 3}
-    m_Threshold: 0.1
+    m_Threshold: 0
     m_Position: {x: 0, y: 1}
     m_TimeScale: 1
     m_CycleOffset: 0
@@ -166,7 +166,7 @@ BlendTree:
     m_Mirror: 0
   m_BlendParameter: JumpHeight
   m_BlendParameterY: Jump
-  m_MinThreshold: 0.1
+  m_MinThreshold: 0
   m_MaxThreshold: 1
   m_UseAutomaticThresholds: 0
   m_NormalizedBlendValues: 0

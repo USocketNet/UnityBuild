@@ -290,6 +290,8 @@ MonoBehaviour:
   camObject: {fileID: 20578602614342966}
   rigObject: {fileID: 54990454498827192}
   socketView: {fileID: 114799573014960534}
+  curTrackPoint: 0
+  trackPoints: {fileID: 0}
 --- !u!114 &114799573014960534
 MonoBehaviour:
   m_ObjectHideFlags: 1

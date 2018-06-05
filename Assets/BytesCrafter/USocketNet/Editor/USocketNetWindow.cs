@@ -98,12 +98,12 @@ namespace BytesCrafter.USocketNet
 
 			EditorGUILayout.BeginHorizontal ();
 			EditorGUILayout.LabelField ("USocketNet Clients: ");
-			EditorGUILayout.LabelField (USocket.Instance.usocketNets.Count.ToString());
+			EditorGUILayout.LabelField (USocketNet.Instance.usocketNets.Count.ToString());
 			EditorGUILayout.EndHorizontal ();
 
 			EditorGUILayout.BeginHorizontal ();
 			int totalLocalViews = 0;
-			foreach(USocketClient unets in USocket.Instance.usocketNets)
+			foreach(USocketClient unets in USocketNet.Instance.usocketNets)
 			{
 				totalLocalViews += unets.localSockets.Count;
 			}
@@ -113,7 +113,7 @@ namespace BytesCrafter.USocketNet
 
 			EditorGUILayout.BeginHorizontal ();
 			EditorGUILayout.LabelField ("USocketView Peers: ");
-			EditorGUILayout.LabelField (USocket.Instance.socketIdentities.Count.ToString());
+			EditorGUILayout.LabelField (USocketNet.Instance.socketIdentities.Count.ToString());
 			EditorGUILayout.EndHorizontal ();
 
 			EditorGUILayout.Separator ();
@@ -121,9 +121,9 @@ namespace BytesCrafter.USocketNet
 
 			EditorGUILayout.BeginHorizontal ();
 			EditorGUILayout.LabelField ("Sync Rate: ");
-			if(USocket.Instance.usocketNets.Count > 0)
+			if(USocketNet.Instance.usocketNets.Count > 0)
 			{
-				EditorGUILayout.LabelField (USocket.Instance.synchRate.ToString() + " sync/second");
+				EditorGUILayout.LabelField (USocketNet.Instance.synchRate.ToString() + " sync/second");
 			}
 
 			else
@@ -134,12 +134,12 @@ namespace BytesCrafter.USocketNet
 
 			EditorGUILayout.BeginHorizontal ();
 			EditorGUILayout.LabelField ("Upload Rate: ");
-			EditorGUILayout.LabelField (USocket.Instance.uploadRate.ToString() + " bytes/sent");
+			EditorGUILayout.LabelField (USocketNet.Instance.uploadRate.ToString() + " bytes/sent");
 			EditorGUILayout.EndHorizontal ();
 
 			EditorGUILayout.BeginHorizontal ();
 			EditorGUILayout.LabelField ("Download Rate: ");
-			EditorGUILayout.LabelField (USocket.Instance.downloadRate.ToString() + " bytes/received");
+			EditorGUILayout.LabelField (USocketNet.Instance.downloadRate.ToString() + " bytes/received");
 			EditorGUILayout.EndHorizontal ();
 
 			EditorGUILayout.Separator ();

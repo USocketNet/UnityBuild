@@ -20,6 +20,13 @@ namespace BytesCrafter.USocketNet.Serializables
 		public bool xAxis = true;
 		public bool yAxis = true;
 		public bool zAxis = true;
+
+		public SocketAxis(bool all)
+		{
+			xAxis = all;
+			yAxis = all;
+			zAxis = all;
+		}
 	}
 
 	[System.Serializable]
@@ -36,7 +43,7 @@ namespace BytesCrafter.USocketNet.Serializables
 		//Synchronized or bypass this data!
 		public bool synchronize = true;
 
-		public SocketAxis axises = new SocketAxis();
+		public SocketAxis axises = new SocketAxis(true);
 		public Floatings floatings = new Floatings();
 
 		//Rate of sync per seconds timespan.

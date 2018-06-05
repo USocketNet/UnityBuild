@@ -61,6 +61,49 @@ namespace BytesCrafter.USocketNet
 
 namespace BytesCrafter.USocketNet.Serializables
 {
+	/// <summary>
+	/// Conn init.
+	/// </summary>
+	[System.Serializable]
+	public class Credential
+	{
+		public string ak = string.Empty;
+		public string un = string.Empty;
+		public string pw = string.Empty;
+
+		public Credential(string authKey, string username, string password)
+		{
+			ak = authKey;
+			un = username;
+			pw = password;
+		}
+	}
+
+	/// <summary>
+	/// Rejection callback handler.
+	/// </summary>
+	[System.Serializable]
+	public class Rejection
+	{
+		public Reject rs = Reject.UnauthorizedDomain;
+	}
+
+	public enum Reject
+	{
+		/// <summary>
+		/// For some reason, connection credentials is not detected during client evaluation.
+		/// </summary>
+		ForbiddenAuthKey,
+		/// <summary>
+		/// Server expects for userInfo and callback, please dont make any changes on the plugin.
+		/// </summary>
+		InvalidArguments,
+		/// <summary>
+		/// The domain or public ip refered for connection is not authorized by server.
+		/// </summary>
+		UnauthorizedDomain
+	}
+
 	[System.Serializable]
 	public class ConnRes
 	{
@@ -68,18 +111,5 @@ namespace BytesCrafter.USocketNet.Serializables
 		public string id = string.Empty;
 	}
 
-	[System.Serializable]
-	public class ConnInit
-	{
-		public string ak = string.Empty;
-		public string un = string.Empty;
-		public string pw = string.Empty;
 
-		public ConnInit(string authKey, string username, string password)
-		{
-			ak = authKey;
-			un = username;
-			pw = password;
-		}
-	}
 }

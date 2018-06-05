@@ -1,7 +1,5 @@
 fileFormatVersion: 2
 guid: 57836ad167ab67348a8332cabcc4fd5e
-timeCreated: 1515003346
-licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
@@ -151,6 +149,10 @@ ModelImporter:
     400140: swat:Spine
     400142: swat:Spine1
     400144: swat:Spine2
+    2300000: Soldier_body
+    2300002: Soldier_head
+    3300000: Soldier_body
+    3300002: Soldier_head
     4300000: Soldier_head
     4300002: Soldier_body
     7400000: mixamo.com
@@ -186,7 +188,8 @@ ModelImporter:
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
-    animationCompression: 1
+    importConstraints: 1
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -210,6 +213,8 @@ ModelImporter:
     optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
@@ -236,7 +241,7 @@ ModelImporter:
     rootMotionBoneName: 
     rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
-    hasExtraRoot: 0
+    hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 2

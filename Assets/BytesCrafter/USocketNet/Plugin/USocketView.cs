@@ -259,7 +259,7 @@ namespace BytesCrafter.USocketNet
 							else if (childs.childList[i].position.syncMode == SocketSync.AdjustToward)
 							{
 								float pDamp = Vector3.Distance(childs.childList[i].reference.position, targetChilds.lists[i].position);
-								transform.position = Vector3.MoveTowards(childs.childList[i].reference.position, targetChilds.lists[i].position, 
+								childs.childList[i].reference.position = Vector3.MoveTowards(childs.childList[i].reference.position, targetChilds.lists[i].position, 
 									(pDamp + childs.childList[i].position.interpolation) * childs.childList[i].position.speed * Time.deltaTime);
 							}
 
@@ -623,19 +623,19 @@ namespace BytesCrafter.USocketNet
 
 						if(childit[0].Equals("t"))
 						{
-							targetChilds.lists[i].position = VectorJson.ToVector3 (childit[childindex], transform.position, position.axises);
+							targetChilds.lists[i].position = VectorJson.ToVector3 (childit[childindex], targetChilds.lists[i].position, new SocketAxis(true));
 							childindex += 1;
 						}
 
 						if(childit[1].Equals("t"))
 						{
-							targetChilds.lists[i].rotation = VectorJson.ToQuaternion (childit[childindex], transform.rotation, rotation.axises);
+							targetChilds.lists[i].rotation = VectorJson.ToQuaternion (childit[childindex], targetChilds.lists[i].rotation, new SocketAxis(true));
 							childindex += 1;
 						}
 
 						if(childit[2].Equals("t"))
 						{
-							targetChilds.lists[i].scale = VectorJson.ToVector3 (childit[childindex], transform.localScale, scale.axises);
+							targetChilds.lists[i].scale = VectorJson.ToVector3 (childit[childindex], targetChilds.lists[i].scale, new SocketAxis(true));
 						}
 					}
 				}

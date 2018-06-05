@@ -7,7 +7,7 @@ using BytesCrafter.USocketNet.Compression;
 
 public class USocketNet_UIDemo : MonoBehaviour
 {
-	private USocketClient netScpt = null;
+	public USocketClient netScpt = null;
 	public USocketClient netScript
 	{
 		get {
@@ -165,7 +165,7 @@ public class USocketNet_UIDemo : MonoBehaviour
 			{
 				if(conStat == ConnStat.Connected && connAuth == ConnAuth.Success)
 				{
-					publicViewer.Logs("Connected with id: " + netScpt.Identity);
+					publicViewer.Logs("Connected with id: " + netScript.Identity);
 				}
 			});
 	}
@@ -235,9 +235,9 @@ public class USocketNet_UIDemo : MonoBehaviour
 
 	public void CreateServerRoom()
 	{
-		netScript.CreateChannel (roomname.text, gameVariant, 2, (Returned returned, ChannelJson roomJson) => 
+		netScript.CreateChannel (roomname.text, gameVariant, 2, (MatchRes result, MatchMake matchMake) => 
 			{
-				if(returned == Returned.Success)
+				if(result == MatchRes.Success)
 				{
 					ChangeCanvas(2);
 					netScript.Instantiate (0, Vector3.zero, Quaternion.identity, null);
@@ -247,9 +247,9 @@ public class USocketNet_UIDemo : MonoBehaviour
 
 	public void JoinServerRoom()
 	{
-		netScript.JoinChannel (roomname.text, gameVariant, (Returned returned, ChannelJson roomJson) =>
+		netScript.JoinChannel (roomname.text, gameVariant, (MatchRes result, MatchMake matchMake) =>
 			{
-				if(returned == Returned.Success)
+				if(result == MatchRes.Success)
 				{
 					ChangeCanvas(2);
 					netScript.Instantiate (0, Vector3.zero, Quaternion.identity, null);

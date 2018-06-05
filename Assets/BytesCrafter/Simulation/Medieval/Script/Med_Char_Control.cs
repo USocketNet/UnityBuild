@@ -70,7 +70,7 @@ public class Med_Char_Control : MonoBehaviour
 
 		if(socketView != null)
 		{
-			if(socketView.IsLocalUser)
+			if(!socketView.enabled)
 			{
 				onControl = true;
 				camObject.enabled = true;
@@ -79,9 +79,19 @@ public class Med_Char_Control : MonoBehaviour
 
 			else
 			{
-				onControl = false;
-				camObject.enabled = false;
-				rigidBody.useGravity = false;
+				if(socketView.IsLocalUser)
+				{
+					onControl = true;
+					camObject.enabled = true;
+					rigidBody.useGravity = true;
+				}
+
+				else
+				{
+					onControl = false;
+					camObject.enabled = false;
+					rigidBody.useGravity = false;
+				}
 			}
 		}
 
@@ -120,15 +130,16 @@ public class Med_Char_Control : MonoBehaviour
 
 				if(normalAttack)
 				{
-					animator.SetTrigger("NAttack");
+					animator.SetTrigger("Attack");
 				}
 
 				if(superAttack)
 				{
-					animator.SetTrigger("SAttack");
+					
 				}
 			}
 
+			animator.SetBool("Block", Input.GetMouseButton(1));
 			debugger = animStateInfo.fullPathHash.ToString();
 		}
 	}

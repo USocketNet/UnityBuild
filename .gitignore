@@ -1,9 +1,11 @@
-[Ll]ibrary/
-[Tt]emp/
-[Oo]bj/
+
+# Parent folders to exclude.
 [Bb]uild/
 [Bb]uilds/
-Assets/AssetStoreTools*
+[Ll]ibrary/
+[Oo]bj/
+[Pp]ackages/
+[Tt]emp/
 
 # Visual Studio 2015 cache directory
 /.vs/
