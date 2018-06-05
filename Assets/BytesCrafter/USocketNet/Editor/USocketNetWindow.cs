@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+﻿//#if UNITY_EDITOR
 
 using UnityEngine;
 using UnityEditor;
@@ -148,4 +148,4 @@ namespace BytesCrafter.USocketNet
 
 }
 	
-#endif
+//#endif

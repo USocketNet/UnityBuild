@@ -126,16 +126,16 @@ namespace BytesCrafter.USocketNet.Serializables
 
 		public static string ToVectorStr(Vector3 vector3)
 		{
-			return Minified(vector3.x, 4) + "~" + Minified(vector3.y, 4) + "~" + Minified(vector3.z, 4);
+			return Minified(vector3.x, 7) + "~" + Minified(vector3.y, 7) + "~" + Minified(vector3.z, 7);
 		}
 
-		public static string ToVectorStr(Vector3 vector3, SocketAxis axises)
+		public static string ToVectorStr(Vector3 vector3, SocketAxis axises, Floatings significants)
 		{
 			string vString = string.Empty;
 
 			if(axises.xAxis)
 			{
-				vString = Minified(vector3.x, 4);
+				vString = Minified(vector3.x, significants.xPoints);
 			}
 
 			if(axises.yAxis)
@@ -145,7 +145,7 @@ namespace BytesCrafter.USocketNet.Serializables
 					vString = vString + "~";
 				}
 
-				vString = vString + Minified(vector3.y, 4) ;
+				vString = vString + Minified(vector3.y, significants.yPoints) ;
 			}
 
 			if(axises.zAxis)
@@ -155,7 +155,7 @@ namespace BytesCrafter.USocketNet.Serializables
 					vString = vString + "~";
 				}
 
-				vString = vString + Minified(vector3.z, 4);
+				vString = vString + Minified(vector3.z, significants.zPoints);
 			}
 
 			return vString;
@@ -211,16 +211,16 @@ namespace BytesCrafter.USocketNet.Serializables
 
 		public static string ToQuaternionStr(Quaternion rotation)
 		{
-			return Minified(rotation.eulerAngles.x, 0) + "~" + Minified(rotation.eulerAngles.y, 0) + "~" + Minified(rotation.eulerAngles.z, 0);
+			return Minified(rotation.eulerAngles.x, 7) + "~" + Minified(rotation.eulerAngles.y, 7) + "~" + Minified(rotation.eulerAngles.z, 7);
 		}
 
-		public static string ToQuaternionStr(Quaternion rotation, SocketAxis axises)
+		public static string ToQuaternionStr(Quaternion rotation, SocketAxis axises, Floatings significants)
 		{
 			string qString = string.Empty;
 
 			if(axises.xAxis)
 			{
-				qString = qString + Minified(rotation.eulerAngles.x, 0);
+				qString = qString + Minified(rotation.eulerAngles.x, significants.xPoints);
 			}
 
 			if(axises.yAxis)
@@ -230,7 +230,7 @@ namespace BytesCrafter.USocketNet.Serializables
 					qString = qString + "~";
 				}
 
-				qString = qString + Minified(rotation.eulerAngles.y, 0) ;
+				qString = qString + Minified(rotation.eulerAngles.y, significants.yPoints) ;
 			}
 
 			if(axises.zAxis)
@@ -240,7 +240,7 @@ namespace BytesCrafter.USocketNet.Serializables
 					qString = qString + "~";
 				}
 
-				qString = qString + Minified(rotation.eulerAngles.z, 0);
+				qString = qString + Minified(rotation.eulerAngles.z, significants.zPoints);
 			}
 
 			return qString;

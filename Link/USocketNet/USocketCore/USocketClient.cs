@@ -12,35 +12,34 @@ using UnityEngine.UI;
 using BytesCrafter.USocketNet.Serializables;
 using BytesCrafter.USocketNet.Networks;
 using BytesCrafter.USocketNet.Toolsets;
+
 namespace BytesCrafter.USocketNet
 {
 	public class USocketClient : MonoBehaviour
 	{
 		#region ExposedInterface - Ongoing!
 
-		[Header("NETWORK SETTINGS")]
+		/// <summary>
+		/// Bindings is all about server connection parameters, if you are not a 
+		/// developer of USocketNet, please dont mess with it to prevent any 
+		/// unhandled excemption. Thank you for your cooperation.
+		/// </summary>
 		public Bindings bindings = new Bindings();
 
-		[Header("INSTANCE PREFAB")]
+		/// <summary>
+		/// The USocketView prefab list which contains all possible global instance.
+		/// </summary>
 		public List<USocketView> socketPrefabs = new List<USocketView>();
+
+		/// <summary>
+		/// Get all self/local USocketView that is associated with this USocketClient instance.
+		/// </summary>
 		[HideInInspector]
 		public List<USocketView> localSockets = new List<USocketView> ();
 
 		#endregion
 
 		#region CheckerInterface - Done!
-
-		/// <summary>
-		/// Determines whether this client is connected to web socket server.
-		/// </summary>
-		/// <returns><c>true</c> if this client is connected; otherwise, <c>false</c>.</returns>
-		public bool IsConnected
-		{
-			get { return threadset.IsConnected; }
-		}
-
-		[HideInInspector]
-		public bool Subscribed = false;
 
 		/// <summary>
 		/// Sockets identity of the current user's connection to the server.
@@ -50,12 +49,31 @@ namespace BytesCrafter.USocketNet
 		{
 			get
 			{
-				//if (threadset.IsConnected) { return threadset.socketId; }
-				//else { return "Not Connected"; }
 				return netIdentity;
 			}
 		}
 		private string netIdentity = string.Empty;
+
+		/// <summary>
+		/// Determines whether this client is connected to web socket server.
+		/// </summary>
+		/// <returns><c>true</c> if this client is connected; otherwise, <c>false</c>.</returns>
+		public bool IsConnected
+		{
+			get
+			{
+				return threadset.IsConnected;
+			}
+		}
+
+		/// <summary>
+		/// Is this client currently joined on a live channel or not.
+		/// </summary>
+		public bool Subscribed = false;
+
+
+
+
 
 		/// <summary>
 		/// Gets the current ping count in ms or millisecond.
@@ -69,6 +87,11 @@ namespace BytesCrafter.USocketNet
 			}
 		}
 		private int pingValue = 0;
+
+		#endregion
+
+		#region CustomMechanism
+
 		private DateTime lastPing = DateTime.Now;
 		private float timer = 0f;
 		private void Pinging()
@@ -85,6 +108,7 @@ namespace BytesCrafter.USocketNet
 					lastPing = DateTime.Now;
 					SendEmit("sping", OnPingReceived);
 				}
+
 			}
 		}
 		private void OnPingReceived(JSONObject jsonObject)
@@ -92,6 +116,14 @@ namespace BytesCrafter.USocketNet
 			TimeSpan timeSpan = DateTime.Now.Subtract(lastPing);
 			pingValue = timeSpan.Milliseconds;
 			timer = bindings.pingFrequency;
+			StartCoroutine (Pings());
+		}
+
+		private IEnumerator Pings()
+		{
+			Ping ping = new Ping ("http://www.bytes-crafter.com");
+			yield return new WaitUntil (() => ping.isDone);
+			Debug.Log (ping.isDone + " - " + ping.time);
 		}
 
 		enum Debugs { Log, Warn, Error }
@@ -156,12 +188,18 @@ namespace BytesCrafter.USocketNet
 		#region ConnectServer - Done!
 
 		private bool connectReturn = false;
-		private Action<ConnStat, ConnJson> connectCallback = null;
+		private Action<ConnStat, ConnAuth> connectCallback = null;
 
-		public void ConnectToServer(string username, Action<ConnStat, ConnJson> connCallback)
+		/// <summary>
+		/// Connects to server using user specific credentials.
+		/// </summary>
+		/// <param name="username">Username.</param>
+		/// <param name="password">Password.</param>
+		/// <param name="callback">Callback.</param>
+		public void ConnectToServer(string username, string password, Action<ConnStat, ConnAuth> callback)
 		{
-			connectCallback = connCallback;
 			connectReturn = false;
+			connectCallback = callback;
 
 			if (!threadset.IsConnected)
 			{
@@ -176,29 +214,34 @@ namespace BytesCrafter.USocketNet
 				pingThread = new Thread(RunPingThread);
 				pingThread.Start(threadset.websocket);
 
-				StartCoroutine(ConnectingToServer(username));
+				StartCoroutine(ConnectingToServer(username, password));
 			}
 
 			else
 			{
 				if(connectCallback != null)
 				{
-					connectCallback(ConnStat.Connected, new ConnJson());
+					connectCallback(ConnStat.Connected, ConnAuth.Success);
 				}
 				DebugLog(Debugs.Warn, "ConnectionSuccess", "Already connected to the server!");
+
+				Credential credential = new Credential(bindings.authenKey, username, password);
+				string sendData = JsonUtility.ToJson(credential);
+				SendEmit ("heartbeat", new JSONObject(sendData));
 			}
 		}
 
-		private string lastUsername = string.Empty;
-		IEnumerator ConnectingToServer(string username)
+		IEnumerator ConnectingToServer(string username, string password)
 		{
 			lastUsername = username;
+			lastPassword = password;
+
 			yield return new WaitForSeconds(bindings.connectDelay);
 
 			if (threadset.websocket.IsConnected)
 			{
-				UserJson userJson = new UserJson(bindings.authenKey, username);
-				string sendData = JsonUtility.ToJson(userJson);
+				Credential credential = new Credential(bindings.authenKey, username, password);
+				string sendData = JsonUtility.ToJson(credential);
 				SendEmit("connect", new JSONObject(sendData), OnServerConnect);
 
 				yield return new WaitForSeconds(bindings.connectDelay);
@@ -206,11 +249,12 @@ namespace BytesCrafter.USocketNet
 				if (!connectReturn)
 				{
 					AbortConnection ();
+					ResetLastAuth ();
 					UIBlocker (false);
 
 					if(connectCallback != null)
 					{
-						connectCallback(ConnStat.InternetAccess, new ConnJson());
+						connectCallback(ConnStat.InternetAccess, ConnAuth.Error);
 					}
 					DebugLog(Debugs.Error, "ConnectionNoInternet", "Detected no internet connection!");
 				}
@@ -218,14 +262,23 @@ namespace BytesCrafter.USocketNet
 
 			else
 			{
-				AbortConnection ();
-
-				if(connectCallback != null)
+				if (!connectReturn)
 				{
-					connectCallback(ConnStat.Maintainance, new ConnJson());
-				}
-				UIBlocker (false);
+					AbortConnection ();
+					ResetLastAuth ();
+					UIBlocker (false);
 
+					if(connectCallback != null)
+					{
+						connectCallback(ConnStat.Maintainance, ConnAuth.Error);
+					}
+					DebugLog(Debugs.Error, "ServerOnMaintainance", "Server is currently unreachable!");
+				}
+
+				else
+				{
+					DebugLog(Debugs.Warn, "ConnectionRejected", "Client connection rejected by server!");
+				}
 			}
 		}
 
@@ -233,31 +286,57 @@ namespace BytesCrafter.USocketNet
 		{
 			StopCoroutine("ConnectingToServer");
 			connectReturn = true;
-
-			ConnJson connJson = JsonSerializer.ToObject<ConnJson>(jsonObject.ToString());
-			lastUsername = connJson.username;
-			netIdentity = connJson.identity;
 			UIBlocker (false);
 
-			if(connectCallback != null)
+			ConnRes connRes = JsonSerializer.ToObject<ConnRes>(jsonObject.ToString());
+			netIdentity = connRes.id;
+
+			if(connRes.ca == ConnAuth.Success)
 			{
-				connectCallback(ConnStat.Connected, connJson);
+				prevConnected = true;
+				if(connectionStats != null)
+				{
+					connectionStats(ConnStat.Connected);
+				}
+				if(connectCallback != null)
+				{
+					connectCallback(ConnStat.Connected, ConnAuth.Success);
+				}
+				DebugLog(Debugs.Log, "ConnectionSuccess", "Successfully connected to server!");
 			}
-			DebugLog(Debugs.Log, "ConnectionSuccess", "Successfully connected to server!");
+
+			else
+			{
+				ForceDisconnect();
+				ResetLastAuth ();
+				pingValue = 0;
+
+				if(connectCallback != null)
+				{
+					connectCallback(ConnStat.Rejected, connRes.ca);
+				}
+				DebugLog(Debugs.Warn, "ConnectionRejected", "Client connection rejected by server!");
+			}
 		}
 
 		//Done! User rejections if authKey is not valid!
 		private void OnUserRejected(SocketIOEvent _eventArgs)
 		{
+			connectReturn = true;
+			onListeningReturn = true;
+
+			Rejection connRes = JsonUtility.FromJson<Rejection>(_eventArgs.data.ToString());
+
 			ForceDisconnect();
+			ResetLastAuth ();
 			UIBlocker (false);
 			pingValue = 0;
 
-			if(disconnectCallback != null)
+			if(connectCallback != null)
 			{
-				disconnectCallback(ConnStat.Disconnected);
+				//connectCallback(ConnStat.Disconnected, connRes.ca);
 			}
-			DebugLog (Debugs.Error, "ConnectForbidden", "Your authentication key is not authorized!");
+			//DebugLog(Debugs.Warn, "ConnectionRejected", "Client connection rejected by server!");
 		}
 
 		#endregion
@@ -310,9 +389,11 @@ namespace BytesCrafter.USocketNet
 		{
 			StopCoroutine("DisconnectingToServer");
 			disconnectReturn = true;
+			UIBlocker (false);
+
+			prevConnected = false;
 			ForceDisconnect();
 			pingValue = 0;
-			UIBlocker (false);
 
 			if(disconnectCallback != null)
 			{
@@ -324,56 +405,87 @@ namespace BytesCrafter.USocketNet
 
 		#region ReconnectServer - Done!
 
-		private Action<ConnStat, ConnJson> connectionStats = null;
+		private bool prevConnected = false;
+		private string lastUsername = string.Empty;
+		private string lastPassword = string.Empty;
+		private void ResetLastAuth()
+		{
+			lastUsername = string.Empty;
+			lastPassword = string.Empty;
+		}
+
+		private Action<ConnStat> connectionStats = null;
 		private bool onListeningReturn = false;
 
-		public void ListenConnectionStatus(Action<ConnStat, ConnJson> connectionStatus)
+		public void ListenConnectionStatus(Action<ConnStat> connectionStatus)
 		{
 			connectionStats = connectionStatus;
 		}
 
 		IEnumerator OnListeningConnectionStatus(ConnStat connStat)
 		{
-			onListeningReturn = false;
-
-			if(connStat != ConnStat.Connected)
+			if(prevConnected)
 			{
-				Subscribed = false;
-			}
+				onListeningReturn = false;
 
-			if (connStat == ConnStat.Reconnected)
-			{
-				UIBlocker (true);
-				UserJson userJson = new UserJson(bindings.authenKey, lastUsername);
-				string sendData = JsonUtility.ToJson(userJson);
-				SendEmit("reconnect", new JSONObject(sendData), OnServerReconnect);
-			}
-
-			yield return new WaitForSeconds(bindings.connectDelay);
-
-			if (!onListeningReturn)
-			{
-				UIBlocker (false);
-
-				if (connectionStats != null)
+				if(connStat != ConnStat.Connected)
 				{
-					connectionStats(connStat, null);
+					Subscribed = false;
 				}
-			}
 
-			DebugLog (Debugs.Warn, "ConnectionStatus", "You are currently " + connStat.ToString() + " to the server!");
+				if (connStat == ConnStat.Reconnected)
+				{
+					UIBlocker (true);
+					Credential credential = new Credential(bindings.authenKey, lastUsername, lastPassword);
+					string sendData = JsonUtility.ToJson(credential);
+					SendEmit("reconnect", new JSONObject(sendData), OnServerReconnect);
+				}
+
+				yield return new WaitForSeconds(bindings.connectDelay);
+
+				if (!onListeningReturn)
+				{
+					UIBlocker (false);
+
+					if (connectionStats != null)
+					{
+						connectionStats(connStat);
+					}
+				}
+
+				DebugLog (Debugs.Warn, "ConnectionStatus", "You are currently " + connStat.ToString() + " to the server!");
+			}
 		}
 
 		private void OnServerReconnect(JSONObject jsonObject)
 		{
 			StopCoroutine ("OnListeningConnectionStatus");
-			ConnJson connJson = JsonSerializer.ToObject<ConnJson>(jsonObject.ToString());
 			onListeningReturn = true;
 			UIBlocker (false);
 
-			if (connectionStats != null)
+			ConnRes connRes = JsonSerializer.ToObject<ConnRes>(jsonObject.ToString());
+			netIdentity = connRes.id;
+
+			if(connRes.ca == ConnAuth.Success)
 			{
-				connectionStats(ConnStat.Reconnected, connJson);
+				if(connectionStats != null)
+				{
+					connectionStats(ConnStat.Reconnected);
+				}
+				//DebugLog(Debugs.Log, "ConnectionSuccess", "Successfully reconnected to server!");
+			}
+
+			else
+			{
+				ForceDisconnect();
+				ResetLastAuth ();
+				pingValue = 0;
+
+				if(connectionStats != null)
+				{
+					connectionStats(ConnStat.Rejected);
+				}
+				DebugLog(Debugs.Log, "ConnectionRejected", "Server rejected reconnection!");
 			}
 		}
 
@@ -603,7 +715,7 @@ namespace BytesCrafter.USocketNet
 			{
 				messageCallback(msgJson);
 			}
-			DebugLog(Debugs.Log, "OnEvent: MESSAGE", "Sender: " + msgJson.sender + " Type: " + msgJson.msgtype + " Content: " + msgJson.content);
+			DebugLog(Debugs.Log, "OnEvent: MESSAGE", "Sender: " + msgJson.sd + " Type: " + msgJson.mt + " Content: " + msgJson.ct);
 		}
 
 		#endregion
@@ -611,9 +723,9 @@ namespace BytesCrafter.USocketNet
 		#region AutoChannel - Done!
 
 		private bool autoChannelReturned = false;
-		private Action<Returned, ChannelJson> autoChannelCallback = null;
+		private Action<MatchRes, MatchMake> autoChannelCallback = null;
 
-		public void AutoMatchChannel(string variant, int maxconnect, Action<Returned, ChannelJson> _autoChannelCallback)
+		public void AutoMatchChannel(string variant, int maxconnect, Action<MatchRes, MatchMake> _autoChannelCallback)
 		{
 			autoChannelCallback = _autoChannelCallback;
 			autoChannelReturned = false;
@@ -630,7 +742,7 @@ namespace BytesCrafter.USocketNet
 			{
 				if(autoChannelCallback != null)
 				{
-					autoChannelCallback(Returned.Error, null);
+					autoChannelCallback(MatchRes.Error, null);
 				}
 				DebugLog (Debugs.Error, "AutoChannelError", "You are currently disconnected to the server!");
 			}
@@ -644,9 +756,8 @@ namespace BytesCrafter.USocketNet
 			{
 				if (autoChannelCallback != null)
 				{
-					autoChannelCallback(Returned.Failed, null);
+					autoChannelCallback(MatchRes.Error, null);
 				}
-
 				DebugLog (Debugs.Error, "AutoChannelFailed", "Server did not respond to leave event!");
 			}
 		}
@@ -655,22 +766,31 @@ namespace BytesCrafter.USocketNet
 		{
 			StopCoroutine (AutoingChannel());
 			autoChannelReturned = true;
-			Subscribed = true;
 
-			ChannelJson channelJson = JsonSerializer.ToObject<ChannelJson>(jsonObject.ToString());
+			MatchMake matchMake = JsonSerializer.ToObject<MatchMake>(jsonObject.ToString());
+			if(matchMake.mr == MatchRes.Success)
+			{
+				Subscribed = true;
+				DebugLog (Debugs.Log, "AutoChannelSuccess", "Successfully auto match a channel!");
+			}
+
+			else
+			{
+				DebugLog (Debugs.Warn, "AutoChannelFailed", "Channel name is already exist or full or not same variant!");
+			}
+
 			if(autoChannelCallback != null)
 			{
-				autoChannelCallback(Returned.Success, channelJson);
+				autoChannelCallback(matchMake.mr, matchMake);
 			}
-			DebugLog (Debugs.Log, "AutoChannelSuccess", "Successfully auto match a channel!");
 		}
 
 		#endregion
 
 		#region CreateChannel - Done!
 
-		private Action<Returned, ChannelJson> createCallback = null; private bool createReturned = false;
-		public void CreateChannel(string channelName, string variant, int maxconnect, Action<Returned, ChannelJson> _createCallback)
+		private Action<MatchRes, MatchMake> createCallback = null; private bool createReturned = false;
+		public void CreateChannel(string channelName, string variant, int maxconnect, Action<MatchRes, MatchMake> _createCallback)
 		{
 			createCallback = _createCallback;
 			createReturned = false;
@@ -687,7 +807,7 @@ namespace BytesCrafter.USocketNet
 			{
 				if(createCallback != null)
 				{
-					createCallback(Returned.Error, new ChannelJson(string.Empty));
+					createCallback(MatchRes.Error, null);
 				}
 				DebugLog (Debugs.Error, "CreateChannelError", "You are currently disconnected to the server!");
 			}
@@ -701,7 +821,7 @@ namespace BytesCrafter.USocketNet
 			{
 				if (createCallback != null)
 				{
-					createCallback(Returned.Failed, new ChannelJson(string.Empty));
+					createCallback(MatchRes.Error, null);
 				}
 				DebugLog (Debugs.Warn, "CreateChannelFailed", "Server did not respond to leave event!");
 			}
@@ -712,24 +832,21 @@ namespace BytesCrafter.USocketNet
 			StopCoroutine (CreatingChannel());
 			createReturned = true;
 
-			ChanReturn channelJson = JsonSerializer.ToObject<ChanReturn>(jsonObject.ToString());
-			if(channelJson.rt)
+			MatchMake matchMake = JsonSerializer.ToObject<MatchMake>(jsonObject.ToString());
+			if(matchMake.mr == MatchRes.Success)
 			{
 				Subscribed = true;
-				if(createCallback != null)
-				{
-					createCallback(Returned.Success, JsonUtility.FromJson<ChannelJson>(channelJson.ch) );
-				}
 				DebugLog (Debugs.Log, "CreateChannelSuccess", "Successfully create match a channel!");
 			}
 
 			else
 			{
-				if(createCallback != null)
-				{
-					createCallback(Returned.Failed, null);
-				}
 				DebugLog (Debugs.Warn, "CreateChannelFailed", "Channel name is already exist or full or not same variant!");
+			}
+
+			if(createCallback != null)
+			{
+				createCallback(matchMake.mr, matchMake);
 			}
 		}
 
@@ -737,10 +854,10 @@ namespace BytesCrafter.USocketNet
 
 		#region JoinChannel - Done!
 
-		private Action<Returned, ChannelJson> joinCallback = null;
+		private Action<MatchRes, MatchMake> joinCallback = null;
 		private bool joinReturned = false;
 
-		public void JoinChannel(string channelName, string variant, Action<Returned, ChannelJson> _joinCallback)
+		public void JoinChannel(string channelName, string variant, Action<MatchRes, MatchMake> _joinCallback)
 		{
 			joinCallback = _joinCallback;
 			joinReturned = false;
@@ -757,7 +874,7 @@ namespace BytesCrafter.USocketNet
 			{
 				if(joinCallback != null)
 				{
-					joinCallback(Returned.Error, new ChannelJson(string.Empty));
+					joinCallback(MatchRes.Error, null);
 				}
 				DebugLog (Debugs.Error, "JoinChannelError", "You are currently disconnected to the server!");
 			}
@@ -771,7 +888,7 @@ namespace BytesCrafter.USocketNet
 			{
 				if (joinCallback != null)
 				{
-					joinCallback(Returned.Failed, new ChannelJson(string.Empty));
+					joinCallback(MatchRes.Error, null);
 				}
 				DebugLog (Debugs.Warn, "JoinChannelFailed", "Server did not respond to leave event!");
 			}
@@ -782,24 +899,21 @@ namespace BytesCrafter.USocketNet
 			StopCoroutine (JoiningChannel());
 			joinReturned = true;
 
-			ChanReturn channelJson = JsonSerializer.ToObject<ChanReturn>(jsonObject.ToString());
-			if(channelJson.rt)
+			MatchMake matchMake = JsonSerializer.ToObject<MatchMake>(jsonObject.ToString());
+			if(matchMake.mr == MatchRes.Success)
 			{
 				Subscribed = true;
-				if(joinCallback != null)
-				{
-					joinCallback(Returned.Success, JsonUtility.FromJson<ChannelJson>(channelJson.ch) );
-				}
 				DebugLog (Debugs.Log, "JoinChannelSuccess", "Successfully join match a channel!");
 			}
 
 			else
 			{
-				if(joinCallback != null)
-				{
-					joinCallback(Returned.Failed, null);
-				}
-				DebugLog (Debugs.Warn, "JoinChannelFailed", "Channel name is does not exist or full or not same variant!");
+				DebugLog (Debugs.Warn, "JoinChannelFailed", "Channel name is already exist or full or not same variant!");
+			}
+
+			if(joinCallback != null)
+			{
+				joinCallback(matchMake.mr, matchMake);
 			}
 		}
 
@@ -854,10 +968,10 @@ namespace BytesCrafter.USocketNet
 			leaveCallback (Returned.Success, null);
 
 			//Must only destroy peers that is assoc with this net.
-			USocket.Instance.socketIdentities.ForEach ((USocketView sockView) => {
+			USocketNet.Instance.socketIdentities.ForEach ((USocketView sockView) => {
 				Destroy(sockView.gameObject);
 			});
-			USocket.Instance.socketIdentities = new List<USocketView> ();
+			USocketNet.Instance.socketIdentities = new List<USocketView> ();
 
 			//For each local socket view of this socket net must be destroy.
 			localSockets.ForEach ((USocketView sockView) => {
@@ -915,16 +1029,16 @@ namespace BytesCrafter.USocketNet
 			PeerJson peerJson = JsonUtility.FromJson<PeerJson>(_eventArgs.data.ToString());
 
 			//Destroy only socket views that is assoc in thi socket net.
-			if(USocket.Instance.socketIdentities.Exists(x => x.Identity == peerJson.id))
+			if(USocketNet.Instance.socketIdentities.Exists(x => x.Identity == peerJson.id))
 			{
 				//all instance of the socket net's current peer!
-				USocket.Instance.socketIdentities.ForEach ((USocketView obj) => {
+				USocketNet.Instance.socketIdentities.ForEach ((USocketView obj) => {
 					if(obj.Identity == peerJson.id)
 					{
 						Destroy(obj.gameObject);
 					}
 				});
-				USocket.Instance.socketIdentities.RemoveAll (x => x == null);
+				USocketNet.Instance.socketIdentities.RemoveAll (x => x == null);
 			}
 
 			//Destroy all sockets views assoc in this socket net.
@@ -1000,7 +1114,7 @@ namespace BytesCrafter.USocketNet
 			{
 				instanceCallback (Returned.Success);
 			}
-			DebugLog(Debugs.Log, "OnEvent: INSTANCE LOCAL", "ID: " + instances.identity + " POS: " + instances.pos);
+			DebugLog(Debugs.Log, "OnEvent: INSTANCE LOCAL", "ID: " + instances.id + " POS: " + instances.pos);
 		}
 
 		//Instantiate froms SERVER.
@@ -1008,13 +1122,13 @@ namespace BytesCrafter.USocketNet
 		{
 			Instances instances = JsonUtility.FromJson<Instances>(_eventArgs.data.ToString());
 
-			if(!USocket.Instance.usocketNets.Exists(x => x.Identity == instances.identity))
+			if(!USocketNet.Instance.usocketNets.Exists(x => x.Identity == instances.id))
 			{
-				if(!USocket.Instance.socketIdentities.Exists(x => x.Instance == instances.itc))
+				if(!USocketNet.Instance.socketIdentities.Exists(x => x.Instance == instances.itc))
 				{
 					Instantiating (instances, false);
 
-					DebugLog(Debugs.Log, "OnEvent: INSTANCE SERVER", "ID: " + instances.identity + "POS: " + instances.pos);
+					DebugLog(Debugs.Log, "OnEvent: INSTANCE SERVER", "ID: " + instances.id + "POS: " + instances.pos);
 				}
 			}
 		}
@@ -1024,7 +1138,7 @@ namespace BytesCrafter.USocketNet
 		{
 			USocketView curUser = Instantiate(socketPrefabs[instances.pfb], VectorJson.ToVector3(instances.pos), VectorJson.ToQuaternion(instances.rot));
 			curUser.IsLocalUser = isLocalUser;
-			curUser.Identity = instances.identity;
+			curUser.Identity = instances.id;
 			curUser.Instance = instances.itc;
 			curUser.uSocketNet = this;
 
@@ -1035,7 +1149,7 @@ namespace BytesCrafter.USocketNet
 
 			else
 			{
-				USocket.Instance.socketIdentities.Add(curUser);
+				USocketNet.Instance.socketIdentities.Add(curUser);
 			}
 
 			return curUser;
@@ -1044,48 +1158,152 @@ namespace BytesCrafter.USocketNet
 		#endregion
 
 		#region SYNCHRONIZATION - Optimization!
+		private string prevPosOutbound = string.Empty;
+		private string prevRotOutbound = string.Empty;
+		private string prevScaOutbound = string.Empty;
+		private string prevStaOutbound = string.Empty;
+		private string prevAniOutbound = string.Empty;
+		private string prevChiOutbound = string.Empty;
 
 		private void SynchingOutbound()
 		{
-			USocket.Instance.synchRate = bindings.mainSendRate;
-			USocket.Instance.socketIdentities.Remove (null);
+			USocketNet.Instance.synchRate = bindings.mainSendRate;
+			USocketNet.Instance.socketIdentities.Remove (null);
 			localSockets.Remove (null);
 
 			bindings.sendTimer += Time.deltaTime;
 
 			if (bindings.sendTimer >= (1f / bindings.mainSendRate))
 			{
-				SyncJsons syncJsons = new SyncJsons ();//Identity);
-
-				if (localSockets.Count > 0)
+				if(bindings.syncGroup == SyncGroup.Single)
 				{
-					foreach(USocketView usocket in localSockets)
+					//FOREACH ALL LOCAL SOCKET THEN SEND INSIDE.
+					if (localSockets.Count > 0)
 					{
-						SyncJson syncJson = usocket.GetViewData ();
-						if(syncJson.states.Count > 0)
+						string curUploads = string.Empty;
+
+						foreach(USocketView usocket in localSockets)
 						{
-							syncJsons.obj.Add (syncJson);
+							if(usocket.position.synchronize)
+							{
+								string curPosOutbound = usocket.GetPosStr;
+								if(!prevPosOutbound.Equals(curPosOutbound))
+								{
+									SingleJson singleJson = new SingleJson (usocket.Instance, curPosOutbound);
+									SendEmit ("p", new JSONObject (JsonUtility.ToJson(singleJson)));
+
+									curUploads = curUploads + "p" + curPosOutbound;
+									prevPosOutbound = curPosOutbound;
+								}
+							}
+
+							if(usocket.rotation.synchronize)
+							{
+								string curRotOutbound = usocket.GetRotStr;
+								if(!prevRotOutbound.Equals(curRotOutbound))
+								{
+									SingleJson singleJson = new SingleJson (usocket.Instance, curRotOutbound);
+									SendEmit ("r", new JSONObject (JsonUtility.ToJson(singleJson)));
+
+									curUploads = curUploads + "r" + curRotOutbound;
+									prevRotOutbound = curRotOutbound;
+								}
+							}
+
+							if(usocket.scale.synchronize)
+							{
+								string curScaOutbound = usocket.GetScaStr;
+								if(!prevScaOutbound.Equals(curScaOutbound))
+								{
+									SingleJson singleJson = new SingleJson (usocket.Instance, curScaOutbound);
+									SendEmit ("s", new JSONObject (JsonUtility.ToJson(singleJson)));
+
+									curUploads = curUploads + "s" + curScaOutbound;
+									prevScaOutbound = curScaOutbound;
+								}
+							}
+
+							if(usocket.states.synchronize)
+							{
+
+							}
+
+							if(usocket.animator.synchronize)
+							{
+
+							}
+
+							if(usocket.childs.synchronize)
+							{
+
+							}
 						}
+
+						//DESTROY IF NOT EXIST!
+						SendEmit ("u", SynchingSocket);
+						USocketNet.Instance.uploadRate = curUploads.Length;
 					}
 				}
 
-				string sendData = "0";
-				if(syncJsons.obj.Count > 0)
+				else
 				{
-					sendData = JsonUtility.ToJson (syncJsons);
+					SyncJsons syncJsons = new SyncJsons ();//Identity);
+
+					if (localSockets.Count > 0)
+					{
+						foreach(USocketView usocket in localSockets)
+						{
+							SyncJson syncJson = usocket.GetViewData ();
+							if(syncJson.states.Count > 0)
+							{
+								syncJsons.obj.Add (syncJson);
+							}
+						}
+					}
+
+					string sendData = "0";
+					if(syncJsons.obj.Count > 0)
+					{
+						sendData = JsonUtility.ToJson (syncJsons);
+					}
+
+					USocketNet.Instance.uploadRate = sendData.Length;
+					SendEmit ("m", new JSONObject (sendData), SynchingSockets);
 				}
 
-				USocket.Instance.uploadRate = sendData.Length;
-				SendEmit ("transtate", new JSONObject (sendData), SynchingSockets);
-
 				bindings.sendTimer = 0f;
+			}
+		}
+
+		private void SynchingSocket(JSONObject jsonObject)
+		{
+			PeerJson peerJson = JsonSerializer.ToObject<PeerJson>(jsonObject.ToString());
+			USocketNet.Instance.downloadRate = jsonObject.ToString().Length;
+
+			//Check if user id is other machine must!.
+			if(!USocketNet.Instance.usocketNets.Exists(x => x.Identity == peerJson.id))
+			{
+				peerJson.obj.ForEach ((ObjJson objJson) => 
+				{
+						if (USocketNet.Instance.socketIdentities.Exists(x => x.Identity == peerJson.id && x.Instance == objJson.id))
+						{
+							USocketNet.Instance.socketIdentities.Find(x => x.Identity == peerJson.id && x.Instance == objJson.id).SetViewTarget(objJson);
+						}
+
+						else
+						{
+							Instances instan = new Instances(objJson.id, objJson.pfb, VectorJson.ToVector3(objJson.pos), VectorJson.ToQuaternion(objJson.rot));
+							instan.id = peerJson.id;
+							Instantiating(instan, false).SetViewTarget(objJson);
+						}
+				});
 			}
 		}
 
 		private void SynchingSockets(JSONObject jsonObject)
 		{
 			ChanUsers chanUsers = JsonSerializer.ToObject<ChanUsers>(jsonObject.ToString());
-			USocket.Instance.downloadRate = jsonObject.ToString().Length;
+			USocketNet.Instance.downloadRate = jsonObject.ToString().Length;
 
 			//SYNCHRONIZE AND INSTANTIATE!
 			chanUsers.us.ForEach ((PeerJson peerJson) => 
@@ -1094,19 +1312,19 @@ namespace BytesCrafter.USocketNet
 						return;
 
 					//Check if user id is other machine must!.
-					if(!USocket.Instance.usocketNets.Exists(x => x.Identity == peerJson.id))
+					if(!USocketNet.Instance.usocketNets.Exists(x => x.Identity == peerJson.id))
 					{
 						peerJson.obj.ForEach ((ObjJson objJson) => 
 							{
-								if (USocket.Instance.socketIdentities.Exists(x => x.Identity == peerJson.id && x.Instance == objJson.id))
+								if (USocketNet.Instance.socketIdentities.Exists(x => x.Identity == peerJson.id && x.Instance == objJson.id))
 								{
-									USocket.Instance.socketIdentities.Find(x => x.Identity == peerJson.id && x.Instance == objJson.id).SetViewTarget(objJson);
+									USocketNet.Instance.socketIdentities.Find(x => x.Identity == peerJson.id && x.Instance == objJson.id).SetViewTarget(objJson);
 								}
 
 								else
 								{
 									Instances instan = new Instances(objJson.id, objJson.pfb, VectorJson.ToVector3(objJson.pos), VectorJson.ToQuaternion(objJson.rot));
-									instan.identity = peerJson.id;
+									instan.id = peerJson.id;
 									Instantiating(instan, false).SetViewTarget(objJson);
 								}
 							});
@@ -1114,7 +1332,7 @@ namespace BytesCrafter.USocketNet
 				});
 			
 			//SYNCHRONIZE AND DESTROY IF NOT EXIST!
-			USocket.Instance.socketIdentities.ForEach((USocketView toDestroy) =>{
+			USocketNet.Instance.socketIdentities.ForEach((USocketView toDestroy) =>{
 
 				if(!toDestroy.IsLocalUser)
 				{
@@ -1124,17 +1342,17 @@ namespace BytesCrafter.USocketNet
 					}
 				}
 			});
-			USocket.Instance.socketIdentities.RemoveAll (x => x == null);
+			USocketNet.Instance.socketIdentities.RemoveAll (x => x == null);
 		}
 
 		private void SynchingInbound()
 		{
-			USocket.Instance.socketIdentities.ForEach ((USocketView peers) => 
+			USocketNet.Instance.socketIdentities.ForEach ((USocketView peers) => 
 				{
 					//Check if entry is null, just remove it.
 					if (peers == null)
 					{
-						USocket.Instance.socketIdentities.Remove(peers);
+						USocketNet.Instance.socketIdentities.Remove(peers);
 						return;
 					};
 				});
@@ -1227,13 +1445,16 @@ namespace BytesCrafter.USocketNet
 		//Initilaized all the required mechanisms.
 		void Awake()
 		{
-			if(!USocket.Instance.socketIdentities.Exists(x => x.GetInstanceID() == GetInstanceID()))
+			if(!USocketNet.Instance.socketIdentities.Exists(x => x.GetInstanceID() == GetInstanceID()))
 			{
-				USocket.Instance.usocketNets.Add (this);
+				USocketNet.Instance.usocketNets.Add (this);
 			}
 
 			//CUSTOM INITIALIZATION
-			DontDestroyOnLoad(this);
+			if(bindings.dontDestroyOnLoad)
+			{
+				DontDestroyOnLoad(this);
+			}
 			threadset.IsInitialized = true;
 			Application.runInBackground = bindings.runOnBackground;
 
@@ -1250,7 +1471,7 @@ namespace BytesCrafter.USocketNet
 			queueCoder.ackQueueLock = new object();
 			queueCoder.ackList = new List<Ack>();
 
-			//WEB SOCKET INITIALIZATION
+			//WEB SOCKET INITIALIZATION										
 			threadset.websocket = new WebSocket("ws://" + bindings.serverUrl + ":" + bindings.serverPort + "/socket.io/?EIO=4&transport=websocket");
 			threadset.websocket.OnOpen += OnOpen;
 			threadset.websocket.OnError += OnError;
@@ -1268,7 +1489,7 @@ namespace BytesCrafter.USocketNet
 			//CallbackOn("error", OnReceivedError);
 
 			//LISTENERS AND EVENTS
-			CallbackOn("disconnected", OnUserRejected);
+			CallbackOn("rejected", OnUserRejected);
 			CallbackOn("messaged", OnMessageReceived);
 			CallbackOn("joined", OnChannelJoined);
 			CallbackOn("instanced", OnInstancePeer);
@@ -1429,9 +1650,18 @@ namespace BytesCrafter.USocketNet
 			DebugLog(Debugs.Warn, "[SocketIO]", " Close received: " + e.name + " " + e.data);
 		}
 
-		private void OnOpen(object sender, EventArgs e) { EmitEvent("open"); }
-		private void OnError(object sender, ErrorEventArgs e) { EmitEvent("error"); }
-		private void OnClose(object sender, CloseEventArgs e) { EmitEvent("close"); }
+		private void OnOpen(object sender, EventArgs e)
+		{ 
+			EmitEvent("open");
+		}
+		private void OnError(object sender, ErrorEventArgs e)
+		{
+			EmitEvent("error");
+		}
+		private void OnClose(object sender, CloseEventArgs e)
+		{
+			EmitEvent("close");
+		}
 
 		private void OnMessage(object sender, MessageEventArgs e)
 		{
@@ -1441,7 +1671,7 @@ namespace BytesCrafter.USocketNet
 			{
 				case EnginePacketType.OPEN: HandleOpen(packet); break;
 				case EnginePacketType.CLOSE: EmitEvent("close"); break;
-				case EnginePacketType.PING: HandlePing(); break;
+				case EnginePacketType.PING: HandlePing (); break;
 				case EnginePacketType.PONG: HandlePong(); break;
 				case EnginePacketType.MESSAGE: HandleMessage(packet); break;
 			}
@@ -1527,7 +1757,9 @@ namespace BytesCrafter.USocketNet
 		private Thread pingThread;
 		private void RunPingThread(object obj)
 		{
-			WebSocket webSocket = (WebSocket)obj; DateTime pingStart;
+			WebSocket webSocket = (WebSocket)obj; 
+			DateTime pingStart;
+
 			int timeoutMilis = Mathf.FloorToInt(threadset.pingTimeout * 1000);
 			int intervalMilis = Mathf.FloorToInt(threadset.pingInterval * 1000);
 

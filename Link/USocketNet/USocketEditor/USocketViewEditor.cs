@@ -79,7 +79,36 @@ namespace BytesCrafter.USocketNet
 				EditorGUILayout.EndHorizontal ();
 
 				EditorGUILayout.Separator ();
+				EditorGUILayout.BeginHorizontal ();
+				GUILayout.Space (25f);
+				GUILayout.Label("Floating Points");
+				EditorGUILayout.EndHorizontal ();
 
+				if(view.position.axises.xAxis)
+				{
+					EditorGUILayout.BeginHorizontal ();
+					GUILayout.Space (50f);
+					view.position.floatings.xPoints = EditorGUILayout.IntSlider ("X Significants", view.position.floatings.xPoints, 0, 10);
+					EditorGUILayout.EndHorizontal ();
+				}
+
+				if(view.position.axises.yAxis)
+				{
+					EditorGUILayout.BeginHorizontal ();
+					GUILayout.Space (50f);
+					view.position.floatings.yPoints = EditorGUILayout.IntSlider ("Y Significants", view.position.floatings.yPoints, 0, 10);
+					EditorGUILayout.EndHorizontal ();
+				}
+
+				if(view.position.axises.zAxis)
+				{
+					EditorGUILayout.BeginHorizontal ();
+					GUILayout.Space (50f);
+					view.position.floatings.zPoints = EditorGUILayout.IntSlider ("Z Significants", view.position.floatings.zPoints, 0, 10);
+					EditorGUILayout.EndHorizontal ();
+				}
+
+				EditorGUILayout.Separator ();
 				EditorGUILayout.BeginHorizontal ();
 				GUILayout.Space (25f);
 				view.position.syncMode = (SocketSync)EditorGUILayout.EnumPopup ("Sync Mode", view.position.syncMode);
@@ -141,7 +170,36 @@ namespace BytesCrafter.USocketNet
 				EditorGUILayout.EndHorizontal ();
 
 				EditorGUILayout.Separator ();
+				EditorGUILayout.BeginHorizontal ();
+				GUILayout.Space (25f);
+				GUILayout.Label("Floating Points");
+				EditorGUILayout.EndHorizontal ();
 
+				if(view.rotation.axises.xAxis)
+				{
+					EditorGUILayout.BeginHorizontal ();
+					GUILayout.Space (50f);
+					view.rotation.floatings.xPoints = EditorGUILayout.IntSlider ("X Significants", view.rotation.floatings.xPoints, 0, 10);
+					EditorGUILayout.EndHorizontal ();
+				}
+
+				if(view.rotation.axises.yAxis)
+				{
+					EditorGUILayout.BeginHorizontal ();
+					GUILayout.Space (50f);
+					view.rotation.floatings.yPoints = EditorGUILayout.IntSlider ("Y Significants", view.rotation.floatings.yPoints, 0, 10);
+					EditorGUILayout.EndHorizontal ();
+				}
+
+				if(view.rotation.axises.zAxis)
+				{
+					EditorGUILayout.BeginHorizontal ();
+					GUILayout.Space (50f);
+					view.rotation.floatings.zPoints = EditorGUILayout.IntSlider ("Z Significants", view.rotation.floatings.zPoints, 0, 10);
+					EditorGUILayout.EndHorizontal ();
+				}
+
+				EditorGUILayout.Separator ();
 				EditorGUILayout.BeginHorizontal ();
 				GUILayout.Space (25f);
 				view.rotation.syncMode = (SocketSync)EditorGUILayout.EnumPopup ("Sync Mode", view.rotation.syncMode);
@@ -203,7 +261,36 @@ namespace BytesCrafter.USocketNet
 				EditorGUILayout.EndHorizontal ();
 
 				EditorGUILayout.Separator ();
+				EditorGUILayout.BeginHorizontal ();
+				GUILayout.Space (25f);
+				GUILayout.Label("Floating Points");
+				EditorGUILayout.EndHorizontal ();
 
+				if(view.scale.axises.xAxis)
+				{
+					EditorGUILayout.BeginHorizontal ();
+					GUILayout.Space (50f);
+					view.scale.floatings.xPoints = EditorGUILayout.IntSlider ("X Significants", view.scale.floatings.xPoints, 0, 10);
+					EditorGUILayout.EndHorizontal ();
+				}
+
+				if(view.scale.axises.yAxis)
+				{
+					EditorGUILayout.BeginHorizontal ();
+					GUILayout.Space (50f);
+					view.scale.floatings.yPoints = EditorGUILayout.IntSlider ("Y Significants", view.scale.floatings.yPoints, 0, 10);
+					EditorGUILayout.EndHorizontal ();
+				}
+
+				if(view.scale.axises.zAxis)
+				{
+					EditorGUILayout.BeginHorizontal ();
+					GUILayout.Space (50f);
+					view.scale.floatings.zPoints = EditorGUILayout.IntSlider ("Z Significants", view.scale.floatings.zPoints, 0, 10);
+					EditorGUILayout.EndHorizontal ();
+				}
+
+				EditorGUILayout.Separator ();
 				EditorGUILayout.BeginHorizontal ();
 				GUILayout.Space (25f);
 				view.scale.syncMode = (SocketSync)EditorGUILayout.EnumPopup ("Sync Mode", view.scale.syncMode);

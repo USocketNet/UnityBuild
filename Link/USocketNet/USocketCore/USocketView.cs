@@ -259,7 +259,7 @@ namespace BytesCrafter.USocketNet
 							else if (childs.childList[i].position.syncMode == SocketSync.AdjustToward)
 							{
 								float pDamp = Vector3.Distance(childs.childList[i].reference.position, targetChilds.lists[i].position);
-								transform.position = Vector3.MoveTowards(childs.childList[i].reference.position, targetChilds.lists[i].position, 
+								childs.childList[i].reference.position = Vector3.MoveTowards(childs.childList[i].reference.position, targetChilds.lists[i].position, 
 									(pDamp + childs.childList[i].position.interpolation) * childs.childList[i].position.speed * Time.deltaTime);
 							}
 
@@ -319,6 +319,30 @@ namespace BytesCrafter.USocketNet
 			}
 		}
 
+		public string GetPosStr
+		{
+			get
+			{
+				return VectorJson.ToVectorStr (transform.position, position.axises, position.floatings);
+			}
+		}
+
+		public string GetRotStr
+		{
+			get
+			{
+				return VectorJson.ToQuaternionStr (transform.rotation, rotation.axises, rotation.floatings);
+			}
+		}
+
+		public string GetScaStr
+		{
+			get
+			{
+				return VectorJson.ToVectorStr (transform.localScale, scale.axises, scale.floatings);
+			}
+		}
+
 		public SyncJson GetViewData()
 		{
 			//Create a minified string version of syncjson.
@@ -334,8 +358,7 @@ namespace BytesCrafter.USocketNet
 
 				//if (usocket.position.sendTimer >= (1f / usocket.position.sendRate))
 				//{
-				string newVstate = VectorJson.ToVectorStr (transform.position, position.axises);
-
+				string newVstate = GetPosStr;
 				if(!newVstate.Equals(position.prevVstring))
 				{
 					syncJson.states [0] = "t";
@@ -355,8 +378,7 @@ namespace BytesCrafter.USocketNet
 
 				//if (usocket.rotation.sendTimer >= (1f / usocket.rotation.sendRate))
 				//{
-				string newVstate = VectorJson.ToQuaternionStr (transform.rotation, rotation.axises);
-
+				string newVstate = GetRotStr;
 				if(!newVstate.Equals(rotation.prevVstring))
 				{
 					syncJson.states [1] = "t";
@@ -376,8 +398,7 @@ namespace BytesCrafter.USocketNet
 
 				//if (usocket.scale.sendTimer >= (1f / usocket.scale.sendRate))
 				//{
-				string newVstate = VectorJson.ToVectorStr (transform.localScale, scale.axises);
-
+				string newVstate = GetScaStr;
 				if(!newVstate.Equals(scale.prevVstring))
 				{
 					syncJson.states [2] = "t";
@@ -602,19 +623,19 @@ namespace BytesCrafter.USocketNet
 
 						if(childit[0].Equals("t"))
 						{
-							targetChilds.lists[i].position = VectorJson.ToVector3 (childit[childindex], transform.position, position.axises);
+							targetChilds.lists[i].position = VectorJson.ToVector3 (childit[childindex], targetChilds.lists[i].position, new SocketAxis(true));
 							childindex += 1;
 						}
 
 						if(childit[1].Equals("t"))
 						{
-							targetChilds.lists[i].rotation = VectorJson.ToQuaternion (childit[childindex], transform.rotation, rotation.axises);
+							targetChilds.lists[i].rotation = VectorJson.ToQuaternion (childit[childindex], targetChilds.lists[i].rotation, new SocketAxis(true));
 							childindex += 1;
 						}
 
 						if(childit[2].Equals("t"))
 						{
-							targetChilds.lists[i].scale = VectorJson.ToVector3 (childit[childindex], transform.localScale, scale.axises);
+							targetChilds.lists[i].scale = VectorJson.ToVector3 (childit[childindex], targetChilds.lists[i].scale, new SocketAxis(true));
 						}
 					}
 				}

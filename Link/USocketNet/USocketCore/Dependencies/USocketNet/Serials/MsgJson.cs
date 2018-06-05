@@ -20,21 +20,21 @@ namespace BytesCrafter.USocketNet
 	[System.Serializable]
 	public class MsgJson
 	{
-		public string sender = string.Empty;
-		public string content = string.Empty;
-		public MsgType msgtype = MsgType.Public;
-		public string receiver = string.Empty; 
+		public string sd = string.Empty;
+		public string ct = string.Empty;
+		public MsgType mt = MsgType.Public;
+		public string rv = string.Empty; 
 
 		public MsgJson() { }
 
 		public MsgJson(string _content, MsgType _msgtype)
 		{
-			content = _content; msgtype = _msgtype; 
+			ct = _content; mt = _msgtype; 
 		}
 
 		public MsgJson(string _content, MsgType _msgtype, string _receiver)
 		{
-			content = _content; msgtype = _msgtype; receiver = _receiver; 
+			ct = _content; mt = _msgtype; rv = _receiver; 
 		}
 	}
 }

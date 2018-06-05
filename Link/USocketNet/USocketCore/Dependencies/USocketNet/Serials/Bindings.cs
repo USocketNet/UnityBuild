@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using BytesCrafter.USocketNet.Serializables;
 namespace BytesCrafter.USocketNet.Networks
 {
 	[System.Serializable]
@@ -20,7 +21,10 @@ namespace BytesCrafter.USocketNet.Networks
 		[Range(1f, 30f)] public int mainSendRate = 30;
 		[HideInInspector] public float sendTimer = 0f;
 
+		public SyncGroup syncGroup = SyncGroup.Single;
+
 		public bool debugOnLog = true;
+		public bool dontDestroyOnLoad = true;
 		public bool runOnBackground = true;
 	}
 }

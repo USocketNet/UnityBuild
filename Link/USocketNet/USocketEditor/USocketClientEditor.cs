@@ -5,6 +5,7 @@ using UnityEditor;
 using System.Collections.Generic;
 using BytesCrafter.USocketNet;
 
+using BytesCrafter.USocketNet.Serializables;
 namespace BytesCrafter.USocketNet
 {
 	[CustomEditor(typeof(USocketClient))]
@@ -91,6 +92,13 @@ namespace BytesCrafter.USocketNet
 
 			EditorGUILayout.BeginHorizontal ();
 			GUILayout.Space (25f);
+			net.bindings.syncGroup = (SyncGroup)EditorGUILayout.EnumPopup ("Sync Group", net.bindings.syncGroup);
+			EditorGUILayout.EndHorizontal ();
+
+			EditorGUILayout.Separator ();
+
+			EditorGUILayout.BeginHorizontal ();
+			GUILayout.Space (25f);
 			net.bindings.connectDelay = EditorGUILayout.Slider("Connect Delay", net.bindings.connectDelay, 1f, 7f);
 			EditorGUILayout.EndHorizontal ();
 
@@ -113,6 +121,13 @@ namespace BytesCrafter.USocketNet
 			EditorGUILayout.BeginHorizontal ();
 			GUILayout.Space (25f);
 			net.bindings.debugOnLog = EditorGUILayout.Toggle ("Debug Custom Log", net.bindings.debugOnLog);
+			EditorGUILayout.EndHorizontal ();
+
+			EditorGUILayout.Separator ();
+
+			EditorGUILayout.BeginHorizontal ();
+			GUILayout.Space (25f);
+			net.bindings.dontDestroyOnLoad = EditorGUILayout.Toggle ("Dont Destroy on Load", net.bindings.dontDestroyOnLoad);
 			EditorGUILayout.EndHorizontal ();
 
 			EditorGUILayout.Separator ();
