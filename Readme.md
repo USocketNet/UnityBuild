@@ -92,4 +92,4 @@ Become an official contributor and get your photo on our README with a link to y
 
 ## License
 
-[MIT](Raw/LICENSE.md?display=True)
+[MIT](Raw/LICENSE?display=True)
