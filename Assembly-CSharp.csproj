@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_2_8;UNITY_2018_2;UNITY_2018;PLATFORM_ARCH_64;UNITY_64;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITES;ENABLE_GRID;ENABLE_TILEMAP;ENABLE_TERRAIN;ENABLE_TEXTURE_STREAMING;ENABLE_DIRECTOR;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_TIMELINE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;INCLUDE_DYNAMIC_GI;INCLUDE_GI;ENABLE_MONO_BDWGC;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_VIDEO;ENABLE_PACKMAN;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_LOCALIZATION;PLATFORM_STANDALONE_WIN;PLATFORM_STANDALONE;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_OUT_OF_PROCESS_CRASH_HANDLER;ENABLE_EVENT_QUEUE;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;ENABLE_VR;ENABLE_AR;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_2_8;UNITY_2018_2;UNITY_2018;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITES;ENABLE_GRID;ENABLE_TILEMAP;ENABLE_TERRAIN;ENABLE_TEXTURE_STREAMING;ENABLE_DIRECTOR;ENABLE_UNET;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_TIMELINE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;INCLUDE_DYNAMIC_GI;INCLUDE_GI;ENABLE_MONO_BDWGC;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_VIDEO;ENABLE_PACKMAN;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_LOCALIZATION;PLATFORM_WEBGL;UNITY_WEBGL;UNITY_WEBGL_API;UNITY_DISABLE_WEB_VERIFICATION;UNITY_GFX_USE_PLATFORM_VSYNC;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_VR;ENABLE_SPATIALTRACKING;ENABLE_IL2CPP;NET_2_0_SUBSET;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -53,108 +53,109 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\BytesCrafter\USocketNet\Demoguy\Script\MessageDisplay.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Demoguy\Script\SimpleControl.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Demoguy\Script\StressTest.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Demoguy\Script\TrackPoints.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Demoguy\Script\USocketNet_MsgLog.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Demoguy\Script\USocketNet_Multiple.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Demoguy\Script\USocketNet_UIDemo.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\JSONObject\JSONObject.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\JSONObject\JSONTemplates.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\JSONObject\VectorTemplates.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\SocketIO\Ack.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\SocketIO\Decoder.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\SocketIO\Encoder.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\SocketIO\EnginePacketType.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\SocketIO\Packet.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\SocketIO\Parser.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\SocketIO\SocketIOEvent.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\SocketIO\SocketIOException.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\SocketIO\SocketPacketType.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\USocketNet\Serials\Bindings.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\USocketNet\Serials\Channels.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\USocketNet\Serials\ChildTrans.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\USocketNet\Serials\Connects.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\USocketNet\Serials\InspOption.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\USocketNet\Serials\Instances.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\USocketNet\Serials\LeavedJson.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\USocketNet\Serials\MatchMake.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\USocketNet\Serials\MsgJson.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\USocketNet\Serials\QueueCoder.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\USocketNet\Serials\SyncJsons.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\USocketNet\Serials\Threadset.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\USocketNet\Serials\Toolsets.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\USocketNet\Serials\TriggerJson.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\USocketNet\Serials\VectorJson.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\USocketNet\USocketNet.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\AssemblyInfo.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\ByteOrder.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\CloseEventArgs.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\CloseStatusCode.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\CompressionMethod.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\ErrorEventArgs.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Ext.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Fin.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\HandshakeBase.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\HandshakeRequest.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\HandshakeResponse.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\LogData.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Logger.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\LogLevel.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Mask.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\MessageEventArgs.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\AuthenticationBase.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\AuthenticationChallenge.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\AuthenticationResponse.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\AuthenticationSchemes.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\Chunk.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\ChunkedRequestStream.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\ChunkStream.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\Cookie.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\CookieCollection.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\CookieException.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\EndPointListener.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\EndPointManager.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\HttpBasicIdentity.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\HttpConnection.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\HttpDigestIdentity.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\HttpHeaderInfo.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\HttpHeaderType.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\HttpListener.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\HttpListenerContext.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\HttpListenerException.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\HttpListenerPrefixCollection.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\HttpListenerRequest.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\HttpListenerResponse.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\HttpStatusCode.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\HttpStreamAsyncResult.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\HttpUtility.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\HttpVersion.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\InputChunkState.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\InputState.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\LineState.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\ListenerAsyncResult.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\ListenerPrefix.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\NetworkCredential.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\QueryStringCollection.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\ReadBufferState.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\RequestStream.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\ResponseStream.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\Security\SslStream.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\WebHeaderCollection.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\WebSockets\HttpListenerWebSocketContext.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\WebSockets\TcpListenerWebSocketContext.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Net\WebSockets\WebSocketContext.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Opcode.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\PayloadData.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\Rsv.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\WebSocket.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\WebSocketException.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\WebSocketFrame.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\WebSocketState.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\Websocket\WebSocketStream.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketClient.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\USocketView.cs" />
-     <None Include="Assets\BytesCrafter\USocketNet\Plugin\Dependencies\JSONObject\readme.txt" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Demoguy\Script\UIDemo.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\JSONObject\JSONObject.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\JSONObject\JSONTemplates.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\JSONObject\VectorTemplates.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\SocketIO\Ack.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\SocketIO\Decoder.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\SocketIO\Encoder.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\SocketIO\EnginePacketType.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\SocketIO\Packet.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\SocketIO\Parser.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\SocketIO\SocketIOEvent.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\SocketIO\SocketIOException.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\SocketIO\SocketPacketType.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\Bindings.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\Channels.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\ChildTrans.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\Connects.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\InspOption.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\Instances.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\LeavedJson.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\MatchMake.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\MsgJson.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\QueueCoder.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\SyncJsons.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\Threadset.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\Toolsets.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\TriggerJson.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\VectorJson.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\USocketNet.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\USocketNetWebGL.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\AssemblyInfo.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\ByteOrder.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\CloseEventArgs.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\CloseStatusCode.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\CompressionMethod.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\ErrorEventArgs.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Ext.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Fin.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\HandshakeBase.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\HandshakeRequest.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\HandshakeResponse.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\LogData.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Logger.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\LogLevel.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Mask.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\MessageEventArgs.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\AuthenticationBase.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\AuthenticationChallenge.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\AuthenticationResponse.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\AuthenticationSchemes.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\Chunk.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\ChunkedRequestStream.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\ChunkStream.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\Cookie.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\CookieCollection.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\CookieException.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\EndPointListener.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\EndPointManager.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\HttpBasicIdentity.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\HttpConnection.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\HttpDigestIdentity.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\HttpHeaderInfo.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\HttpHeaderType.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\HttpListener.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\HttpListenerContext.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\HttpListenerException.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\HttpListenerPrefixCollection.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\HttpListenerRequest.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\HttpListenerResponse.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\HttpStatusCode.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\HttpStreamAsyncResult.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\HttpUtility.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\HttpVersion.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\InputChunkState.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\InputState.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\LineState.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\ListenerAsyncResult.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\ListenerPrefix.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\NetworkCredential.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\QueryStringCollection.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\ReadBufferState.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\RequestStream.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\ResponseStream.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\Security\SslStream.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\WebHeaderCollection.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\WebSockets\HttpListenerWebSocketContext.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\WebSockets\TcpListenerWebSocketContext.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Net\WebSockets\WebSocketContext.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Opcode.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\PayloadData.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\Rsv.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\WebSocket.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\WebSocketException.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\WebSocketFrame.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\WebSocketState.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\WebSocketStream.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\USocketClient.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\USocketView.cs" />
+     <None Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\JSONObject\readme.txt" />
  <Reference Include="UnityEditor.StandardEvents">
  <HintPath>D:/Projects/Plugin - USocketNet/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
  </Reference>
@@ -193,12 +194,6 @@
  </Reference>
  <Reference Include="UnityEngine.CloudWebServicesModule">
  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.CloudWebServicesModule.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.ClusterInputModule">
- <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.ClusterInputModule.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.ClusterRendererModule">
- <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.ClusterRendererModule.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.CoreModule">
  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.CoreModule.dll</HintPath>
@@ -262,6 +257,9 @@
  </Reference>
  <Reference Include="UnityEngine.SharedInternalsModule">
  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.SharedInternalsModule.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.SpatialTrackingModule">
+ <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.SpatialTrackingModule.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.SpriteMaskModule">
  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.SpriteMaskModule.dll</HintPath>
@@ -337,6 +335,9 @@
  </Reference>
  <Reference Include="UnityEngine.VideoModule">
  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.VideoModule.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.WebGLModule">
+ <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/WebGLSupport/Managed/UnityEngine.WebGLModule.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.WindModule">
  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.WindModule.dll</HintPath>

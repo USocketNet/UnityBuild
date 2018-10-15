@@ -113,48 +113,6 @@ LightmapSettings:
     m_ShowResolutionOverlay: 1
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
---- !u!1001 &1019024197
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4797511640077662, guid: f9ef8242ba1e1ba4fbfe0835dfc1b3e9, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4797511640077662, guid: f9ef8242ba1e1ba4fbfe0835dfc1b3e9, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4797511640077662, guid: f9ef8242ba1e1ba4fbfe0835dfc1b3e9, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4797511640077662, guid: f9ef8242ba1e1ba4fbfe0835dfc1b3e9, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4797511640077662, guid: f9ef8242ba1e1ba4fbfe0835dfc1b3e9, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4797511640077662, guid: f9ef8242ba1e1ba4fbfe0835dfc1b3e9, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4797511640077662, guid: f9ef8242ba1e1ba4fbfe0835dfc1b3e9, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4797511640077662, guid: f9ef8242ba1e1ba4fbfe0835dfc1b3e9, type: 2}
-      propertyPath: m_RootOrder
-      value: 2
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: f9ef8242ba1e1ba4fbfe0835dfc1b3e9, type: 2}
-  m_IsPrefabAsset: 0
 --- !u!1001 &1556402040
 Prefab:
   m_ObjectHideFlags: 0
@@ -294,30 +252,10 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114250161575234646, guid: 2960126293d1e874cbd19fad233696c0,
+    - target: {fileID: 224641731629572500, guid: 2960126293d1e874cbd19fad233696c0,
         type: 2}
-      propertyPath: bindings.serverUrl
-      value: www.bytes-crafter.com
-      objectReference: {fileID: 0}
-    - target: {fileID: 114250161575234646, guid: 2960126293d1e874cbd19fad233696c0,
-        type: 2}
-      propertyPath: bindings.serverPort
-      value: 3000
-      objectReference: {fileID: 0}
-    - target: {fileID: 224567455041417584, guid: 2960126293d1e874cbd19fad233696c0,
-        type: 2}
-      propertyPath: m_AnchoredPosition.y
-      value: -0.0000076293945
-      objectReference: {fileID: 0}
-    - target: {fileID: 224213334293916408, guid: 2960126293d1e874cbd19fad233696c0,
-        type: 2}
-      propertyPath: m_AnchoredPosition.y
-      value: -0.0000076293945
-      objectReference: {fileID: 0}
-    - target: {fileID: 224677600791682944, guid: 2960126293d1e874cbd19fad233696c0,
-        type: 2}
-      propertyPath: m_AnchoredPosition.y
-      value: -0.0000076293945
+      propertyPath: m_AnchoredPosition.x
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2960126293d1e874cbd19fad233696c0, type: 2}
