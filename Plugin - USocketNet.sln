@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin - USocketNet", "Assembly-CSharp.csproj", "{DA4A8B68-2A3A-85AA-0A64-94BAA910F5AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{DA4A8B68-2A3A-85AA-0A64-94BAA910F5AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin - USocketNet", "Assembly-CSharp-Editor.csproj", "{42E1CF4A-7AD7-F5B7-DD8D-18F9E572ED13}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{42E1CF4A-7AD7-F5B7-DD8D-18F9E572ED13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

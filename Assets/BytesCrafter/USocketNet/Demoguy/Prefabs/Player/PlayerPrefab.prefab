@@ -157,6 +157,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
@@ -191,6 +192,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: da2026ab66e18a149ad8e9631ca572a4, type: 2}
   m_StaticBatchInfo:
@@ -270,6 +272,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &114577269107602516
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -321,7 +324,7 @@ MonoBehaviour:
     speed: 3
     sendTimer: 0
     prevVstring: 
-    syncMode: 1
+    syncMode: 2
   rotation:
     synchronize: 1
     axises:
@@ -337,7 +340,7 @@ MonoBehaviour:
     speed: 3
     sendTimer: 0
     prevVstring: 
-    syncMode: 1
+    syncMode: 2
   scale:
     synchronize: 0
     axises:
