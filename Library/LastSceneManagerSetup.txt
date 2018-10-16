@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/BytesCrafter/USocketNet/Demoguy/Scene/Single.unity
+- path: Assets/BytesCrafter/USocketNet/Demoguy/Scene/WebGL.unity
   isLoaded: 1
   isActive: 1
