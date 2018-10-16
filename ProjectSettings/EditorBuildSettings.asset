@@ -5,13 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/BytesCrafter/USocketNet/Demoguy/Scene/Single.unity
     guid: ee2dbb34103da044ea8a09e20085e951
   - enabled: 0
     path: Assets/BytesCrafter/USocketNet/Demoguy/Scene/Stress.unity
     guid: 301a367ad3887254989ea876cd2a5604
-  - enabled: 1
+  - enabled: 0
     path: Assets/BytesCrafter/USocketNet/Demoguy/Scene/WebGL.unity
     guid: c06785c620165be4fb825537e315e997
   m_configObjects: {}
