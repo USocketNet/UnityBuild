@@ -1,43 +1,106 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
+using System;
 using System.Runtime.InteropServices;
+
+[Serializable]
+public class Contains
+{
+	public string strings = "string";
+	public int integers = 12;
+	public float floatings = 0.24f;
+}
 
 public class USocketNetWebGL : MonoBehaviour 
 {
+	//#region Temporary
+		[DllImport("__Internal")]
+		private static extern void CallTheBrowser(string asdas);
+
+		[DllImport("__Internal")]
+		private static extern void Hello();
+
+		[DllImport("__Internal")]
+		private static extern void HelloString(string str);
+
+		[DllImport("__Internal")]
+		private static extern void PrintFloatArray(float[] array, int size);
+
+		[DllImport("__Internal")]
+		private static extern int AddNumbers(int x, int y);
+
+		[DllImport("__Internal")]
+		private static extern string StringReturnValueFunction();
+
+		[DllImport("__Internal")]
+		private static extern void BindWebGLTexture(int texture);
+	//#endregion
+
+	public delegate void CallbackResult( string data );
 
 	[DllImport("__Internal")]
-	private static extern void CallTheBrowser(string str);
+	private static extern void CallbackReturnee( string data );
 
 	[DllImport("__Internal")]
-	private static extern void Hello();
+	private static extern void CallbackReturn( string data, CallbackResult cr );
 
 	[DllImport("__Internal")]
-	private static extern void HelloString(string str);
+	private static extern string ConnectToServer();
 
 	[DllImport("__Internal")]
-	private static extern void PrintFloatArray(float[] array, int size);
+	private static extern string DisconnectFromServer();
+	
+	public Text results = null;
 
-	[DllImport("__Internal")]
-	private static extern int AddNumbers(int x, int y);
+	public Contains contains = new Contains();
 
-	[DllImport("__Internal")]
-	private static extern string StringReturnValueFunction();
+	public CallbackResult resulted = null;
 
-	[DllImport("__Internal")]
-	private static extern void BindWebGLTexture(int texture);
+	void Start()
+	{
+		//UnityFunction();
+		resulted = OnCallback;
+	}
 
-	int timer = 0;
-	void Update() {
-		
-		timer += 1;
+	public void OnCallback( string data )
+	{
+		Debug.Log( data );
+	}
 
-		if(timer > 33.33)
-		{
-			timer = 0;
-			//CallTheBrowser();
-		}
+	public void Connect()
+	{
+		ConnectToServer();
+	}
+
+	public void Connecting(string sid)
+	{
+		results.text = sid;
+	}
+
+	public void Disconnect()
+	{
+		results.text = DisconnectFromServer();
+	}
+
+	public void OnCallbackResult(string data)
+	{
+		Debug.Log( "Callback: " + data );
+	}
+
+	void Update() 
+	{
+
 
 		if(Input.GetKeyDown(KeyCode.Space))
 		{
+			Debug.Log ("Unity to Browser!");
+			string datas = JsonUtility.ToJson( contains );
+			CallbackReturnee( datas );
+		//CallbackReturn (datas, (string objs) => {
+			//contains = JsonUtility.FromJson<Contains>( objs );
+			//Debug.Log( "Result: " + contains.strings + ":" + contains.integers + ":" + contains.floatings );
+
+			
 			//Hello();
 
 			//HelloString("This is a string.");
@@ -55,7 +118,7 @@ public class USocketNetWebGL : MonoBehaviour
 
 			//Debug.Log ("Unity: StringReturnValueFunction!");
 			//Debug.Log("Browser to Unity: 2");
-			UnityFunction();
+			//UnityFunction();
 		}
 
 		if(Input.GetKeyDown(KeyCode.LeftShift))
@@ -66,10 +129,6 @@ public class USocketNetWebGL : MonoBehaviour
 
 	}
 
-	void Start()
-	{
-		UnityFunction();
-	}
 		
 	public void UnityFunction()
 	{
