@@ -19,43 +19,43 @@ namespace BytesCrafter.USocketNet
 		[MenuItem("Bytes Crafter/USocketNet/Demo")]
 		public static void SurfDemoTutorial()
 		{
-			Application.OpenURL ("http://usocket.bytes-crafter.com");
+			Application.OpenURL ("https://www.bytes-crafter.com/portfolio/usocketnet-self-hosted-multiplayer-server-for-unity-and-website/");
 		}
 
 		[MenuItem("Bytes Crafter/USocketNet/About")]
 		public static void SurfAppWebsite()
 		{
-			Application.OpenURL ("http://usocket.bytes-crafter.com");
+			Application.OpenURL ("https://www.bytes-crafter.com/portfolio/usocketnet-self-hosted-multiplayer-server-for-unity-and-website/");
 		}
 
 		[MenuItem("Bytes Crafter/More/MobilePOS")]
 		public static void VisitMobilePOS()
 		{
-			Application.OpenURL ("http://mopos.bytes-crafter.com");
+			Application.OpenURL ("https://www.bytes-crafter.com/portfolio/mopos-point-of-sale-application-for-small-business/");
 		}
 
 		[MenuItem("Bytes Crafter/More/DataVice")]
 		public static void VisitDataVice()
 		{
-			Application.OpenURL ("http://datavice.bytes-crafter.com");
+			Application.OpenURL ("https://www.bytes-crafter.com/portfolio/datavice-user-management-solution-for-unity-or-website/");
 		}
 
 		[MenuItem("Bytes Crafter/More/USocketNet")]
 		public static void VisitUSocketNet()
 		{
-			Application.OpenURL ("http://usocket.bytes-crafter.com");
+			Application.OpenURL ("https://www.bytes-crafter.com/portfolio/usocketnet-self-hosted-multiplayer-server-for-unity-and-website/");
 		}
 
 		[MenuItem("Bytes Crafter/More/Digital Store")]
 		public static void VisitDigitalStore()
 		{
-			Application.OpenURL ("http://www.bytes-crafter.com");
+			Application.OpenURL ("http://www.bytes-crafter.com/assets");
 		}
 
 		[MenuItem("Bytes Crafter/About")]
 		public static void SurfOfficialWebsite()
 		{
-			Application.OpenURL ("http://www.bytes-crafter.com/about");
+			Application.OpenURL ("http://www.bytes-crafter.com/about-us");
 		}
 
 		void OnInspectorUpdate()

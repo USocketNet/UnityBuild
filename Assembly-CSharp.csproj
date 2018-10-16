@@ -86,7 +86,6 @@
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\TriggerJson.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\VectorJson.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\USocketNet.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\USocketNetWebGL.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\AssemblyInfo.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\ByteOrder.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\CloseEventArgs.cs" />
@@ -154,8 +153,8 @@
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\WebSocketState.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\WebSocketStream.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\USocketClient.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\USocketNetWebGL.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\USocketView.cs" />
-     <None Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\JSONObject\readme.txt" />
  <Reference Include="UnityEditor.StandardEvents">
  <HintPath>D:/Projects/Plugin - USocketNet/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
  </Reference>

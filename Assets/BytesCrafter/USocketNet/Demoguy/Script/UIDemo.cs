@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using BytesCrafter.USocketNet;
-using BytesCrafter.USocketNet.Compression;
 
 public class UIDemo : MonoBehaviour
 {
