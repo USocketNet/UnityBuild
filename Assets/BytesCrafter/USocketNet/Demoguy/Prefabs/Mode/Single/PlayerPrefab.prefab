@@ -347,7 +347,7 @@ MonoBehaviour:
     prevVstring: 
     syncMode: 2
   scale:
-    synchronize: 0
+    synchronize: 1
     axises:
       xAxis: 1
       yAxis: 0
@@ -363,21 +363,71 @@ MonoBehaviour:
     prevVstring: 
     syncMode: 1
   animator:
-    synchronize: 0
+    synchronize: 1
     sendRate: 1
-    reference: {fileID: 0}
+    reference: {fileID: 95583421158479592}
     parameters: []
     sendTimer: 0
     prevVstring: 
   states:
-    synchronize: 0
+    synchronize: 1
     sendRate: 1
     sendTimer: 0
     prevVstring: 
-    syncValue: []
+    syncValue:
+    - 
   childs:
-    synchronize: 0
-    childList: []
+    synchronize: 1
+    childList:
+    - reference: {fileID: 4266669769295148}
+      position:
+        synchronize: 1
+        axises:
+          xAxis: 1
+          yAxis: 1
+          zAxis: 1
+        floatings:
+          xPoints: 4
+          yPoints: 4
+          zPoints: 4
+        sendRate: 15
+        interpolation: 3
+        speed: 3
+        sendTimer: 0
+        prevVstring: 
+        syncMode: 0
+      rotation:
+        synchronize: 1
+        axises:
+          xAxis: 1
+          yAxis: 1
+          zAxis: 1
+        floatings:
+          xPoints: 4
+          yPoints: 4
+          zPoints: 4
+        sendRate: 15
+        interpolation: 3
+        speed: 3
+        sendTimer: 0
+        prevVstring: 
+        syncMode: 0
+      scale:
+        synchronize: 1
+        axises:
+          xAxis: 1
+          yAxis: 1
+          zAxis: 1
+        floatings:
+          xPoints: 4
+          yPoints: 4
+          zPoints: 4
+        sendRate: 15
+        interpolation: 3
+        speed: 3
+        sendTimer: 0
+        prevVstring: 
+        syncMode: 0
     sendRate: 15
     sendTimer: 0
     prevVstring: 

@@ -43,7 +43,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bindings:
     authenKey: SeCuReHaSkEy123
-    serverUrl: www.bytes-crafter.com
+    serverUrl: server.bytes-crafter.com
     serverPort: 3000
     connectDelay: 1
     pingFrequency: 3
