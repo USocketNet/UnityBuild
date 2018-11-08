@@ -2713,7 +2713,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bindings:
     authenKey: SeCuReHaSkEy123
-    serverUrl: usocketnet.bytes-crafter.com
+    serverUrl: usocket.bytes-crafter.com
     serverPort: 3000
     connectDelay: 1
     pingFrequency: 3

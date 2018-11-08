@@ -185,11 +185,23 @@ namespace BytesCrafter.USocketNet
 
 			else
 			{
-				if(callback != null)
+				if( !connectReturn )
 				{
-					callback(ConnStat.Connected, ConnAuth.Success);
+					if(callback != null)
+					{
+						callback(ConnStat.Disconnected, ConnAuth.Busy);
+					}
+					DebugLog(Debugs.Warn, "ConnectionBusy", "USocketNet is currently performing connection task.");
 				}
-				DebugLog(Debugs.Warn, "ConnectionSuccess", "Already connected to the server!");
+
+				else
+				{
+					if(callback != null)
+					{
+						callback(ConnStat.Connected, ConnAuth.Success);
+					}
+					DebugLog(Debugs.Warn, "ConnectionSuccess", "Already connected to the server!");
+				}
 			}
 		}
 
@@ -204,7 +216,7 @@ namespace BytesCrafter.USocketNet
 			{
 				Credential credential = new Credential(bindings.authenKey, username, password);
 				string sendData = JsonUtility.ToJson(credential);
-				SendEmit("connect", (JSONObject jsonObject) => {
+				SendEmit("connect", new JSONObject(sendData), (JSONObject jsonObject) => {
 					StopCoroutine("ConnectingToServer");
 					connectReturn = true;
 

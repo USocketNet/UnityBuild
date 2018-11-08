@@ -24,7 +24,11 @@ namespace BytesCrafter.USocketNet
 		/// <summary>
 		/// For some reason, server cannot process request.
 		/// </summary>
-		Error
+		Error,
+		/// <summary>
+		/// USocketClient is currently performing task.
+		/// </summary>
+		Busy
 	}
 
 	/// <summary>
