@@ -12,6 +12,7 @@ using UnityEngine.UI;
 using BytesCrafter.USocketNet.Serializables;
 using BytesCrafter.USocketNet.Networks;
 using BytesCrafter.USocketNet.Toolsets;
+using BytesCrafter.USocketNet.Overrides;
 
 namespace BytesCrafter.USocketNet
 {
@@ -150,45 +151,11 @@ namespace BytesCrafter.USocketNet
 
 		#endregion
 
-		#region CanvasBlocker - Done!
-
-		private GameObject blocker = null;
-		private void UIBlocker(bool show)
-		{
-			if(show)
-			{
-				if(blocker == null)
-				{
-					blocker = new GameObject ("Blocker");
-					Canvas cvs = blocker.AddComponent<Canvas> ();
-					cvs.renderMode = RenderMode.ScreenSpaceOverlay;
-					cvs.sortingOrder = 100;
-					blocker.AddComponent<CanvasScaler> ();
-					Image img = blocker.AddComponent<Image> ();
-					img.color = new Color (0f, 0f, 0f, 0.49f);
-				}
-
-				else
-				{
-					blocker.SetActive(true);
-				}
-			}
-
-			else
-			{
-				if(blocker != null)
-				{
-					blocker.SetActive(false);
-				}
-			}
-		}
-
-		#endregion
+		public USN_UIBlocker screenBlocker = new USN_UIBlocker();
 
 		#region ConnectServer - Done!
 
 		private bool connectReturn = false;
-		private Action<ConnStat, ConnAuth> connectCallback = null;
 
 		/// <summary>
 		/// Connects to server using user specific credentials.
@@ -199,11 +166,10 @@ namespace BytesCrafter.USocketNet
 		public void ConnectToServer(string username, string password, Action<ConnStat, ConnAuth> callback)
 		{
 			connectReturn = false;
-			connectCallback = callback;
 
 			if (!threadset.IsConnected)
 			{
-				UIBlocker (true);
+				screenBlocker.Show (true);
 
 				threadset.IsConnected = true;
 				threadset.autoConnect = false;
@@ -214,14 +180,14 @@ namespace BytesCrafter.USocketNet
 				pingThread = new Thread(RunPingThread);
 				pingThread.Start(threadset.websocket);
 
-				StartCoroutine(ConnectingToServer(username, password));
+				StartCoroutine( ConnectingToServer(username, password, callback) );
 			}
 
 			else
 			{
-				if(connectCallback != null)
+				if(callback != null)
 				{
-					connectCallback(ConnStat.Connected, ConnAuth.Success);
+					callback(ConnStat.Connected, ConnAuth.Success);
 				}
 				DebugLog(Debugs.Warn, "ConnectionSuccess", "Already connected to the server!");
 
@@ -231,7 +197,7 @@ namespace BytesCrafter.USocketNet
 			}
 		}
 
-		IEnumerator ConnectingToServer(string username, string password)
+		IEnumerator ConnectingToServer(string username, string password, Action<ConnStat, ConnAuth> callback)
 		{
 			lastUsername = username;
 			lastPassword = password;
@@ -242,7 +208,41 @@ namespace BytesCrafter.USocketNet
 			{
 				Credential credential = new Credential(bindings.authenKey, username, password);
 				string sendData = JsonUtility.ToJson(credential);
-				SendEmit("connect", new JSONObject(sendData), OnServerConnect);
+				SendEmit("connect", new JSONObject(sendData), (JSONObject jsonObject) => {
+					StopCoroutine("ConnectingToServer");
+					connectReturn = true;
+					screenBlocker.Show (false);
+
+					ConnRes connRes = JsonSerializer.ToObject<ConnRes>(jsonObject.ToString());
+					netIdentity = connRes.id;
+
+					if(connRes.ca == ConnAuth.Success)
+					{
+						prevConnected = true;
+						if(connectionStats != null)
+						{
+							connectionStats(ConnStat.Connected);
+						}
+						if(callback != null)
+						{
+							callback(ConnStat.Connected, ConnAuth.Success);
+						}
+						DebugLog(Debugs.Log, "ConnectionSuccess", "Successfully connected to server!");
+					}
+
+					else
+					{
+						ForceDisconnect();
+						ResetLastAuth ();
+						pingValue = 0;
+
+						if(callback != null)
+						{
+							callback(ConnStat.Rejected, connRes.ca);
+						}
+						DebugLog(Debugs.Warn, "ConnectionRejected", "Client connection rejected by server!");
+					}
+				});
 
 				yield return new WaitForSeconds(bindings.connectDelay);
 
@@ -250,11 +250,11 @@ namespace BytesCrafter.USocketNet
 				{
 					AbortConnection ();
 					ResetLastAuth ();
-					UIBlocker (false);
+					screenBlocker.Show (false);
 
-					if(connectCallback != null)
+					if(callback != null)
 					{
-						connectCallback(ConnStat.InternetAccess, ConnAuth.Error);
+						callback(ConnStat.InternetAccess, ConnAuth.Error);
 					}
 					DebugLog(Debugs.Error, "ConnectionNoInternet", "Detected no internet connection!");
 				}
@@ -266,11 +266,11 @@ namespace BytesCrafter.USocketNet
 				{
 					AbortConnection ();
 					ResetLastAuth ();
-					UIBlocker (false);
+					screenBlocker.Show (false);
 
-					if(connectCallback != null)
+					if(callback != null)
 					{
-						connectCallback(ConnStat.Maintainance, ConnAuth.Error);
+						callback(ConnStat.Maintainance, ConnAuth.Error);
 					}
 					DebugLog(Debugs.Error, "ServerOnMaintainance", "Server is currently unreachable!");
 				}
@@ -279,43 +279,6 @@ namespace BytesCrafter.USocketNet
 				{
 					DebugLog(Debugs.Warn, "ConnectionRejected", "Client connection rejected by server!");
 				}
-			}
-		}
-
-		private void OnServerConnect(JSONObject jsonObject)
-		{
-			StopCoroutine("ConnectingToServer");
-			connectReturn = true;
-			UIBlocker (false);
-
-			ConnRes connRes = JsonSerializer.ToObject<ConnRes>(jsonObject.ToString());
-			netIdentity = connRes.id;
-
-			if(connRes.ca == ConnAuth.Success)
-			{
-				prevConnected = true;
-				if(connectionStats != null)
-				{
-					connectionStats(ConnStat.Connected);
-				}
-				if(connectCallback != null)
-				{
-					connectCallback(ConnStat.Connected, ConnAuth.Success);
-				}
-				DebugLog(Debugs.Log, "ConnectionSuccess", "Successfully connected to server!");
-			}
-
-			else
-			{
-				ForceDisconnect();
-				ResetLastAuth ();
-				pingValue = 0;
-
-				if(connectCallback != null)
-				{
-					connectCallback(ConnStat.Rejected, connRes.ca);
-				}
-				DebugLog(Debugs.Warn, "ConnectionRejected", "Client connection rejected by server!");
 			}
 		}
 
@@ -329,13 +292,13 @@ namespace BytesCrafter.USocketNet
 
 			ForceDisconnect();
 			ResetLastAuth ();
-			UIBlocker (false);
+			screenBlocker.Show (false);
 			pingValue = 0;
 
-			if(connectCallback != null)
-			{
+			//if(callback != null)
+			//{
 				//connectCallback(ConnStat.Disconnected, connRes.ca);
-			}
+			//}
 			//DebugLog(Debugs.Warn, "ConnectionRejected", "Client connection rejected by server!");
 		}
 
@@ -353,7 +316,7 @@ namespace BytesCrafter.USocketNet
 
 			if (threadset.websocket.IsConnected)
 			{
-				UIBlocker (true);
+				screenBlocker.Show (true);
 				StartCoroutine(DisconnectingToServer());
 			}
 
@@ -375,7 +338,7 @@ namespace BytesCrafter.USocketNet
 
 			if (!disconnectReturn)
 			{
-				UIBlocker (false);
+				screenBlocker.Show (false);
 				ForceDisconnect();
 
 				if(disconnectCallback != null)
@@ -389,7 +352,7 @@ namespace BytesCrafter.USocketNet
 		{
 			StopCoroutine("DisconnectingToServer");
 			disconnectReturn = true;
-			UIBlocker (false);
+			screenBlocker.Show (false);
 
 			prevConnected = false;
 			ForceDisconnect();
@@ -435,7 +398,7 @@ namespace BytesCrafter.USocketNet
 
 				if (connStat == ConnStat.Reconnected)
 				{
-					UIBlocker (true);
+					screenBlocker.Show (true);
 					Credential credential = new Credential(bindings.authenKey, lastUsername, lastPassword);
 					string sendData = JsonUtility.ToJson(credential);
 					SendEmit("reconnect", new JSONObject(sendData), OnServerReconnect);
@@ -445,7 +408,7 @@ namespace BytesCrafter.USocketNet
 
 				if (!onListeningReturn)
 				{
-					UIBlocker (false);
+					screenBlocker.Show (false);
 
 					if (connectionStats != null)
 					{
@@ -461,7 +424,7 @@ namespace BytesCrafter.USocketNet
 		{
 			StopCoroutine ("OnListeningConnectionStatus");
 			onListeningReturn = true;
-			UIBlocker (false);
+			screenBlocker.Show (false);
 
 			ConnRes connRes = JsonSerializer.ToObject<ConnRes>(jsonObject.ToString());
 			netIdentity = connRes.id;
