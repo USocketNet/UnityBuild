@@ -204,16 +204,16 @@ namespace BytesCrafter.USocketNet
 			{
 				Credential credential = new Credential(bindings.authenKey, username, password);
 				string sendData = JsonUtility.ToJson(credential);
-				SendEmit("connect", new JSONObject(sendData), (JSONObject jsonObject) => {
+				SendEmit("connect", (JSONObject jsonObject) => {
 					StopCoroutine("ConnectingToServer");
 					connectReturn = true;
-					screenBlocker.Show (false);
 
 					ConnRes connRes = JsonSerializer.ToObject<ConnRes>(jsonObject.ToString());
 					netIdentity = connRes.id;
 
 					if(connRes.ca == ConnAuth.Success)
 					{
+						screenBlocker.Show (false);
 						prevConnected = true;
 						if(connectionStats != null)
 						{
@@ -230,6 +230,8 @@ namespace BytesCrafter.USocketNet
 					{
 						ForceDisconnect();
 						ResetLastAuth ();
+						threadset.IsConnected = false;
+						screenBlocker.Show (false);
 						pingValue = 0;
 
 						if(callback != null)
@@ -246,35 +248,29 @@ namespace BytesCrafter.USocketNet
 				{
 					AbortConnection ();
 					ResetLastAuth ();
+					threadset.IsConnected = false;
 					screenBlocker.Show (false);
 
 					if(callback != null)
 					{
 						callback(ConnStat.InternetAccess, ConnAuth.Error);
 					}
-					DebugLog(Debugs.Error, "ConnectionNoInternet", "Detected no internet connection!");
+					DebugLog(Debugs.Error, "ConnectionFailed", "Connected to server yet server did not respond.");
 				}
 			}
 
 			else
 			{
-				if (!connectReturn)
-				{
-					AbortConnection ();
-					ResetLastAuth ();
-					screenBlocker.Show (false);
+				AbortConnection ();
+				ResetLastAuth ();
+				threadset.IsConnected = false;
+				screenBlocker.Show (false);
 
-					if(callback != null)
-					{
-						callback(ConnStat.Maintainance, ConnAuth.Error);
-					}
-					DebugLog(Debugs.Error, "ServerOnMaintainance", "Server is currently unreachable!");
-				}
-
-				else
+				if(callback != null)
 				{
-					DebugLog(Debugs.Warn, "ConnectionRejected", "Client connection rejected by server!");
+					callback(ConnStat.Maintainance, ConnAuth.Error);
 				}
+				DebugLog(Debugs.Error, "ServerOnMaintainance", "Server is currently unreachable!");
 			}
 		}
 
@@ -288,6 +284,7 @@ namespace BytesCrafter.USocketNet
 
 			ForceDisconnect();
 			ResetLastAuth ();
+			threadset.IsConnected = false;
 			screenBlocker.Show (false);
 			pingValue = 0;
 
