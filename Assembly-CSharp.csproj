@@ -70,7 +70,6 @@
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\SocketIO\SocketIOEvent.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\SocketIO\SocketIOException.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\SocketIO\SocketPacketType.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Inhirits\USN_Connect.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Inhirits\USN_UIBlocker.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\Bindings.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\Channels.cs" />

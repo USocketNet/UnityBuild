@@ -190,10 +190,6 @@ namespace BytesCrafter.USocketNet
 					callback(ConnStat.Connected, ConnAuth.Success);
 				}
 				DebugLog(Debugs.Warn, "ConnectionSuccess", "Already connected to the server!");
-
-				Credential credential = new Credential(bindings.authenKey, username, password);
-				string sendData = JsonUtility.ToJson(credential);
-				SendEmit ("heartbeat", new JSONObject(sendData));
 			}
 		}
 
