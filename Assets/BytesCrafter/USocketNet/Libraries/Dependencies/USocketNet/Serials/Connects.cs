@@ -10,23 +10,35 @@ namespace BytesCrafter.USocketNet
 	public enum ConnAuth
 	{ 
 		/// <summary>
-		/// Successfully enter the server.
+		/// Successfully enter the server. Code: 0
 		/// </summary>
 		Success, 
 		/// <summary>
-		/// Username not found on the server.
+		/// Username not found on the server. Code: 1
 		/// </summary>
 		NotFound, 
 		/// <summary>
-		/// Password of username is incorrect.
+		/// Password of username is incorrect. Code: 2
 		/// </summary>
 		Incorrect, 
 		/// <summary>
-		/// For some reason, server cannot process request.
+		/// Application id dont exist on the database. Code: 3
+		/// </summary>
+		Invalid, 
+		/// <summary>
+		/// Server found invalid arguments thus rejecting conn. Code: 4
+		/// </summary>
+		Rejected,
+		/// <summary>
+		/// For some reason, server cannot process request. Code: 5
 		/// </summary>
 		Error,
 		/// <summary>
-		/// USocketClient is currently performing task.
+		/// Users account is currently online. Code: 6
+		/// </summary>
+		Online,
+		/// <summary>
+		/// USocketClient is currently performing task. Code: 7
 		/// </summary>
 		Busy
 	}

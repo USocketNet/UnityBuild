@@ -74,7 +74,7 @@ namespace BytesCrafter.USocketNet
 
 			EditorGUILayout.BeginHorizontal ();
 			GUILayout.Space (40f);
-			net.bindings.authenKey = EditorGUILayout.PasswordField ("Access", net.bindings.authenKey);
+			net.bindings.authenKey = EditorGUILayout.PasswordField ("Appkey", net.bindings.authenKey);
 			EditorGUILayout.EndHorizontal ();
 
 			GUILayout.Space (7f);

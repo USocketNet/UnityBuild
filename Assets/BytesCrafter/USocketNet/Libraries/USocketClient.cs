@@ -250,11 +250,11 @@ namespace BytesCrafter.USocketNet
 						{
 							callback(ConnStat.Rejected, connRes.ca);
 						}
-						DebugLog(Debugs.Warn, "ConnectionRejected", "Client connection rejected by server!");
+						DebugLog(Debugs.Warn, "ConnectionRejected", "Event code: " + connRes.ca.ToString() );
 					}
 				});
 
-				yield return new WaitForSeconds(bindings.connectDelay);
+				yield return new WaitForSeconds( bindings.connectDelay * 3 );
 
 				if (!connectReturn)
 				{
