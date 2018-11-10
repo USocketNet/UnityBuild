@@ -40,7 +40,15 @@ namespace BytesCrafter.USocketNet
 		/// <summary>
 		/// USocketClient is currently performing task. Code: 7
 		/// </summary>
-		Busy
+		Busy,
+		/// <summary>
+		/// Game is currenly inactive and block want new connection. Code: 8
+		/// </summary>
+		Inactive,
+		/// <summary>
+		/// Game is currenly at its limit and cant accept new connection Code: 9
+		/// </summary>
+		Overload
 	}
 
 	/// <summary>
