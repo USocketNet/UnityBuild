@@ -14,6 +14,8 @@ namespace BytesCrafter.USocketNet
 		Texture2D headerTexture;
 		Rect headerRect;
 
+		bool hideAppId = true;
+
 		public override void OnInspectorGUI()
 		{
 			//EditorGUIUtility.labelWidth = 70f;
@@ -63,18 +65,25 @@ namespace BytesCrafter.USocketNet
 			GUILayout.Space (7f);
 
 			EditorGUILayout.BeginHorizontal ();
-			GUILayout.Space (40f);
-			net.bindings.serverUrl = EditorGUILayout.TextField ("Address", net.bindings.serverUrl);
+			GUILayout.Space (12f);
+			EditorGUILayout.PrefixLabel ("IP/PORT:");
+			net.bindings.serverUrl = EditorGUILayout.TextField (net.bindings.serverUrl);
+			net.bindings.serverPort = EditorGUILayout.IntField (System.Convert.ToInt16(net.bindings.serverPort)) + string.Empty;
+			GUILayout.Space (12f);
 			EditorGUILayout.EndHorizontal ();
 
 			EditorGUILayout.BeginHorizontal ();
-			GUILayout.Space (40f);
-			net.bindings.serverPort = EditorGUILayout.IntField ("Port", System.Convert.ToInt16(net.bindings.serverPort)) + string.Empty;
+			GUILayout.Space (12f);
+			net.bindings.authenKey = EditorGUILayout.PasswordField ("AuthKey", net.bindings.authenKey);
+
+			GUILayout.Space (12f);
 			EditorGUILayout.EndHorizontal ();
 
 			EditorGUILayout.BeginHorizontal ();
-			GUILayout.Space (40f);
-			net.bindings.authenKey = EditorGUILayout.PasswordField ("Appkey", net.bindings.authenKey);
+			GUILayout.Space (12f);
+			net.bindings.appsKey = EditorGUILayout.PasswordField ("AppKey", net.bindings.appsKey);
+			hideAppId = EditorGUILayout.Toggle ( hideAppId );
+			GUILayout.Space (12f);
 			EditorGUILayout.EndHorizontal ();
 
 			GUILayout.Space (7f);

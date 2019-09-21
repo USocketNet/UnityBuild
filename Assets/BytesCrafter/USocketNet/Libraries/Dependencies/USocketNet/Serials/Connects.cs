@@ -119,10 +119,6 @@ namespace BytesCrafter.USocketNet.Serializables
 		/// </summary>
 		ForbiddenAuthKey,
 		/// <summary>
-		/// Server expects for userInfo and callback, please dont make any changes on the plugin.
-		/// </summary>
-		InvalidArguments,
-		/// <summary>
 		/// The domain or public ip refered for connection is not authorized by server.
 		/// </summary>
 		UnauthorizedDomain

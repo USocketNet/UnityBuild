@@ -155,6 +155,7 @@ namespace BytesCrafter.USocketNet
 
 		#region ConnectServer - Done!
 
+		private bool currentlyConnecting = false;
 		private bool connectReturn = false;
 
 		/// <summary>
@@ -165,6 +166,16 @@ namespace BytesCrafter.USocketNet
 		/// <param name="callback">Callback.</param>
 		public void ConnectToServer(string username, string password, Action<ConnStat, ConnAuth> callback)
 		{
+			if( bindings.serverUrl == string.Empty || bindings.serverPort == string.Empty || 
+				bindings.authenKey == string.Empty || bindings.appsKey == string.Empty )
+			{
+				DebugLog(Debugs.Warn, "ConnectionError", "Please fill up Server Information field os this USocketClient: " + name);
+				callback( ConnStat.Reconnected, ConnAuth.Error );
+				return;
+			}
+
+			currentlyConnecting = true;
+
 			connectReturn = false;
 
 			if (!threadset.IsConnected)
@@ -202,6 +213,8 @@ namespace BytesCrafter.USocketNet
 					}
 					DebugLog(Debugs.Warn, "ConnectionSuccess", "Already connected to the server!");
 				}
+
+				currentlyConnecting = false;
 			}
 		}
 
@@ -210,11 +223,11 @@ namespace BytesCrafter.USocketNet
 			lastUsername = username;
 			lastPassword = password;
 
-			yield return new WaitForSeconds(bindings.connectDelay);
+			yield return new WaitForSeconds( bindings.connectDelay );
 
 			if (threadset.websocket.IsConnected)
 			{
-				Credential credential = new Credential(bindings.authenKey, username, password);
+				Credential credential = new Credential(bindings.appsKey, username, password);
 				string sendData = JsonUtility.ToJson(credential);
 				SendEmit("connect", new JSONObject(sendData), (JSONObject jsonObject) => {
 					StopCoroutine("ConnectingToServer");
@@ -282,8 +295,10 @@ namespace BytesCrafter.USocketNet
 				{
 					callback(ConnStat.Maintainance, ConnAuth.Error);
 				}
-				DebugLog(Debugs.Error, "ServerOnMaintainance", "Server is currently unreachable!");
+				DebugLog(Debugs.Error, "ServerOnMaintainance", "Server is currently unreachable or client rejected!");
 			}
+
+			currentlyConnecting = false;
 		}
 
 		//Done! User rejections if authKey is not valid!
@@ -304,7 +319,7 @@ namespace BytesCrafter.USocketNet
 			//{
 				//connectCallback(ConnStat.Disconnected, connRes.ca);
 			//}
-			//DebugLog(Debugs.Warn, "ConnectionRejected", "Client connection rejected by server!");
+			DebugLog(Debugs.Warn, "ConnectionRejected", "Client connection request failed: Code: " + connRes.rs.ToString() );
 		}
 
 		#endregion
@@ -392,6 +407,15 @@ namespace BytesCrafter.USocketNet
 
 		IEnumerator OnListeningConnectionStatus(ConnStat connStat)
 		{
+			if( bindings.serverUrl == string.Empty || bindings.serverPort == string.Empty || 
+				bindings.authenKey == string.Empty || bindings.appsKey == string.Empty )
+			{
+				DebugLog(Debugs.Warn, "ReconnectionError", "Please fill up Server Information field os this USocketClient: " + name);
+				StopCoroutine ("OnListeningConnectionStatus");
+			}
+
+			currentlyConnecting = true;
+
 			if(prevConnected)
 			{
 				onListeningReturn = false;
@@ -423,6 +447,8 @@ namespace BytesCrafter.USocketNet
 
 				DebugLog (Debugs.Warn, "ConnectionStatus", "You are currently " + connStat.ToString() + " to the server!");
 			}
+
+			currentlyConnecting = false;
 		}
 
 		private void OnServerReconnect(JSONObject jsonObject)
@@ -440,7 +466,7 @@ namespace BytesCrafter.USocketNet
 				{
 					connectionStats(ConnStat.Reconnected);
 				}
-				//DebugLog(Debugs.Log, "ConnectionSuccess", "Successfully reconnected to server!");
+				DebugLog(Debugs.Log, "ReconnectionSuccess", "Successfully reconnected to server!");
 			}
 
 			else
@@ -1440,7 +1466,8 @@ namespace BytesCrafter.USocketNet
 			queueCoder.ackList = new List<Ack>();
 
 			//WEB SOCKET INITIALIZATION										
-			threadset.websocket = new WebSocket("ws://" + bindings.serverUrl + ":" + bindings.serverPort + "/socket.io/?EIO=4&transport=websocket");
+			threadset.websocket = new WebSocket("ws://" + bindings.serverUrl + ":" + bindings.serverPort + 
+				"/socket.io/?EIO=4&transport=websocket&token=" + bindings.authenKey );
 			threadset.websocket.OnOpen += OnOpen;
 			threadset.websocket.OnError += OnError;
 			threadset.websocket.OnClose += OnClose;
@@ -1452,8 +1479,8 @@ namespace BytesCrafter.USocketNet
 			threadset.socketId = null;
 			threadset.autoConnect = true;
 
-			//CallbackOn("open", OnReceivedOpen);
-			//CallbackOn("close", OnReceivedClose);
+			CallbackOn("open", OnReceivedOpen);
+			CallbackOn("close", OnReceivedClose);
 			//CallbackOn("error", OnReceivedError);
 
 			//LISTENERS AND EVENTS
@@ -1605,17 +1632,20 @@ namespace BytesCrafter.USocketNet
 
 		private void OnReceivedOpen(SocketIOEvent e)
 		{
-			DebugLog(Debugs.Warn, "[SocketIO]", " Open received: " + e.name + " " + e.data);
+			//DebugLog(Debugs.Warn, "[SocketIO]", " Open received: " + e.name + " " + e.data);
 		}
 
 		private void OnReceivedError(SocketIOEvent e)
 		{
-			DebugLog(Debugs.Warn, "[SocketIO]", " Error received: " + e.name + " " + e.data);
+			//DebugLog(Debugs.Warn, "[SocketIO]", " Error received: " + e.name + " " + e.data);
 		}
 
 		private void OnReceivedClose(SocketIOEvent e)
 		{	
-			DebugLog(Debugs.Warn, "[SocketIO]", " Close received: " + e.name + " " + e.data);
+			if ( currentlyConnecting ) {
+				currentlyConnecting = false;
+				DebugLog(Debugs.Warn, "ConnectionRefused", "Connection request failed due to server authentication problem.");
+			} //DebugLog(Debugs.Warn, "[SocketIO]", " Close received: " + e.name + " " + e.data);
 		}
 
 		private void OnOpen(object sender, EventArgs e)

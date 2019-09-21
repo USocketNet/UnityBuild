@@ -10,6 +10,7 @@ namespace BytesCrafter.USocketNet.Networks
 	{
 		[Header("SERVER SETTINGS")]
 		public string authenKey = "SeCuReHaSkEy123";
+		public string appsKey = "";
 		public string serverUrl = "localhost";
 		public string serverPort = "3000";
 
