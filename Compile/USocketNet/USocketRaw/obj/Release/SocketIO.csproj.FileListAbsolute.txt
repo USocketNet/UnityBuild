@@ -1,0 +1,6 @@
+D:\Projects\Library - Socket.IO\Socket.IO\Socket.IO\obj\Release\SocketIO.csproj.CoreCompileInputs.cache
+D:\DLL\Socket.IO.dll
+D:\Projects\Library - Socket.IO\Socket.IO\Socket.IO\obj\Release\SocketIO.csproj.CopyComplete
+D:\Projects\Library - Socket.IO\Socket.IO\Socket.IO\obj\Release\Socket.IO.dll
+D:\DLL\Socket.IO.xml
+D:\Projects\Library - Socket.IO\Socket.IO\Socket.IO\obj\Release\SocketIO.csprojAssemblyReference.cache
