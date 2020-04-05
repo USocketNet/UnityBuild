@@ -91,15 +91,13 @@ namespace BytesCrafter.USocketNet.Serializables
 	[System.Serializable]
 	public class Credential
 	{
-		public string ak = string.Empty;
-		public string un = string.Empty;
-		public string pw = string.Empty;
+		public string UN = string.Empty;
+		public string PW = string.Empty;
 
-		public Credential(string authKey, string username, string password)
+		public Credential(string username, string password)
 		{
-			ak = authKey;
-			un = username;
-			pw = password;
+			UN = username;
+			PW = password;
 		}
 	}
 

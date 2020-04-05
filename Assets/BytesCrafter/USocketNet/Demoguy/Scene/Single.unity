@@ -258,25 +258,15 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114250161575234646, guid: 2960126293d1e874cbd19fad233696c0,
-        type: 3}
-      propertyPath: bindings.serverUrl
-      value: localhost
-      objectReference: {fileID: 0}
-    - target: {fileID: 114250161575234646, guid: 2960126293d1e874cbd19fad233696c0,
-        type: 3}
-      propertyPath: bindings.serverPort
-      value: 8080
-      objectReference: {fileID: 0}
-    - target: {fileID: 114286648730245742, guid: 2960126293d1e874cbd19fad233696c0,
-        type: 3}
-      propertyPath: m_Text
-      value: 123
-      objectReference: {fileID: 0}
     - target: {fileID: 114459721499358540, guid: 2960126293d1e874cbd19fad233696c0,
         type: 3}
       propertyPath: m_Text
-      value: '***'
+      value: '*****'
+      objectReference: {fileID: 0}
+    - target: {fileID: 114241228273330856, guid: 2960126293d1e874cbd19fad233696c0,
+        type: 3}
+      propertyPath: m_Text
+      value: admin
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2960126293d1e874cbd19fad233696c0, type: 3}

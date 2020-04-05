@@ -70,7 +70,8 @@
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\SocketIO\SocketIOEvent.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\SocketIO\SocketIOException.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\SocketIO\SocketPacketType.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Inhirits\USN_UIBlocker.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Class\RestApi.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Helper\USN_UIBlocker.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\Bindings.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\Channels.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\ChildTrans.cs" />
@@ -81,11 +82,13 @@
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\MatchMake.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\MsgJson.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\QueueCoder.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\Response.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\SyncJsons.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\Threadset.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\Toolsets.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\TriggerJson.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\VectorJson.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\WPToken.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\USocketNet.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\AssemblyInfo.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\ByteOrder.cs" />

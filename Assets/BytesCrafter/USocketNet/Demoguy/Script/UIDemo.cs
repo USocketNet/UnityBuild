@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using BytesCrafter.USocketNet;
+using BytesCrafter.USocketNet.Serializables;
 
 public class UIDemo : MonoBehaviour
 {
@@ -132,11 +133,11 @@ public class UIDemo : MonoBehaviour
 	//Connecting to server with callbacks.
 	public void ConnectToServer()
 	{
-		netScript.ConnectToServer (username.text, password.text, (ConnStat conStat, ConnAuth connAuth) =>
+		netScript.Authenticate (username.text, password.text, (Response response) =>
 			{
-				if(conStat == ConnStat.Connected && connAuth == ConnAuth.Success)
+				if( response.success )
 				{
-					publicViewer.Logs("Connected with id: " + netScript.Identity);
+					publicViewer.Logs("WPID: " + response.data.id + " SNID: " + response.data.session);
 				}
 			});
 	}

@@ -7,12 +7,11 @@ using SocketIO;
 using WebSocketSharp;
 using UnityEngine;
 
-using UnityEngine.UI;
-
 using BytesCrafter.USocketNet.Serializables;
 using BytesCrafter.USocketNet.Networks;
 using BytesCrafter.USocketNet.Toolsets;
 using BytesCrafter.USocketNet.Overrides;
+using BytesCrafter.USocketNet.RestApi;
 
 namespace BytesCrafter.USocketNet
 {
@@ -153,6 +152,16 @@ namespace BytesCrafter.USocketNet
 
 		public USN_UIBlocker screenBlocker = new USN_UIBlocker();
 
+		private BC_USN_RestApi bc_usn_restapi = new BC_USN_RestApi();
+
+		public void Authenticate( string uname, string pword, Action<Response> callback ) {
+			bc_usn_restapi.Authenticate(uname, pword, this, (Response response) => {
+				if( response.success ) {
+					Debug.Log( "Code: " + response.code + " Message: " + response.message);
+				}
+			});
+		}
+
 		#region ConnectServer - Done!
 
 		private bool currentlyConnecting = false;
@@ -166,8 +175,7 @@ namespace BytesCrafter.USocketNet
 		/// <param name="callback">Callback.</param>
 		public void ConnectToServer(string username, string password, Action<ConnStat, ConnAuth> callback)
 		{
-			if( bindings.serverUrl == string.Empty || bindings.serverPort == string.Empty || 
-				bindings.authenKey == string.Empty || bindings.appsKey == string.Empty )
+			if( bindings.serverUrl == string.Empty || bindings.serverPort == string.Empty )
 			{
 				DebugLog(Debugs.Warn, "ConnectionError", "Please fill up Server Information field os this USocketClient: " + name);
 				callback( ConnStat.Reconnected, ConnAuth.Error );
@@ -227,7 +235,7 @@ namespace BytesCrafter.USocketNet
 
 			if (threadset.websocket.IsConnected)
 			{
-				Credential credential = new Credential(bindings.appsKey, username, password);
+				Credential credential = new Credential(username, password);
 				string sendData = JsonUtility.ToJson(credential);
 				SendEmit("connect", new JSONObject(sendData), (JSONObject jsonObject) => {
 					StopCoroutine("ConnectingToServer");
@@ -407,8 +415,7 @@ namespace BytesCrafter.USocketNet
 
 		IEnumerator OnListeningConnectionStatus(ConnStat connStat)
 		{
-			if( bindings.serverUrl == string.Empty || bindings.serverPort == string.Empty || 
-				bindings.authenKey == string.Empty || bindings.appsKey == string.Empty )
+			if( bindings.serverUrl == string.Empty || bindings.serverPort == string.Empty )
 			{
 				DebugLog(Debugs.Warn, "ReconnectionError", "Please fill up Server Information field os this USocketClient: " + name);
 				StopCoroutine ("OnListeningConnectionStatus");
@@ -428,7 +435,7 @@ namespace BytesCrafter.USocketNet
 				if (connStat == ConnStat.Reconnected)
 				{
 					screenBlocker.Show (true);
-					Credential credential = new Credential(bindings.authenKey, lastUsername, lastPassword);
+					Credential credential = new Credential(lastUsername, lastPassword);
 					string sendData = JsonUtility.ToJson(credential);
 					SendEmit("reconnect", new JSONObject(sendData), OnServerReconnect);
 				}
@@ -1467,7 +1474,7 @@ namespace BytesCrafter.USocketNet
 
 			//WEB SOCKET INITIALIZATION										
 			threadset.websocket = new WebSocket("ws://" + bindings.serverUrl + ":" + bindings.serverPort + 
-				"/socket.io/?EIO=4&transport=websocket&token=" + bindings.authenKey );
+				"/socket.io/?EIO=4&transport=websocket");
 			threadset.websocket.OnOpen += OnOpen;
 			threadset.websocket.OnError += OnError;
 			threadset.websocket.OnClose += OnClose;
