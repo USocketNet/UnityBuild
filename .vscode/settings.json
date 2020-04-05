@@ -49,6 +49,13 @@
         "Obj/": true,
         "ProjectSettings/": true,
         "temp/": true,
-        "Temp/": true
+        "Temp/": true,
+        "Logs/": true,
+        "**/*.csproj": true,
+        "**/*.sln": true,
+        "**/*.vs": true
+    },
+    "files.associations": {
+        "*.jslib": "javascript"
     }
 }

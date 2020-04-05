@@ -266,7 +266,7 @@ PrefabInstance:
     - target: {fileID: 114250161575234646, guid: 2960126293d1e874cbd19fad233696c0,
         type: 3}
       propertyPath: bindings.serverPort
-      value: 3001
+      value: 8080
       objectReference: {fileID: 0}
     - target: {fileID: 114286648730245742, guid: 2960126293d1e874cbd19fad233696c0,
         type: 3}
