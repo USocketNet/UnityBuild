@@ -129,14 +129,14 @@ namespace BytesCrafter.USocketNet.Networks {
 		{
 			if (!queueCoder.handlers.ContainsKey(events))
 			{
-				usnClient.Debug(BC_USN_Debug.Warn, "CallbackOffMissing", "No callbacks registered for event: " + events);
+				usnClient.Logs(BC_USN_Debug.Warn, "CallbackOffMissing", "No callbacks registered for event: " + events);
 				return;
 			}
 
 			List<Action<SocketIOEvent>> eventList = queueCoder.handlers[events];
 			if (!eventList.Contains(callback))
 			{
-				usnClient.Debug(BC_USN_Debug.Warn, "CallbackOffCantRemove", "Couldn't remove callback action for event: " + events);
+				usnClient.Logs(BC_USN_Debug.Warn, "CallbackOffCantRemove", "Couldn't remove callback action for event: " + events);
 				return;
 			}
 
@@ -232,17 +232,17 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		private void OnReceivedOpen(SocketIOEvent e)
 		{
-			usnClient.Debug(BC_USN_Debug.Warn, "[SocketIO]", " Open received: " + e.name + " " + e.data);
+			usnClient.Logs(BC_USN_Debug.Warn, "[SocketIO]", " Open received: " + e.name + " " + e.data);
 		}
 
 		private void OnReceivedError(SocketIOEvent e)
 		{
-			usnClient.Debug(BC_USN_Debug.Warn, "[SocketIO]", " Error received: " + e.name + " " + e.data);
+			usnClient.Logs(BC_USN_Debug.Warn, "[SocketIO]", " Error received: " + e.name + " " + e.data);
 		}
 
 		private void OnReceivedClose(SocketIOEvent e)
 		{	
-			usnClient.Debug(BC_USN_Debug.Warn, "[SocketIO]", " Close received: " + e.name + " " + e.data);
+			usnClient.Logs(BC_USN_Debug.Warn, "[SocketIO]", " Close received: " + e.name + " " + e.data);
 		}
 
 		private void OnOpen(object sender, EventArgs e)
@@ -441,7 +441,7 @@ namespace BytesCrafter.USocketNet.Networks {
 
 				catch (Exception except)
 				{
-					usnClient.Debug(BC_USN_Debug.Warn, "EmitEventCatch", except.Message);
+					usnClient.Logs(BC_USN_Debug.Warn, "EmitEventCatch", except.Message);
 				}
 			}
 		}
@@ -462,7 +462,7 @@ namespace BytesCrafter.USocketNet.Networks {
 			{
 				if (ex != null)
 				{
-					usnClient.Debug(BC_USN_Debug.Warn, "EmitPacketCatch", ex.Message);
+					usnClient.Logs(BC_USN_Debug.Warn, "EmitPacketCatch", ex.Message);
 				}
 			}
 		}

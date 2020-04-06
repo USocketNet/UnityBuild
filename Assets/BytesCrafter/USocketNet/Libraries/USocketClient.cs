@@ -10,10 +10,17 @@ namespace BytesCrafter.USocketNet
 {
 	public class USocketClient : MonoBehaviour
 	{
-		public BC_USN_Option options = new BC_USN_Option();
 		private BC_USN_Logger bc_usn_logger = null;
 		private BC_USN_RestApi bc_usn_restapi = null;
 		private BC_USN_WebSocket bc_usn_websocket = null;
+
+		#region VARIABLES
+
+		/// <summary>
+		/// This is the host and client options.
+		/// </summary>
+		/// <returns></returns>
+		public BC_USN_Option options = new BC_USN_Option();
 
 		/// <summary>
 		/// Determines whether this client is connected to web socket server.
@@ -39,13 +46,21 @@ namespace BytesCrafter.USocketNet
 			}
 		}
 
+		/// <summary>
+		/// Get the Token that your RestApi respond.
+		/// </summary>
+		/// <value></value>
 		public BC_USN_Token GetToken {
 			get {
 				return bc_usn_restapi.GetUserData.token;
 			}
 		}
 
-		public void Debug ( BC_USN_Debug log, string title, string info ) {
+		#endregion
+
+		#region MONOBEHAVIOUR
+		public void Logs ( BC_USN_Debug log, string title, string info ) 
+		{
 			if(bc_usn_logger == null)
 				return;
 
@@ -91,10 +106,18 @@ namespace BytesCrafter.USocketNet
 			bc_usn_websocket.AbortConnection();
 		}
 
+		#endregion
+
+		/// <summary>
+		/// Authenticate the user to your Rest Api host.
+		/// </summary>
+		/// <param name="uname">Username.</param>
+		/// <param name="pword">Password.</param>
+		/// <param name="callback">Callback.</param>
 		public void Authenticate( string uname, string pword, Action<BC_USN_Response> callback ) {
 			bc_usn_restapi.Authenticate(uname, pword, this, (BC_USN_Response response) => {
 				if( response.success ) {
-					Debug(BC_USN_Debug.Log, "Code: " + response.code, " Message: " + response.message);
+					Logs(BC_USN_Debug.Log, "Code: " + response.code, " Message: " + response.message);
 					callback(response);
 				}
 			});
@@ -141,7 +164,7 @@ namespace BytesCrafter.USocketNet
 
 		protected virtual void OnStart( bool auto )
 		{
-			Debug(BC_USN_Debug.Log, "Starting", "");
+			Logs(BC_USN_Debug.Log, "Starting", "");
 		}
 
 
@@ -153,7 +176,7 @@ namespace BytesCrafter.USocketNet
 
 		protected virtual void OnConnection( bool recon )
 		{
-			Debug(BC_USN_Debug.Log, "Connect", "");
+			Logs(BC_USN_Debug.Log, "Connect", "");
 		}
 
 		public void OnDisconnect( bool auto )
@@ -163,7 +186,7 @@ namespace BytesCrafter.USocketNet
 
 		protected virtual void OnDisconnection( bool auto )
 		{
-			Debug(BC_USN_Debug.Log, "Disconnect", "");
+			Logs(BC_USN_Debug.Log, "Disconnect", "");
 		}
 	}
 }
