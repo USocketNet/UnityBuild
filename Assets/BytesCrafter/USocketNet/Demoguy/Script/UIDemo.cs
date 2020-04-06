@@ -4,9 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 using BytesCrafter.USocketNet;
 using BytesCrafter.USocketNet.Serializables;
-
-public class UIDemo : MonoBehaviour
+using BytesCrafter.USocketNet.Toolsets;
+public class UIDemo : USocketClient
 {
+	#region Variablles and References
+
 	public USocketClient netScpt = null;
 	public USocketClient netScript
 	{
@@ -37,6 +39,82 @@ public class UIDemo : MonoBehaviour
 	public InputField username = null;
 	public InputField password = null;
 
+	#endregion
+
+	#region CONNECTION
+
+	//Connecting to server with callbacks.
+	public void ConnectToServer()
+	{
+		netScript.Authenticate (username.text, password.text, (Response response) =>
+			{
+				if( response.success )
+				{
+					netScript.Connect( (ConStat conStat) => {
+						if( conStat == ConStat.Success ) {
+							ChangeCanvas(1);
+						}
+
+						publicViewer.Logs("WPID: " + response.data.id + " SNID: " + response.data.session + " Response: " + conStat.ToString());
+					});
+					
+				}
+			});
+	}
+
+	//Disconnecting to server with callbacks.
+	public void DisconnectFromServer()
+	{
+		netScript.Disconnect ();
+		ChangeCanvas(0);
+	}
+
+	#endregion
+
+
+	protected override void OnStart(bool auto)
+	{
+		UnityEngine.Debug.LogWarning("sTARRTING @ " + auto);
+	}
+
+
+	#region LISTENERS SAMPLE
+	protected override void OnConnection(bool auto)
+	{
+		UnityEngine.Debug.LogWarning("OnReconnection @ " + auto);
+	}
+
+	protected override void OnDisconnection(bool auto)
+	{
+		UnityEngine.Debug.LogWarning("OnDisconnection @ " + auto);
+	}
+	#endregion
+
+
+	
+
+	
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
 	[Header("PUBLIC MESSAGE")]
 	public InputField pubMsgContent = null;
 	public MessageDisplay publicViewer = null;
@@ -61,7 +139,8 @@ public class UIDemo : MonoBehaviour
 
 	public string gameVariant = "Default";
 
-	void Update()
+
+	void Updates()
 	{
 		// pingSocket.text = netScript.PingCount + " ms";
 		// //Ping ASD = new Ping ();
@@ -128,36 +207,7 @@ public class UIDemo : MonoBehaviour
 
 	#endregion
 
-	#region CONNECTION
-
-	//Connecting to server with callbacks.
-	public void ConnectToServer()
-	{
-		netScript.Authenticate (username.text, password.text, (Response response) =>
-			{
-				if( response.success )
-				{
-					netScript.ConnectToServer( (ConStat conStat) => {
-						publicViewer.Logs("WPID: " + response.data.id + " SNID: " + response.data.session + " Response: " + conStat.ToString());
-					});
-					
-				}
-			});
-	}
-
-	//Disconnecting to server with callbacks.
-	public void DisconnectFromServer()
-	{
-		// netScript.DisconnectFromServer ((ConnStat connStat) => 
-		// 	{
-		// 		if(connStat == ConnStat.Disconnected)
-		// 		{
-		// 			publicViewer.Logs("Disconnected from the server.");
-		// 		}
-		// 	});
-	}
-
-	#endregion
+	
 
 	#region MESSAGINGS
 	//Send a public message on the server.

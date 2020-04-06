@@ -6,10 +6,10 @@ using WebSocketSharp;
 using System.Threading; 
 using UnityEngine;
 
-using BytesCrafter.USocketNet.Serializables;
+using BytesCrafter.USocketNet.Toolsets;
 
 namespace BytesCrafter.USocketNet.Networks {
-    public class BC_USN_WebSocket 
+    public class BC_USN_WebSocket
     {
         private USocketClient usnClient = null;
         public BC_USN_WebSocket( USocketClient reference )
@@ -20,6 +20,22 @@ namespace BytesCrafter.USocketNet.Networks {
         private Threadset threadset = new Threadset();
 		private QueueCoder queueCoder = new QueueCoder();
 		private Thread socketThread;
+		private Thread pingThread;
+
+		public bool isConnected 
+		{
+            get 
+			{
+                return threadset.IsConnected && threadset.websocket.IsConnected;
+            }
+
+            set 
+			{
+                threadset.IsConnected = value;
+            }
+        }
+
+		#region Initialization - Done! 
 
         public void Initialize() 
         {
@@ -43,7 +59,7 @@ namespace BytesCrafter.USocketNet.Networks {
 			threadset.websocket.OnOpen += OnOpen;
 			threadset.websocket.OnError += OnError;
 			threadset.websocket.OnClose += OnClose;
-			threadset.websocket.OnMessage += OnMessage;
+			threadset.websocket.OnMessage += OnPacket;
 
 			threadset.wsCheck = false;
 			threadset.IsConnected = false;
@@ -51,35 +67,15 @@ namespace BytesCrafter.USocketNet.Networks {
 			threadset.socketId = null;
 			threadset.autoConnect = true;
 
-			CallbackOn("open", OnReceivedOpen);
-			CallbackOn("close", OnReceivedClose);
-			//CallbackOn("error", OnReceivedError);
-
-			//LISTENERS AND EVENTS
-			// CallbackOn("rejected", usnclient.OnUserRejected);
-			// CallbackOn("messaged", usnclient.OnMessageReceived);
-			// CallbackOn("joined", usnclient.OnChannelJoined);
-			// CallbackOn("instanced", usnclient.OnInstancePeer);
-			// CallbackOn("triggered", usnclient.OnTriggersReceived);
-			// CallbackOn("leaved", usnclient.OnChannelLeaved);
-			//ADD MORE HERE!
+			// AddCallback("open", OnReceivedOpen);
+			// AddCallback("close", OnReceivedClose);
+			// AddCallback("error", OnReceivedError);
         }
 
         public void Update( USocketClient usnclient ) 
         {
             if(threadset.websocket == null)
 				return;
-
-			if (threadset.websocket.IsConnected)
-			{
-				// if(usnclient.Subscribed)
-				// {
-				// 	usnclient.SynchingOutbound ();
-				// 	usnclient.SynchingInbound ();
-				// }
-
-				Pinging();
-			}
 
 			if (threadset.IsInitialized)
 			{
@@ -120,34 +116,14 @@ namespace BytesCrafter.USocketNet.Networks {
 					//If websocket instance is currently connected.
 					if (threadset.websocket.IsConnected)
 					{
-						EmitEvent("connect"); //Send a 'connect' event to server.
-
-						// //If reconnection is authorized.
-						// if (threadset.autoConnect)
-						// {
-						// 	usnclient.StartCoroutine(usnclient.OnListeningConnectionStatus(ConnStat.Reconnected));
-						// }
-
-						// else
-						// {
-						// 	usnclient.StartCoroutine(usnclient.OnListeningConnectionStatus(ConnStat.Connected));
-						// 	threadset.autoConnect = true;
-						// }
+						EmitEvent("connect");
+						usnClient.OnConnect( true );
 					}
 
 					else
 					{
 						EmitEvent("disconnect");
-
-						// if (threadset.autoConnect) //User disconnection.
-						// {
-						// 	usnclient.StartCoroutine(usnclient.OnListeningConnectionStatus(ConnStat.Maintainance));
-						// }
-
-						// else //Server disconnection.
-						// {
-						// 	usnclient.StartCoroutine(usnclient.OnListeningConnectionStatus(ConnStat.Disconnected));
-						// }
+						usnClient.OnDisconnect( true );
 					}
 				}
 
@@ -160,50 +136,6 @@ namespace BytesCrafter.USocketNet.Networks {
 				queueCoder.ackList.RemoveAt(0);
 			}
         }
-
-        public bool isConnected {
-            get {
-                return threadset.IsConnected;
-            }
-
-            set {
-                threadset.IsConnected = value;
-            }
-        } 
-
-        public bool isWsConnected {
-            get {
-                return threadset.websocket.IsConnected;
-            }
-        } 
-
-        private DateTime lastPing = DateTime.Now;
-		private float timer = 0f;
-		private void Pinging()
-		{
-			if (threadset.IsConnected)
-			{
-				if (timer > 0f)
-				{
-					timer -= Time.deltaTime;
-				}
-
-				else
-				{
-					lastPing = DateTime.Now;
-					SendEmit("sping", OnPingReceived);
-				}
-
-			}
-		}
-		private void OnPingReceived(JSONObject jsonObject)
-		{
-			TimeSpan timeSpan = DateTime.Now.Subtract(lastPing);
-			//pingValue = timeSpan.Milliseconds;
-			//timer = bindings.pingFrequency;
-			//StartCoroutine (Pings());
-		}
-
 
         public void InitConnection() 
         {
@@ -232,59 +164,72 @@ namespace BytesCrafter.USocketNet.Networks {
 
         public void ForceDisconnect()
 		{
-			//Send a packet to server to immediately close the connection.
-			EmitPacket(new Packet(EnginePacketType.MESSAGE, SocketPacketType.DISCONNECT, 0, "/", -1, new JSONObject("")));
-			EmitPacket(new Packet(EnginePacketType.CLOSE));
+			if( threadset.IsConnected )
+			{
+				//Send a packet to server to immediately close the connection.
+				EmitPacket(new Packet(EnginePacketType.MESSAGE, SocketPacketType.DISCONNECT, 0, "/", -1, new JSONObject("")));
+				EmitPacket(new Packet(EnginePacketType.CLOSE));
 
-			threadset.websocket.Close ();
-			threadset.IsConnected = false;
-			threadset.autoConnect = false;
+				threadset.websocket.Close ();
+				threadset.IsConnected = false;
+				threadset.autoConnect = false;
+			}
 		}
 
-        #region DefaultSocketEvent - Done!
+		#endregion
+
+        #region Socket Event - Done!
 
 		private void OnReceivedOpen(SocketIOEvent e)
 		{
-			//DebugLog(Debugs.Warn, "[SocketIO]", " Open received: " + e.name + " " + e.data);
+			usnClient.Debug(Debugs.Warn, "[SocketIO]", " Open received: " + e.name + " " + e.data);
 		}
 
 		private void OnReceivedError(SocketIOEvent e)
 		{
-			//DebugLog(Debugs.Warn, "[SocketIO]", " Error received: " + e.name + " " + e.data);
+			usnClient.Debug(Debugs.Warn, "[SocketIO]", " Error received: " + e.name + " " + e.data);
 		}
 
 		private void OnReceivedClose(SocketIOEvent e)
 		{	
-			// if ( currentlyConnecting ) {
-			// 	currentlyConnecting = false;
-			// 	//DebugLog(Debugs.Warn, "ConnectionRefused", "Connection request failed due to server authentication problem.");
-			// } //DebugLog(Debugs.Warn, "[SocketIO]", " Close received: " + e.name + " " + e.data);
+			usnClient.Debug(Debugs.Warn, "[SocketIO]", " Close received: " + e.name + " " + e.data);
 		}
 
 		private void OnOpen(object sender, EventArgs e)
 		{ 
 			EmitEvent("open");
 		}
+
 		private void OnError(object sender, ErrorEventArgs e)
 		{
 			EmitEvent("error");
 		}
+
 		private void OnClose(object sender, CloseEventArgs e)
 		{
 			EmitEvent("close");
 		}
 
-		private void OnMessage(object sender, MessageEventArgs e)
+		private void OnPacket(object sender, MessageEventArgs e)
 		{
 			Packet packet = queueCoder.decoder.Decode(e); 
 
 			switch (packet.enginePacketType)
 			{
-				case EnginePacketType.OPEN: HandleOpen(packet); break;
-				case EnginePacketType.CLOSE: EmitEvent("close"); break;
-				case EnginePacketType.PING: HandlePing (); break;
-				case EnginePacketType.PONG: HandlePong(); break;
-				case EnginePacketType.MESSAGE: HandleMessage(packet); break;
+				case EnginePacketType.OPEN: 
+					HandleOpen(packet);
+					break;
+				case EnginePacketType.CLOSE: 
+					EmitEvent("close"); 
+					break;
+				case EnginePacketType.PING: 
+					HandlePing (); break;
+				case EnginePacketType.PONG: 
+					HandlePong(); 
+					break;
+				case EnginePacketType.MESSAGE: 
+					HandleMessage(packet); 
+					break;
 			}
 		}
 
@@ -307,7 +252,8 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		private void HandleMessage(Packet packet)
 		{
-			if (packet.json == null) { return; }
+			if (packet.json == null)
+				return;
 
 			if (packet.socketPacketType == SocketPacketType.ACK)
 			{
@@ -330,6 +276,7 @@ namespace BytesCrafter.USocketNet.Networks {
 			if (packet.socketPacketType == SocketPacketType.EVENT)
 			{
 				SocketIOEvent e = queueCoder.parser.Parse(packet.json);
+
 				lock (queueCoder.eventQueueLock)
 				{
 					queueCoder.eventQueue.Enqueue(e);
@@ -339,7 +286,7 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		#endregion
 
-        #region WebSocketThreading - Done!
+        #region WebSocket Threading - Done!
 
 		private void RunSocketThread(object obj)
 		{
@@ -361,7 +308,6 @@ namespace BytesCrafter.USocketNet.Networks {
 			webSocket.Close();
 		}
 
-		private Thread pingThread;
 		private void RunPingThread(object obj)
 		{
 			WebSocket webSocket = (WebSocket)obj; 
@@ -379,7 +325,8 @@ namespace BytesCrafter.USocketNet.Networks {
 
 				else
 				{
-					threadset.wsPinging = true; threadset.wsPonging = false;
+					threadset.wsPinging = true; 
+					threadset.wsPonging = false;
 					EmitPacket(new Packet(EnginePacketType.PING));
 					pingStart = DateTime.Now;
 
@@ -400,7 +347,62 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		#endregion
 
-		#region EmitterInterface - Done!
+        #region Emit Listeners - Done!
+
+		private void AddCallback(string events, Action<SocketIOEvent> callback)
+		{
+			if (!queueCoder.handlers.ContainsKey(events))
+			{
+				queueCoder.handlers[events] = new List<Action<SocketIOEvent>>();
+			}
+
+			queueCoder.handlers[events].Add(callback);
+		}
+
+		private void RemoveCallback(string events, Action<SocketIOEvent> callback)
+		{
+			if (!queueCoder.handlers.ContainsKey(events))
+			{
+				usnClient.Debug(Debugs.Warn, "CallbackOffMissing", "No callbacks registered for event: " + events);
+				return;
+			}
+
+			List<Action<SocketIOEvent>> eventList = queueCoder.handlers[events];
+			if (!eventList.Contains(callback))
+			{
+				usnClient.Debug(Debugs.Warn, "CallbackOffCantRemove", "Couldn't remove callback action for event: " + events);
+				return;
+			}
+
+			eventList.Remove(callback);
+
+			if (eventList.Count == 0)
+			{
+				queueCoder.handlers.Remove(events);
+			}
+		}
+
+		private void SendEmit(string events)
+		{
+			EmitMessage(-1, string.Format("[\"{0}\"]", events));
+		}
+
+		private void SendEmit(string events, Action<JSONObject> action)
+		{
+			EmitMessage(++threadset.packetId, string.Format("[\"{0}\"]", events));
+			queueCoder.ackList.Add(new Ack(threadset.packetId, action));
+		}
+
+		private void SendEmit(string events, JSONObject data)
+		{
+			EmitMessage(-1, string.Format("[\"{0}\",{1}]", events, data));
+		}
+
+		private void SendEmit(string events, JSONObject data, Action<JSONObject> action)
+		{
+			EmitMessage(++threadset.packetId, string.Format("[\"{0}\",{1}]", events, data));
+			queueCoder.ackList.Add(new Ack(threadset.packetId, action));
+		}
 
 		private void EmitEvent(string type)
 		{
@@ -421,7 +423,7 @@ namespace BytesCrafter.USocketNet.Networks {
 
 				catch (Exception except)
 				{
-					//DebugLog(Debugs.Warn, "EmitEventCatch", except.Message);
+					usnClient.Debug(Debugs.Warn, "EmitEventCatch", except.Message);
 				}
 			}
 		}
@@ -442,67 +444,9 @@ namespace BytesCrafter.USocketNet.Networks {
 			{
 				if (ex != null)
 				{
-					//DebugLog(Debugs.Warn, "EmitPacketCatch", ex.Message);
+					usnClient.Debug(Debugs.Warn, "EmitPacketCatch", ex.Message);
 				}
 			}
-		}
-
-		#endregion
-
-        #region EventInterface - Done!
-
-		private void CallbackOn(string events, Action<SocketIOEvent> callback)
-		{
-			if (!queueCoder.handlers.ContainsKey(events))
-			{
-				queueCoder.handlers[events] = new List<Action<SocketIOEvent>>();
-			}
-
-			queueCoder.handlers[events].Add(callback);
-		}
-
-		private void CallbackOff(string events, Action<SocketIOEvent> callback)
-		{
-			if (!queueCoder.handlers.ContainsKey(events))
-			{
-				//DebugLog(Debugs.Warn, "CallbackOffMissing", "No callbacks registered for event: " + events);
-				return;
-			}
-
-			List<Action<SocketIOEvent>> eventList = queueCoder.handlers[events];
-			if (!eventList.Contains(callback))
-			{
-				//DebugLog(Debugs.Warn, "CallbackOffCantRemove", "Couldn't remove callback action for event: " + events);
-				return;
-			}
-
-			eventList.Remove(callback);
-			if (eventList.Count == 0)
-			{
-				queueCoder.handlers.Remove(events);
-			}
-		}
-
-		public void SendEmit(string events)
-		{
-			EmitMessage(-1, string.Format("[\"{0}\"]", events));
-		}
-
-		public void SendEmit(string events, Action<JSONObject> action)
-		{
-			EmitMessage(++threadset.packetId, string.Format("[\"{0}\"]", events));
-			queueCoder.ackList.Add(new Ack(threadset.packetId, action));
-		}
-
-		public void SendEmit(string events, JSONObject data)
-		{
-			EmitMessage(-1, string.Format("[\"{0}\",{1}]", events, data));
-		}
-
-		public void SendEmit(string events, JSONObject data, Action<JSONObject> action)
-		{
-			EmitMessage(++threadset.packetId, string.Format("[\"{0}\",{1}]", events, data));
-			queueCoder.ackList.Add(new Ack(threadset.packetId, action));
 		}
 
 		#endregion

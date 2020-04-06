@@ -49,8 +49,17 @@ namespace BytesCrafter.USocketNet.RestApi {
             {
                 string bytes = Encoding.UTF8.GetString( request.downloadHandler.data );
                 Response response = JsonUtility.FromJson<Response>(bytes);
-                wptoken = new WPToken(response.data.id, response.data.session);
-                callback( response );
+
+                if( response.success )
+                {
+                    wptoken = new WPToken(response.data.id, response.data.session);
+                    callback( response );
+                }
+
+                else
+                {
+                    callback( new Response() );
+                }
             }
         }
     }

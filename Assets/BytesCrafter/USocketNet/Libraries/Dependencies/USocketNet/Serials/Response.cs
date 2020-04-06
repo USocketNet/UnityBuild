@@ -6,13 +6,13 @@ namespace BytesCrafter.USocketNet.Serializables {
     [System.Serializable]
     public class Response
     {
-        public string code = "network_error";
+        public string code = "error";
         public string message = string.Empty;
         public Response_Data data = null;
 
         public bool success {
             get {
-                return code == "auth_success" ? true : false;
+                return code == "success" ? true : false;
             }
         }
     }
@@ -28,6 +28,12 @@ namespace BytesCrafter.USocketNet.Serializables {
         public string dname = string.Empty;
         public string email = string.Empty;
         public string[] roles;
+
+        public  WPToken token {
+            get {
+                return new WPToken(id, session);
+            }
+        }
         
     }
 }

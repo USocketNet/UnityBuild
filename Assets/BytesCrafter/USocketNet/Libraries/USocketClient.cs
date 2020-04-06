@@ -1,14 +1,9 @@
 ﻿using System; 
-using System.Collections; 
-using System.Collections.Generic;
-
 using UnityEngine;
-using SocketIO;
 
 using BytesCrafter.USocketNet.Serializables;
 using BytesCrafter.USocketNet.Networks;
 using BytesCrafter.USocketNet.Toolsets;
-using BytesCrafter.USocketNet.Overrides;
 using BytesCrafter.USocketNet.RestApi;
 
 namespace BytesCrafter.USocketNet
@@ -31,6 +26,9 @@ namespace BytesCrafter.USocketNet
 		}
 
 		public void Debug ( Debugs log, string title, string info ) {
+			if(bc_usn_logger == null)
+				return;
+
 			bc_usn_logger.Push(log, title, info);
 		}
 
@@ -45,9 +43,6 @@ namespace BytesCrafter.USocketNet
 			bc_usn_restapi = new BC_USN_RestApi( this );
 			bc_usn_websocket = new BC_USN_WebSocket( this );
 
-			//Put all child script to be initialized as METHOD
-			bc_usn_websocket.Initialize();
-
 			//Client INITIALIZATION options before it run.
 			if(bindings.dontDestroyOnLoad)
 			{
@@ -58,16 +53,25 @@ namespace BytesCrafter.USocketNet
 
 		void Update()
 		{
+			if(bc_usn_websocket == null)
+				return;
+
 			bc_usn_websocket.Update( this );
 		}
 
 		void OnApplicationQuit()
 		{
+			if(bc_usn_websocket == null)
+				return;
+
 			bc_usn_websocket.ForceDisconnect();
 		}
 
 		void OnDestroy()
 		{
+			if(bc_usn_websocket == null)
+				return;
+
 			bc_usn_websocket.AbortConnection();
 		}
 
@@ -84,7 +88,7 @@ namespace BytesCrafter.USocketNet
 		/// Connects to server using user specific credentials.
 		/// </summary>
 		/// <param name="callback">Callback.</param>
-		public void ConnectToServer( Action<ConStat> callback )
+		public void Connect( Action<ConStat> callback )
 		{
 			if( bindings.serverUrl == string.Empty || bindings.serverPort == string.Empty )
 			{
@@ -95,29 +99,58 @@ namespace BytesCrafter.USocketNet
 
 			if (!bc_usn_websocket.isConnected)
 			{
+				//Put all child script to be initialized as METHOD
+				bc_usn_websocket.Initialize();
 				bc_usn_websocket.InitConnection();
+				callback( ConStat.Success );
 			}
 
 			else
 			{
 				bc_usn_logger.Push(Debugs.Warn, "ConnectionSuccess", "Already connected to the server!");
+				callback( ConStat.Invalid );
 			}
 		}
 
+		/// <summary>
+		/// Disconnect to server using user specific credentials.
+		/// </summary>
+		/// <param name="callback">Callback.</param>
+		public void Disconnect()
+		{
+			bc_usn_websocket.ForceDisconnect();
+		}
 
-		//Check for all logging.
-		//Decide default blocking of user interface.
-		//Have a connect listener please.
+		void Start() 
+		{
+			OnStart(true);
+		}
+
+		protected virtual void OnStart( bool auto )
+		{
+			Debug(Debugs.Log, "Starting", "");
+		}
 
 
 
+		public void OnConnect( bool recon )
+		{
+			OnConnection( recon );
+		}
 
+		protected virtual void OnConnection( bool recon )
+		{
+			Debug(Debugs.Log, "Connect", "");
+		}
 
+		public void OnDisconnect( bool auto )
+		{
+			OnDisconnection( auto );
+		}
 
-
-
-
-
-		
+		protected virtual void OnDisconnection( bool auto )
+		{
+			Debug(Debugs.Log, "Disconnect", "");
+		}
 	}
 }

@@ -13,7 +13,7 @@ namespace BytesCrafter.USocketNet.Serializables {
 
         public WPToken(string res_wpid, string res_snid) {
             wpid = res_wpid;
-            wpid = res_snid;
+            snid = res_snid;
         }
 
         public bool success {
