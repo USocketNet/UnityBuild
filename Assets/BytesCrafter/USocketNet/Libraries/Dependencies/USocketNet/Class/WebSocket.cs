@@ -37,23 +37,11 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		#region Initialization - Done! 
 
-        public void Initialize() 
+        public void Starts() 
         {
             threadset.IsInitialized = true;
-
-			//ENCRYPTIONS & HANDLERS
-			queueCoder.encoder = new Encoder();
-			queueCoder.decoder = new Decoder();
-			queueCoder.parser = new Parser();
-
-			queueCoder.handlers = new Dictionary<string, List<Action<SocketIOEvent>>>();
-			queueCoder.eventQueue = new Queue<SocketIOEvent>();
-			queueCoder.eventQueueLock = new object();
-
-			queueCoder.ackQueue = new Queue<Packet>();
-			queueCoder.ackQueueLock = new object();
-			queueCoder.ackList = new List<Ack>();
-
+			queueCoder.Starts();
+			
 			//WEB SOCKET INITIALIZATION										
 			threadset.websocket = new WebSocket("ws://" + usnClient.bind.serverUrl + ":" + usnClient.bind.serverPort + "/socket.io/?EIO=4&transport=websocket&wpid=" + usnClient.wptoken.wpid + "&snid=" + usnClient.wptoken.snid);
 			threadset.websocket.OnOpen += OnOpen;
@@ -72,7 +60,22 @@ namespace BytesCrafter.USocketNet.Networks {
 			// AddCallback("error", OnReceivedError);
         }
 
-        public void Update( USocketClient usnclient ) 
+		public void Stops()
+		{
+			threadset.IsInitialized = false;
+			queueCoder.Stops();
+
+			//WEB SOCKET INITIALIZATION										
+			threadset.websocket = null;
+
+			threadset.wsCheck = false;
+			threadset.IsConnected = false;
+			threadset.packetId = 0;
+			threadset.socketId = string.Empty;
+			threadset.autoConnect = false;
+		}
+
+        public void Update() 
         {
             if(threadset.websocket == null)
 				return;
@@ -137,6 +140,47 @@ namespace BytesCrafter.USocketNet.Networks {
 			}
         }
 
+		#endregion
+
+		#region Listeners Callback
+
+		private void AddCallback(string events, Action<SocketIOEvent> callback)
+		{
+			if (!queueCoder.handlers.ContainsKey(events))
+			{
+				queueCoder.handlers[events] = new List<Action<SocketIOEvent>>();
+			}
+
+			queueCoder.handlers[events].Add(callback);
+		}
+
+		private void RemoveCallback(string events, Action<SocketIOEvent> callback)
+		{
+			if (!queueCoder.handlers.ContainsKey(events))
+			{
+				usnClient.Debug(Debugs.Warn, "CallbackOffMissing", "No callbacks registered for event: " + events);
+				return;
+			}
+
+			List<Action<SocketIOEvent>> eventList = queueCoder.handlers[events];
+			if (!eventList.Contains(callback))
+			{
+				usnClient.Debug(Debugs.Warn, "CallbackOffCantRemove", "Couldn't remove callback action for event: " + events);
+				return;
+			}
+
+			eventList.Remove(callback);
+
+			if (eventList.Count == 0)
+			{
+				queueCoder.handlers.Remove(events);
+			}
+		}
+
+		#endregion
+
+		#region Connection Mechanism
+
         public void InitConnection() 
         {
             threadset.IsConnected = true;
@@ -164,7 +208,7 @@ namespace BytesCrafter.USocketNet.Networks {
 
         public void ForceDisconnect()
 		{
-			if( threadset.IsConnected )
+			if( threadset.IsInitialized )
 			{
 				//Send a packet to server to immediately close the connection.
 				EmitPacket(new Packet(EnginePacketType.MESSAGE, SocketPacketType.DISCONNECT, 0, "/", -1, new JSONObject("")));
@@ -174,11 +218,12 @@ namespace BytesCrafter.USocketNet.Networks {
 				threadset.IsConnected = false;
 				threadset.autoConnect = false;
 			}
+			Stops();
 		}
 
 		#endregion
 
-        #region Socket Event - Done!
+        #region Socket Event
 
 		private void OnReceivedOpen(SocketIOEvent e)
 		{
@@ -286,7 +331,7 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		#endregion
 
-        #region WebSocket Threading - Done!
+        #region Threading Mechanism
 
 		private void RunSocketThread(object obj)
 		{
@@ -347,40 +392,7 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		#endregion
 
-        #region Emit Listeners - Done!
-
-		private void AddCallback(string events, Action<SocketIOEvent> callback)
-		{
-			if (!queueCoder.handlers.ContainsKey(events))
-			{
-				queueCoder.handlers[events] = new List<Action<SocketIOEvent>>();
-			}
-
-			queueCoder.handlers[events].Add(callback);
-		}
-
-		private void RemoveCallback(string events, Action<SocketIOEvent> callback)
-		{
-			if (!queueCoder.handlers.ContainsKey(events))
-			{
-				usnClient.Debug(Debugs.Warn, "CallbackOffMissing", "No callbacks registered for event: " + events);
-				return;
-			}
-
-			List<Action<SocketIOEvent>> eventList = queueCoder.handlers[events];
-			if (!eventList.Contains(callback))
-			{
-				usnClient.Debug(Debugs.Warn, "CallbackOffCantRemove", "Couldn't remove callback action for event: " + events);
-				return;
-			}
-
-			eventList.Remove(callback);
-
-			if (eventList.Count == 0)
-			{
-				queueCoder.handlers.Remove(events);
-			}
-		}
+        #region Emit Listeners
 
 		private void SendEmit(string events)
 		{

@@ -56,7 +56,7 @@ namespace BytesCrafter.USocketNet
 			if(bc_usn_websocket == null)
 				return;
 
-			bc_usn_websocket.Update( this );
+			bc_usn_websocket.Update();
 		}
 
 		void OnApplicationQuit()
@@ -100,7 +100,7 @@ namespace BytesCrafter.USocketNet
 			if (!bc_usn_websocket.isConnected)
 			{
 				//Put all child script to be initialized as METHOD
-				bc_usn_websocket.Initialize();
+				bc_usn_websocket.Starts();
 				bc_usn_websocket.InitConnection();
 				callback( ConStat.Success );
 			}
