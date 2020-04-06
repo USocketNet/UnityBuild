@@ -4475,20 +4475,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bindings:
+    restapiUrl: localhost/wordpress
     serverUrl: localhost
     serverPort: 19090
-    connectDelay: 1
-    pingFrequency: 3
-    mainSendRate: 12
+    connectDelay: 0.49
+    pingFrequency: 1
+    mainSendRate: 30
     sendTimer: 0
     syncGroup: 0
     debugOnLog: 1
     dontDestroyOnLoad: 1
     runOnBackground: 1
-  socketPrefabs:
-  - {fileID: 114799573014960534, guid: a239ee830ab412b4698127fcf7753b24, type: 3}
-  localSockets: []
-  Subscribed: 0
 --- !u!114 &114934323213285524
 MonoBehaviour:
   m_ObjectHideFlags: 0

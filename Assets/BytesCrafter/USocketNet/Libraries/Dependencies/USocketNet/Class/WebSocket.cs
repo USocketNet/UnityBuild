@@ -1,0 +1,510 @@
+﻿using System; 
+using System.Collections.Generic;
+
+using SocketIO;
+using WebSocketSharp;
+using System.Threading; 
+using UnityEngine;
+
+using BytesCrafter.USocketNet.Serializables;
+
+namespace BytesCrafter.USocketNet.Networks {
+    public class BC_USN_WebSocket 
+    {
+        private USocketClient usnClient = null;
+        public BC_USN_WebSocket( USocketClient reference )
+        {
+            usnClient = reference;
+        }
+
+        private Threadset threadset = new Threadset();
+		private QueueCoder queueCoder = new QueueCoder();
+		private Thread socketThread;
+
+        public void Initialize() 
+        {
+            threadset.IsInitialized = true;
+
+			//ENCRYPTIONS & HANDLERS
+			queueCoder.encoder = new Encoder();
+			queueCoder.decoder = new Decoder();
+			queueCoder.parser = new Parser();
+
+			queueCoder.handlers = new Dictionary<string, List<Action<SocketIOEvent>>>();
+			queueCoder.eventQueue = new Queue<SocketIOEvent>();
+			queueCoder.eventQueueLock = new object();
+
+			queueCoder.ackQueue = new Queue<Packet>();
+			queueCoder.ackQueueLock = new object();
+			queueCoder.ackList = new List<Ack>();
+
+			//WEB SOCKET INITIALIZATION										
+			threadset.websocket = new WebSocket("ws://" + usnClient.bind.serverUrl + ":" + usnClient.bind.serverPort + "/socket.io/?EIO=4&transport=websocket&wpid=" + usnClient.wptoken.wpid + "&snid=" + usnClient.wptoken.snid);
+			threadset.websocket.OnOpen += OnOpen;
+			threadset.websocket.OnError += OnError;
+			threadset.websocket.OnClose += OnClose;
+			threadset.websocket.OnMessage += OnMessage;
+
+			threadset.wsCheck = false;
+			threadset.IsConnected = false;
+			threadset.packetId = 0;
+			threadset.socketId = null;
+			threadset.autoConnect = true;
+
+			CallbackOn("open", OnReceivedOpen);
+			CallbackOn("close", OnReceivedClose);
+			//CallbackOn("error", OnReceivedError);
+
+			//LISTENERS AND EVENTS
+			// CallbackOn("rejected", usnclient.OnUserRejected);
+			// CallbackOn("messaged", usnclient.OnMessageReceived);
+			// CallbackOn("joined", usnclient.OnChannelJoined);
+			// CallbackOn("instanced", usnclient.OnInstancePeer);
+			// CallbackOn("triggered", usnclient.OnTriggersReceived);
+			// CallbackOn("leaved", usnclient.OnChannelLeaved);
+			//ADD MORE HERE!
+        }
+
+        public void Update( USocketClient usnclient ) 
+        {
+            if(threadset.websocket == null)
+				return;
+
+			if (threadset.websocket.IsConnected)
+			{
+				// if(usnclient.Subscribed)
+				// {
+				// 	usnclient.SynchingOutbound ();
+				// 	usnclient.SynchingInbound ();
+				// }
+
+				Pinging();
+			}
+
+			if (threadset.IsInitialized)
+			{
+				lock (queueCoder.eventQueueLock)
+				{
+					while (queueCoder.eventQueue.Count > 0)
+					{
+						EmitEvent(queueCoder.eventQueue.Dequeue());
+					}
+				}
+
+				lock (queueCoder.ackQueueLock)
+				{
+					while (queueCoder.ackQueue.Count > 0)
+					{
+						Packet packet = queueCoder.ackQueue.Dequeue();
+						Ack ack; for (int i = 0; i < queueCoder.ackList.Count; i++)
+						{
+							if (queueCoder.ackList[i].packetId != packet.id)
+							{
+								continue;
+							}
+
+							ack = queueCoder.ackList[i];
+							queueCoder.ackList.RemoveAt(i);
+							ack.Invoke(packet.json);
+							return;
+						}
+					}
+				}
+
+				//Check for websocket connection status change.
+				if (threadset.wsCheck != threadset.websocket.IsConnected)
+				{
+					//Save the current websocket connetion status as bool.
+					threadset.wsCheck = threadset.websocket.IsConnected;
+
+					//If websocket instance is currently connected.
+					if (threadset.websocket.IsConnected)
+					{
+						EmitEvent("connect"); //Send a 'connect' event to server.
+
+						// //If reconnection is authorized.
+						// if (threadset.autoConnect)
+						// {
+						// 	usnclient.StartCoroutine(usnclient.OnListeningConnectionStatus(ConnStat.Reconnected));
+						// }
+
+						// else
+						// {
+						// 	usnclient.StartCoroutine(usnclient.OnListeningConnectionStatus(ConnStat.Connected));
+						// 	threadset.autoConnect = true;
+						// }
+					}
+
+					else
+					{
+						EmitEvent("disconnect");
+
+						// if (threadset.autoConnect) //User disconnection.
+						// {
+						// 	usnclient.StartCoroutine(usnclient.OnListeningConnectionStatus(ConnStat.Maintainance));
+						// }
+
+						// else //Server disconnection.
+						// {
+						// 	usnclient.StartCoroutine(usnclient.OnListeningConnectionStatus(ConnStat.Disconnected));
+						// }
+					}
+				}
+
+				if (queueCoder.ackList.Count == 0)
+					return;
+				
+				if (DateTime.Now.Subtract (queueCoder.ackList [0].time).TotalSeconds < threadset.ackExpireTime)
+					return;
+				
+				queueCoder.ackList.RemoveAt(0);
+			}
+        }
+
+        public bool isConnected {
+            get {
+                return threadset.IsConnected;
+            }
+
+            set {
+                threadset.IsConnected = value;
+            }
+        } 
+
+        public bool isWsConnected {
+            get {
+                return threadset.websocket.IsConnected;
+            }
+        } 
+
+        private DateTime lastPing = DateTime.Now;
+		private float timer = 0f;
+		private void Pinging()
+		{
+			if (threadset.IsConnected)
+			{
+				if (timer > 0f)
+				{
+					timer -= Time.deltaTime;
+				}
+
+				else
+				{
+					lastPing = DateTime.Now;
+					SendEmit("sping", OnPingReceived);
+				}
+
+			}
+		}
+		private void OnPingReceived(JSONObject jsonObject)
+		{
+			TimeSpan timeSpan = DateTime.Now.Subtract(lastPing);
+			//pingValue = timeSpan.Milliseconds;
+			//timer = bindings.pingFrequency;
+			//StartCoroutine (Pings());
+		}
+
+
+        public void InitConnection() 
+        {
+            threadset.IsConnected = true;
+            threadset.autoConnect = false;
+
+            socketThread = new Thread(RunSocketThread);
+            socketThread.Start(threadset.websocket);
+
+            pingThread = new Thread(RunPingThread);
+            pingThread.Start(threadset.websocket);
+        }
+
+        public void AbortConnection()
+		{
+			if (socketThread != null)
+			{
+				socketThread.Abort();
+			}
+
+			if (pingThread != null)
+			{
+				pingThread.Abort();
+			}
+		}
+
+        public void ForceDisconnect()
+		{
+			//Send a packet to server to immediately close the connection.
+			EmitPacket(new Packet(EnginePacketType.MESSAGE, SocketPacketType.DISCONNECT, 0, "/", -1, new JSONObject("")));
+			EmitPacket(new Packet(EnginePacketType.CLOSE));
+
+			threadset.websocket.Close ();
+			threadset.IsConnected = false;
+			threadset.autoConnect = false;
+		}
+
+        #region DefaultSocketEvent - Done!
+
+		private void OnReceivedOpen(SocketIOEvent e)
+		{
+			//DebugLog(Debugs.Warn, "[SocketIO]", " Open received: " + e.name + " " + e.data);
+		}
+
+		private void OnReceivedError(SocketIOEvent e)
+		{
+			//DebugLog(Debugs.Warn, "[SocketIO]", " Error received: " + e.name + " " + e.data);
+		}
+
+		private void OnReceivedClose(SocketIOEvent e)
+		{	
+			// if ( currentlyConnecting ) {
+			// 	currentlyConnecting = false;
+			// 	//DebugLog(Debugs.Warn, "ConnectionRefused", "Connection request failed due to server authentication problem.");
+			// } //DebugLog(Debugs.Warn, "[SocketIO]", " Close received: " + e.name + " " + e.data);
+		}
+
+		private void OnOpen(object sender, EventArgs e)
+		{ 
+			EmitEvent("open");
+		}
+		private void OnError(object sender, ErrorEventArgs e)
+		{
+			EmitEvent("error");
+		}
+		private void OnClose(object sender, CloseEventArgs e)
+		{
+			EmitEvent("close");
+		}
+
+		private void OnMessage(object sender, MessageEventArgs e)
+		{
+			Packet packet = queueCoder.decoder.Decode(e); 
+
+			switch (packet.enginePacketType)
+			{
+				case EnginePacketType.OPEN: HandleOpen(packet); break;
+				case EnginePacketType.CLOSE: EmitEvent("close"); break;
+				case EnginePacketType.PING: HandlePing (); break;
+				case EnginePacketType.PONG: HandlePong(); break;
+				case EnginePacketType.MESSAGE: HandleMessage(packet); break;
+			}
+		}
+
+		private void HandleOpen(Packet packet)
+		{
+			threadset.socketId = packet.json["sid"].str;
+			EmitEvent("open");
+		}
+
+		private void HandlePing()
+		{
+			EmitPacket(new Packet(EnginePacketType.PONG));
+		}
+
+		private void HandlePong()
+		{
+			threadset.wsPonging = true;
+			threadset.wsPinging = false;
+		}
+
+		private void HandleMessage(Packet packet)
+		{
+			if (packet.json == null) { return; }
+
+			if (packet.socketPacketType == SocketPacketType.ACK)
+			{
+				for (int i = 0; i < queueCoder.ackList.Count; i++)
+				{
+					if (queueCoder.ackList[i].packetId != packet.id)
+					{
+						continue;
+					}
+
+					lock (queueCoder.ackQueueLock)
+					{
+						queueCoder.ackQueue.Enqueue(packet);
+					}
+
+					return;
+				}
+			}
+
+			if (packet.socketPacketType == SocketPacketType.EVENT)
+			{
+				SocketIOEvent e = queueCoder.parser.Parse(packet.json);
+				lock (queueCoder.eventQueueLock)
+				{
+					queueCoder.eventQueue.Enqueue(e);
+				}
+			}
+		}
+
+		#endregion
+
+        #region WebSocketThreading - Done!
+
+		private void RunSocketThread(object obj)
+		{
+			WebSocket webSocket = (WebSocket)obj;
+
+			while (threadset.IsConnected)
+			{
+				if (webSocket.IsConnected)
+				{
+					Thread.Sleep(threadset.reconDelay);
+				}
+
+				else
+				{
+					webSocket.Connect();
+				}
+			}
+
+			webSocket.Close();
+		}
+
+		private Thread pingThread;
+		private void RunPingThread(object obj)
+		{
+			WebSocket webSocket = (WebSocket)obj; 
+			DateTime pingStart;
+
+			int timeoutMilis = Mathf.FloorToInt(threadset.pingTimeout * 1000);
+			int intervalMilis = Mathf.FloorToInt(threadset.pingInterval * 1000);
+
+			while (threadset.IsConnected)
+			{
+				if (!threadset.websocket.IsConnected)
+				{
+					Thread.Sleep(threadset.reconDelay);
+				}
+
+				else
+				{
+					threadset.wsPinging = true; threadset.wsPonging = false;
+					EmitPacket(new Packet(EnginePacketType.PING));
+					pingStart = DateTime.Now;
+
+					while (webSocket.IsConnected && threadset.wsPinging && (DateTime.Now.Subtract(pingStart).TotalSeconds < timeoutMilis))
+					{
+						Thread.Sleep(200);
+					}
+
+					if (!threadset.wsPonging)
+					{
+						webSocket.Close();
+					}
+
+					Thread.Sleep(intervalMilis);
+				}
+			}
+		}
+
+		#endregion
+
+		#region EmitterInterface - Done!
+
+		private void EmitEvent(string type)
+		{
+			EmitEvent(new SocketIOEvent(type));
+		}
+
+		private void EmitEvent(SocketIOEvent eventArgs)
+		{
+			if (!queueCoder.handlers.ContainsKey(eventArgs.name))
+				return;
+
+			foreach (Action<SocketIOEvent> handler in queueCoder.handlers[eventArgs.name])
+			{
+				try
+				{
+					handler(eventArgs);
+				}
+
+				catch (Exception except)
+				{
+					//DebugLog(Debugs.Warn, "EmitEventCatch", except.Message);
+				}
+			}
+		}
+
+		private void EmitMessage(int id, string raw)
+		{
+			EmitPacket(new Packet(EnginePacketType.MESSAGE, SocketPacketType.EVENT, 0, "/", id, new JSONObject(raw)));
+		}
+
+		private void EmitPacket(Packet packet)
+		{
+			try
+			{
+				threadset.websocket.Send(queueCoder.encoder.Encode(packet));
+			}
+
+			catch (SocketIOException ex)
+			{
+				if (ex != null)
+				{
+					//DebugLog(Debugs.Warn, "EmitPacketCatch", ex.Message);
+				}
+			}
+		}
+
+		#endregion
+
+        #region EventInterface - Done!
+
+		private void CallbackOn(string events, Action<SocketIOEvent> callback)
+		{
+			if (!queueCoder.handlers.ContainsKey(events))
+			{
+				queueCoder.handlers[events] = new List<Action<SocketIOEvent>>();
+			}
+
+			queueCoder.handlers[events].Add(callback);
+		}
+
+		private void CallbackOff(string events, Action<SocketIOEvent> callback)
+		{
+			if (!queueCoder.handlers.ContainsKey(events))
+			{
+				//DebugLog(Debugs.Warn, "CallbackOffMissing", "No callbacks registered for event: " + events);
+				return;
+			}
+
+			List<Action<SocketIOEvent>> eventList = queueCoder.handlers[events];
+			if (!eventList.Contains(callback))
+			{
+				//DebugLog(Debugs.Warn, "CallbackOffCantRemove", "Couldn't remove callback action for event: " + events);
+				return;
+			}
+
+			eventList.Remove(callback);
+			if (eventList.Count == 0)
+			{
+				queueCoder.handlers.Remove(events);
+			}
+		}
+
+		public void SendEmit(string events)
+		{
+			EmitMessage(-1, string.Format("[\"{0}\"]", events));
+		}
+
+		public void SendEmit(string events, Action<JSONObject> action)
+		{
+			EmitMessage(++threadset.packetId, string.Format("[\"{0}\"]", events));
+			queueCoder.ackList.Add(new Ack(threadset.packetId, action));
+		}
+
+		public void SendEmit(string events, JSONObject data)
+		{
+			EmitMessage(-1, string.Format("[\"{0}\",{1}]", events, data));
+		}
+
+		public void SendEmit(string events, JSONObject data, Action<JSONObject> action)
+		{
+			EmitMessage(++threadset.packetId, string.Format("[\"{0}\",{1}]", events, data));
+			queueCoder.ackList.Add(new Ack(threadset.packetId, action));
+		}
+
+		#endregion
+    }
+}

@@ -70,7 +70,9 @@
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\SocketIO\SocketIOEvent.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\SocketIO\SocketIOException.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\SocketIO\SocketPacketType.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Class\Logger.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Class\RestApi.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Class\WebSocket.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Helper\USN_UIBlocker.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\Bindings.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\Channels.cs" />

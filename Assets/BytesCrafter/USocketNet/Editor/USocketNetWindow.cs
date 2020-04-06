@@ -105,7 +105,7 @@ namespace BytesCrafter.USocketNet
 			int totalLocalViews = 0;
 			foreach(USocketClient unets in USocketNet.Instance.usocketNets)
 			{
-				totalLocalViews += unets.localSockets.Count;
+				// totalLocalViews += unets.localSockets.Count;
 			}
 			EditorGUILayout.LabelField ("USocketView Locals: ");
 			EditorGUILayout.LabelField (totalLocalViews.ToString());

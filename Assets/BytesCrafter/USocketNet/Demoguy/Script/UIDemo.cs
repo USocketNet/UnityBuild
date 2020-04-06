@@ -63,39 +63,39 @@ public class UIDemo : MonoBehaviour
 
 	void Update()
 	{
-		pingSocket.text = netScript.PingCount + " ms";
-		//Ping ASD = new Ping ();
+		// pingSocket.text = netScript.PingCount + " ms";
+		// //Ping ASD = new Ping ();
 
-		timer += Time.deltaTime;
+		// timer += Time.deltaTime;
 
-		if(timer > 2f)
-			return;
+		// if(timer > 2f)
+		// 	return;
 
-		if(netScript.localSockets.Count < 10)
-			return;
+		// if(netScript.localSockets.Count < 10)
+		// 	return;
 	}
 
 	#region LISTENERS
 
 	void Awake()
 	{
-		netScript.ListenConnectionStatus (listenOnConnection);
-		netScript.ListenMessagesEvent (ListenOnMessage);
-		netScript.ListenMatchJoined (ListenOnMatchJoined);
-		netScript.ListenMatchLeaved (listenOnLeaved);
+		// netScript.ListenConnectionStatus (listenOnConnection);
+		// netScript.ListenMessagesEvent (ListenOnMessage);
+		// netScript.ListenMatchJoined (ListenOnMatchJoined);
+		// netScript.ListenMatchLeaved (listenOnLeaved);
 	}
 
-	private void listenOnConnection(ConnStat conStat)
+	private void listenOnConnection(ConStat conStat)
 	{
-		if(conStat == ConnStat.Connected || conStat == ConnStat.Reconnected)
-		{
-			ChangeCanvas(1);
-		}
+		// if(conStat == ConnStat.Connected || conStat == ConnStat.Reconnected)
+		// {
+		// 	ChangeCanvas(1);
+		// }
 
-		else
-		{
-			ChangeCanvas(0);
-		}
+		// else
+		// {
+		// 	ChangeCanvas(0);
+		// }
 	}
 
 	private void ListenOnMessage(MsgJson msgJson)
@@ -137,7 +137,10 @@ public class UIDemo : MonoBehaviour
 			{
 				if( response.success )
 				{
-					publicViewer.Logs("WPID: " + response.data.id + " SNID: " + response.data.session);
+					netScript.ConnectToServer( (ConStat conStat) => {
+						publicViewer.Logs("WPID: " + response.data.id + " SNID: " + response.data.session + " Response: " + conStat.ToString());
+					});
+					
 				}
 			});
 	}
@@ -145,13 +148,13 @@ public class UIDemo : MonoBehaviour
 	//Disconnecting to server with callbacks.
 	public void DisconnectFromServer()
 	{
-		netScript.DisconnectFromServer ((ConnStat connStat) => 
-			{
-				if(connStat == ConnStat.Disconnected)
-				{
-					publicViewer.Logs("Disconnected from the server.");
-				}
-			});
+		// netScript.DisconnectFromServer ((ConnStat connStat) => 
+		// 	{
+		// 		if(connStat == ConnStat.Disconnected)
+		// 		{
+		// 			publicViewer.Logs("Disconnected from the server.");
+		// 		}
+		// 	});
 	}
 
 	#endregion
@@ -160,34 +163,34 @@ public class UIDemo : MonoBehaviour
 	//Send a public message on the server.
 	public void SendPublicMessage()
 	{
-		netScript.SendPublicMessage (pubMsgContent.text, (Returned msgStat) =>
-		{
-				if(msgStat == Returned.Success)
-				{
-					publicViewer.Logs("Me: " + pubMsgContent.text);
-					pubMsgContent.text = string.Empty;
-				}
-		});
+		// netScript.SendPublicMessage (pubMsgContent.text, (Returned msgStat) =>
+		// {
+		// 		if(msgStat == Returned.Success)
+		// 		{
+		// 			publicViewer.Logs("Me: " + pubMsgContent.text);
+		// 			pubMsgContent.text = string.Empty;
+		// 		}
+		// });
 	}
 
 	//Send a private message on the server.
 	public void SendPrivateMessage()
 	{
-		netScript.SendPrivateMessage (priMsgReceiver.text, priMsgContent.text, (Returned msgStat) =>
-		{
-			privateViewer.Logs("Me: " + pubMsgContent.text);
-			priMsgContent.text = string.Empty;
-			priMsgReceiver.text = string.Empty;
-		});
+		// netScript.SendPrivateMessage (priMsgReceiver.text, priMsgContent.text, (Returned msgStat) =>
+		// {
+		// 	privateViewer.Logs("Me: " + pubMsgContent.text);
+		// 	priMsgContent.text = string.Empty;
+		// 	priMsgReceiver.text = string.Empty;
+		// });
 	}
 
 	public void SendChannelMessage()
 	{
-		netScript.SendChannelMessage (chanMsgContent.text, (Returned msgStat) =>
-		{
-			channelViewer.Logs("Me: " + chanMsgContent.text);
-			chanMsgContent.text = string.Empty;
-		});
+		// netScript.SendChannelMessage (chanMsgContent.text, (Returned msgStat) =>
+		// {
+		// 	channelViewer.Logs("Me: " + chanMsgContent.text);
+		// 	chanMsgContent.text = string.Empty;
+		// });
 	}
 	#endregion
 
@@ -195,49 +198,49 @@ public class UIDemo : MonoBehaviour
 
 	public void AutoJoinServerRoom()
 	{
-		netScript.AutoMatchChannel (gameVariant, 10, (MatchRes matchRes, MatchMake matchMake) =>
-			{
-				if(matchRes == MatchRes.Success)
-				{
-					ChangeCanvas(2);
-					netScript.Instantiate (0, Vector3.zero, Quaternion.identity, null); // spawnPoint.position, spawnPoint.rotation);
-				}
-			});
+		// netScript.AutoMatchChannel (gameVariant, 10, (MatchRes matchRes, MatchMake matchMake) =>
+		// 	{
+		// 		if(matchRes == MatchRes.Success)
+		// 		{
+		// 			ChangeCanvas(2);
+		// 			netScript.Instantiate (0, Vector3.zero, Quaternion.identity, null); // spawnPoint.position, spawnPoint.rotation);
+		// 		}
+		// 	});
 	}
 
 	public void CreateServerRoom()
 	{
-		netScript.CreateChannel (roomname.text, gameVariant, 2, (MatchRes result, MatchMake matchMake) => 
-			{
-				if(result == MatchRes.Success)
-				{
-					ChangeCanvas(2);
-					netScript.Instantiate (0, Vector3.zero, Quaternion.identity, null);
-				}
-			});
+		// netScript.CreateChannel (roomname.text, gameVariant, 2, (MatchRes result, MatchMake matchMake) => 
+		// 	{
+		// 		if(result == MatchRes.Success)
+		// 		{
+		// 			ChangeCanvas(2);
+		// 			netScript.Instantiate (0, Vector3.zero, Quaternion.identity, null);
+		// 		}
+		// 	});
 	}
 
 	public void JoinServerRoom()
 	{
-		netScript.JoinChannel (roomname.text, gameVariant, (MatchRes result, MatchMake matchMake) =>
-			{
-				if(result == MatchRes.Success)
-				{
-					ChangeCanvas(2);
-					netScript.Instantiate (0, Vector3.zero, Quaternion.identity, null);
-				}
-			});
+		// netScript.JoinChannel (roomname.text, gameVariant, (MatchRes result, MatchMake matchMake) =>
+		// 	{
+		// 		if(result == MatchRes.Success)
+		// 		{
+		// 			ChangeCanvas(2);
+		// 			netScript.Instantiate (0, Vector3.zero, Quaternion.identity, null);
+		// 		}
+		// 	});
 	}
 
 	public void LeaveServerRoom()
 	{
-		netScript.LeaveChannel ((Returned returned, ChannelJson roomJson) =>
-			{
-				if(returned == Returned.Success)
-				{
-					ChangeCanvas(1);
-				}
-			});
+		// netScript.LeaveChannel ((Returned returned, ChannelJson roomJson) =>
+		// 	{
+		// 		if(returned == Returned.Success)
+		// 		{
+		// 			ChangeCanvas(1);
+		// 		}
+		// 	});
 		
 	}
 

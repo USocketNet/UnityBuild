@@ -9,8 +9,9 @@ namespace BytesCrafter.USocketNet.Networks
 	public class Bindings
 	{
 		[Header("SERVER SETTINGS")]
+		public string restapiUrl = "localhost";
 		public string serverUrl = "localhost";
-		public string serverPort = "3000";
+		public string serverPort = "19090";
 
 		[Header("CLIENT SETTINGS")]
 		[Range(1f, 10f)] public float connectDelay = 0.49f;

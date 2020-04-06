@@ -6,6 +6,11 @@ namespace BytesCrafter.USocketNet.Serializables {
         public string wpid = string.Empty;
         public string snid = string.Empty;
 
+        public WPToken() {
+            wpid = string.Empty;
+            wpid = string.Empty;
+        }
+
         public WPToken(string res_wpid, string res_snid) {
             wpid = res_wpid;
             wpid = res_snid;

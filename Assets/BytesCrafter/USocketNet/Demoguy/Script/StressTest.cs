@@ -20,22 +20,22 @@ public class StressTest : MonoBehaviour
 	public void ConnectCreateMove()
 	{
 		USocketClient uClient = Instantiate (clientPrefab.transform).GetComponent<USocketClient>();
-		uClient.ConnectToServer("Demoguy", "1234567", (ConnStat cs, ConnAuth ca) => {
-			if(ca == ConnAuth.Success)
-			{
-				uClient.AutoMatchChannel(gameVariant, 10, (MatchRes mr, MatchMake mm) => {
-					if(mr == MatchRes.Success)
-					{
-						uClient.Instantiate(0, Vector3.zero, Quaternion.identity, (Returned r) => {
-							if(r == Returned.Success)
-							{
-								Debug.Log("Success!");
-							}
-						});
-					}
-				});
-			}
-		});
+		// uClient.ConnectToServer("Demoguy", "1234567", (ConStat cs) => {
+		// 	if(ca == ConnAuth.Success)
+		// 	{
+		// 		uClient.AutoMatchChannel(gameVariant, 10, (MatchRes mr, MatchMake mm) => {
+		// 			if(mr == MatchRes.Success)
+		// 			{
+		// 				uClient.Instantiate(0, Vector3.zero, Quaternion.identity, (Returned r) => {
+		// 					if(r == Returned.Success)
+		// 					{
+		// 						Debug.Log("Success!");
+		// 					}
+		// 				});
+		// 			}
+		// 		});
+		// 	}
+		// });
 	}
 
 	public void ConnectRandomMove()

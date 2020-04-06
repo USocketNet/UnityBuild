@@ -121,8 +121,8 @@ namespace BytesCrafter.USocketNet
 		{
 			if(socketNet != null && !initialized)
 			{
-				socketNet.ListenTriggersEvent(ReceivedTriggers);
-				initialized = true;
+				// socketNet.ListenTriggersEvent(ReceivedTriggers);
+				// initialized = true;
 			}
 
 			//Check if socket id is empty, then remove it.
@@ -666,35 +666,35 @@ namespace BytesCrafter.USocketNet
 			trigger.tKy = key;
 			trigger.tVl = content;
 
-			socketNet.SendTriggerEvent (trigger, (Returned returned) => 
-				{
+			// socketNet.SendTriggerEvent (trigger, (Returned returned) => 
+			// 	{
 
-				if(returned == Returned.Failed)
-				{
-					if(curTriggers == maxTriggers)
-					{
-						if(callback != null)
-						{
-							curTriggers = 0;
-							callback(returned);
-						}
-					}
+			// 	if(returned == Returned.Failed)
+			// 	{
+			// 		if(curTriggers == maxTriggers)
+			// 		{
+			// 			if(callback != null)
+			// 			{
+			// 				curTriggers = 0;
+			// 				callback(returned);
+			// 			}
+			// 		}
 
-					else
-					{
-						curTriggers += 1;
-						TriggerEvents(key, content, callback);
-					}
-				}
+			// 		else
+			// 		{
+			// 			curTriggers += 1;
+			// 			TriggerEvents(key, content, callback);
+			// 		}
+			// 	}
 
-				else
-				{
-					if(callback != null)
-					{
-						callback(returned);
-					}
-				}
-			});
+			// 	else
+			// 	{
+			// 		if(callback != null)
+			// 		{
+			// 			callback(returned);
+			// 		}
+			// 	}
+			// });
 		}
 	}
 }
