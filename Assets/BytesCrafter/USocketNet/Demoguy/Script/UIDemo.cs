@@ -59,6 +59,11 @@ public class UIDemo : USocketClient
 					});
 					
 				}
+
+				else
+				{
+					
+				}
 			});
 	}
 

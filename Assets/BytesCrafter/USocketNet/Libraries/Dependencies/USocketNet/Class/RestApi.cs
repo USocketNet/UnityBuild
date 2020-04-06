@@ -20,7 +20,7 @@ namespace BytesCrafter.USocketNet.RestApi {
         {
             if( usnClient.bind.restapiUrl == string.Empty )
 			{
-				usnClient.Debug(Debugs.Warn, "ConnectionError", "Please fill up USocketNet restapi field on this USocketClient: " + usnClient.name);
+				usnClient.Debug(Debugs.Warn, "RestApi", "Please fill up RestApi url on this USocketClient: " + usnClient.name);
 				callback( new Response() );
 				return;
 			}
@@ -38,10 +38,12 @@ namespace BytesCrafter.USocketNet.RestApi {
             string startString = rapi[0] == 'h' && rapi[1] == 't' && rapi[2] == 't' && rapi[3] == 'p' ? "" : "http://";
             string endString = rapi[rapi.Length - 1] == '/' ? "" : "/";
             var request = UnityWebRequest.Post( startString + rapi + endString + "wp-json/usocketnet/v1/auth", creds);
+            
             yield return request.SendWebRequest();
-
+            
             if ( request.isNetworkError || request.isHttpError )
             {
+                usnClient.Debug(Debugs.Error, "RestApi", "The Rest API url return 404 Not found. Please check and try again.");
                 callback( new Response() );
             }
 
@@ -52,12 +54,14 @@ namespace BytesCrafter.USocketNet.RestApi {
 
                 if( response.success )
                 {
+                    usnClient.Debug(Debugs.Log, "RestApi", "Welcome! " +response.data.dname+ " [" +response.data.email+ "]" );
                     wptoken = new WPToken(response.data.id, response.data.session);
                     callback( response );
                 }
 
                 else
                 {
+                    usnClient.Debug(Debugs.Warn, "RestApi", response.message);
                     callback( new Response() );
                 }
             }
