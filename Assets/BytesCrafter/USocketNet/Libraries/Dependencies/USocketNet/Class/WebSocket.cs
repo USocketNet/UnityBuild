@@ -42,8 +42,12 @@ namespace BytesCrafter.USocketNet.Networks {
             threadset.IsInitialized = true;
 			queueCoder.Starts();
 			
-			//WEB SOCKET INITIALIZATION										
-			threadset.websocket = new WebSocket("ws://" + usnClient.bind.serverUrl + ":" + usnClient.bind.serverPort + "/socket.io/?EIO=4&transport=websocket&wpid=" + usnClient.wptoken.wpid + "&snid=" + usnClient.wptoken.snid);
+			//WEB SOCKET INITIALIZATION	
+			string hostUrl = usnClient.bind.serverUrl + ":" + usnClient.bind.serverPort;
+			string sioPath = "/socket.io/?EIO=4&transport=websocket";
+			string usrTok = "&wpid=" + usnClient.GetToken.wpid + "&snid=" + usnClient.GetToken.snid;
+												
+			threadset.websocket = new WebSocket("ws://" + hostUrl + sioPath + usrTok);
 			threadset.websocket.OnOpen += OnOpen;
 			threadset.websocket.OnError += OnError;
 			threadset.websocket.OnClose += OnClose;

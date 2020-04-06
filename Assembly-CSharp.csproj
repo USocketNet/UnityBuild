@@ -87,10 +87,10 @@
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\Response.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\SyncJsons.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\Threadset.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\Token.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\Toolsets.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\TriggerJson.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\VectorJson.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\Serials\WPToken.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\USocketNet\USocketNet.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\AssemblyInfo.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Libraries\Dependencies\Websocket\ByteOrder.cs" />

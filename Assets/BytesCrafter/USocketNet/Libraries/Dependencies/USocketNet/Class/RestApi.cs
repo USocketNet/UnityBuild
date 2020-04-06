@@ -1,8 +1,10 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
+
 using System;
 using System.Text;
+using System.Collections;
+
 using BytesCrafter.USocketNet.Serializables;
 using BytesCrafter.USocketNet.Toolsets;
 
@@ -15,7 +17,14 @@ namespace BytesCrafter.USocketNet.RestApi {
             usnClient = reference;
         }
 
-        public WPToken wptoken = new WPToken();
+        public Response_Data GetUserData
+        {
+            get 
+            {
+                return curUser; 
+            }
+        }
+        private Response_Data curUser = new Response_Data();
         public void Authenticate(string uname, string pword, USocketClient usnClient, Action<Response> callback) 
         {
             if( usnClient.bind.restapiUrl == string.Empty )
@@ -55,7 +64,7 @@ namespace BytesCrafter.USocketNet.RestApi {
                 if( response.success )
                 {
                     usnClient.Debug(BC_USN_Debug.Log, "RestApi", "Welcome! " +response.data.dname+ " [" +response.data.email+ "]" );
-                    wptoken = new WPToken(response.data.id, response.data.session);
+                    curUser = response.data;
                     callback( response );
                 }
 

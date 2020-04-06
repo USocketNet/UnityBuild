@@ -29,9 +29,9 @@ namespace BytesCrafter.USocketNet.Serializables {
         public string email = string.Empty;
         public string[] roles;
 
-        public  WPToken token {
+        public  BC_USN_Token token {
             get {
-                return new WPToken(id, session);
+                return new BC_USN_Token(id, session);
             }
         }
         

@@ -19,9 +19,9 @@ namespace BytesCrafter.USocketNet
 			}
 		}
 
-		public WPToken wptoken {
+		public BC_USN_Token GetToken {
 			get {
-				return bc_usn_restapi.wptoken;
+				return bc_usn_restapi.GetUserData.token;
 			}
 		}
 
