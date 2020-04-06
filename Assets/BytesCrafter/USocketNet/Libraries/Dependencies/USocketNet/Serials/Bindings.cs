@@ -4,7 +4,7 @@ using UnityEngine;
 namespace BytesCrafter.USocketNet.Networks
 {
 	[System.Serializable]
-	public class Bindings
+	public class BC_USN_Option
 	{
 		[Header("HOST SETTINGS")]
 		public string restapiUrl = "localhost";

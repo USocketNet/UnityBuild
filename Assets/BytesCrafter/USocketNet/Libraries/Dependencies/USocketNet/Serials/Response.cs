@@ -1,14 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace BytesCrafter.USocketNet.Serializables {
+﻿
+namespace BytesCrafter.USocketNet.Serializables 
+{
     [System.Serializable]
-    public class Response
+    public class BC_USN_Response
     {
         public string code = "error";
         public string message = string.Empty;
-        public Response_Data data = null;
+        public BC_USN_Response_Data data = null;
 
         public bool success {
             get {
@@ -18,7 +16,7 @@ namespace BytesCrafter.USocketNet.Serializables {
     }
 
     [System.Serializable]
-    public class Response_Data
+    public class BC_USN_Response_Data
     {
         public string session = string.Empty;
         public string cookie = string.Empty;

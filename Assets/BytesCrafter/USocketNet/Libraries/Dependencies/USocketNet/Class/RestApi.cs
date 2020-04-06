@@ -17,33 +17,33 @@ namespace BytesCrafter.USocketNet.RestApi {
             usnClient = reference;
         }
 
-        public Response_Data GetUserData
+        public BC_USN_Response_Data GetUserData
         {
             get 
             {
                 return curUser; 
             }
         }
-        private Response_Data curUser = new Response_Data();
-        public void Authenticate(string uname, string pword, USocketClient usnClient, Action<Response> callback) 
+        private BC_USN_Response_Data curUser = new BC_USN_Response_Data();
+        public void Authenticate(string uname, string pword, USocketClient usnClient, Action<BC_USN_Response> callback) 
         {
-            if( usnClient.bind.restapiUrl == string.Empty )
+            if( usnClient.options.restapiUrl == string.Empty )
 			{
 				usnClient.Debug(BC_USN_Debug.Warn, "RestApi", "Please fill up RestApi url on this USocketClient: " + usnClient.name);
-				callback( new Response() );
+				callback( new BC_USN_Response() );
 				return;
 			}
             
             usnClient.StartCoroutine( Authenticating(uname, pword, callback) );
         }
         
-        IEnumerator Authenticating( string uname, string pword, Action<Response> callback ) 
+        IEnumerator Authenticating( string uname, string pword, Action<BC_USN_Response> callback ) 
         {            
             WWWForm creds = new WWWForm();
             creds.AddField("UN", uname);
             creds.AddField("PW", pword);
 
-            string rapi = usnClient.bind.restapiUrl;
+            string rapi = usnClient.options.restapiUrl;
             string startString = rapi[0] == 'h' && rapi[1] == 't' && rapi[2] == 't' && rapi[3] == 'p' ? "" : "http://";
             string endString = rapi[rapi.Length - 1] == '/' ? "" : "/";
             var request = UnityWebRequest.Post( startString + rapi + endString + "wp-json/usocketnet/v1/auth", creds);
@@ -53,13 +53,13 @@ namespace BytesCrafter.USocketNet.RestApi {
             if ( request.isNetworkError || request.isHttpError )
             {
                 usnClient.Debug(BC_USN_Debug.Error, "RestApi", "The Rest API url return 404 Not found. Please check and try again.");
-                callback( new Response() );
+                callback( new BC_USN_Response() );
             }
 
             else
             {
                 string bytes = Encoding.UTF8.GetString( request.downloadHandler.data );
-                Response response = JsonUtility.FromJson<Response>(bytes);
+                BC_USN_Response response = JsonUtility.FromJson<BC_USN_Response>(bytes);
 
                 if( response.success )
                 {
@@ -71,7 +71,7 @@ namespace BytesCrafter.USocketNet.RestApi {
                 else
                 {
                     usnClient.Debug(BC_USN_Debug.Warn, "RestApi", response.message);
-                    callback( new Response() );
+                    callback( new BC_USN_Response() );
                 }
             }
         }

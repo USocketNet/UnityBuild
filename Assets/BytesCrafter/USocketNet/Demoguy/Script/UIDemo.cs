@@ -46,7 +46,7 @@ public class UIDemo : USocketClient
 	//Connecting to server with callbacks.
 	public void ConnectToServer()
 	{
-		netScript.Authenticate (username.text, password.text, (Response response) =>
+		netScript.Authenticate (username.text, password.text, (BC_USN_Response response) =>
 			{
 				if( response.success )
 				{

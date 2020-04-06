@@ -10,14 +10,7 @@ namespace BytesCrafter.USocketNet
 {
 	public class USocketClient : MonoBehaviour
 	{
-		public Bindings bindings = new Bindings();
-
-		public Bindings bind 
-		{
-			get {
-				return bindings;
-			}
-		}
+		public BC_USN_Option options = new BC_USN_Option();
 
 		public BC_USN_Token GetToken {
 			get {
@@ -44,11 +37,11 @@ namespace BytesCrafter.USocketNet
 			bc_usn_websocket = new BC_USN_WebSocket( this );
 
 			//Client INITIALIZATION options before it run.
-			if(bindings.dontDestroyOnLoad)
+			if(options.dontDestroyOnLoad)
 			{
 				DontDestroyOnLoad(this);
 			}
-			Application.runInBackground = bindings.runOnBackground;
+			Application.runInBackground = options.runOnBackground;
 		}
 
 		void Update()
@@ -75,8 +68,8 @@ namespace BytesCrafter.USocketNet
 			bc_usn_websocket.AbortConnection();
 		}
 
-		public void Authenticate( string uname, string pword, Action<Response> callback ) {
-			bc_usn_restapi.Authenticate(uname, pword, this, (Response response) => {
+		public void Authenticate( string uname, string pword, Action<BC_USN_Response> callback ) {
+			bc_usn_restapi.Authenticate(uname, pword, this, (BC_USN_Response response) => {
 				if( response.success ) {
 					Debug(BC_USN_Debug.Log, "Code: " + response.code, " Message: " + response.message);
 					callback(response);
@@ -90,7 +83,7 @@ namespace BytesCrafter.USocketNet
 		/// <param name="callback">Callback.</param>
 		public void Connect( Action<ConStat> callback )
 		{
-			if( bindings.serverUrl == string.Empty || bindings.serverPort == string.Empty )
+			if( options.serverUrl == string.Empty || options.serverPort == string.Empty )
 			{
 				bc_usn_logger.Push(BC_USN_Debug.Warn, "ConnectionError", "Please fill up USocketNet host field on this USocketClient: " + name);
 				callback( ConStat.Error );
