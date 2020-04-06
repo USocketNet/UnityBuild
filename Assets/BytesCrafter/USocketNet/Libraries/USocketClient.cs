@@ -11,6 +11,33 @@ namespace BytesCrafter.USocketNet
 	public class USocketClient : MonoBehaviour
 	{
 		public BC_USN_Option options = new BC_USN_Option();
+		private BC_USN_Logger bc_usn_logger = null;
+		private BC_USN_RestApi bc_usn_restapi = null;
+		private BC_USN_WebSocket bc_usn_websocket = null;
+
+		/// <summary>
+		/// Determines whether this client is connected to web socket server.
+		/// </summary>
+		/// <returns><c>true</c> if this client is connected; otherwise, <c>false</c>.</returns>
+		public bool IsConnected 
+		{
+            get 
+			{
+                return bc_usn_websocket.isConnected;
+            }
+        }
+
+		/// <summary>
+		/// Sockets identity of the current user's connection to the server.
+		/// </summary>
+		/// <returns> Socket Identity, Not Connected, No Internet Access. </returns>
+		public string Identity
+		{
+			get
+			{
+				return bc_usn_websocket.socketId;
+			}
+		}
 
 		public BC_USN_Token GetToken {
 			get {
@@ -24,10 +51,6 @@ namespace BytesCrafter.USocketNet
 
 			bc_usn_logger.Push(log, title, info);
 		}
-
-		private BC_USN_Logger bc_usn_logger = null;
-		private BC_USN_RestApi bc_usn_restapi = null;
-		private BC_USN_WebSocket bc_usn_websocket = null;
 
 		void Awake()
 		{
@@ -92,10 +115,7 @@ namespace BytesCrafter.USocketNet
 
 			if (!bc_usn_websocket.isConnected)
 			{
-				//Put all child script to be initialized as METHOD
-				bc_usn_websocket.Starts();
-				bc_usn_websocket.InitConnection();
-				callback( ConStat.Success );
+				bc_usn_websocket.InitConnection(callback);
 			}
 
 			else

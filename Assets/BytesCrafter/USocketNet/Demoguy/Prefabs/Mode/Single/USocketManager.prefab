@@ -4474,15 +4474,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 007cd0caee8ae404991b2fe5be4737fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bindings:
-    restapiUrl: localhost/wordpress
+  options:
+    restapiUrl: localhost
     serverUrl: localhost
     serverPort: 19090
-    connectDelay: 0.49
-    pingFrequency: 1
-    mainSendRate: 30
-    sendTimer: 0
-    syncGroup: 0
     debugOnLog: 1
     dontDestroyOnLoad: 1
     runOnBackground: 1
@@ -4498,6 +4493,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fe0513710b529e4c8226f0aaf8844b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  options:
+    restapiUrl: localhost/wordpress
+    serverUrl: localhost
+    serverPort: 19090
+    debugOnLog: 1
+    dontDestroyOnLoad: 1
+    runOnBackground: 1
   netScpt: {fileID: 114250161575234646}
   canvasGroup:
   - {fileID: 225953205541612174}

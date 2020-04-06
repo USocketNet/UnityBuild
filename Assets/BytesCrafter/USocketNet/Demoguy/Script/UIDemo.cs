@@ -1,10 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 using System.Collections.Generic;
 using BytesCrafter.USocketNet;
 using BytesCrafter.USocketNet.Serializables;
-using BytesCrafter.USocketNet.Toolsets;
 public class UIDemo : USocketClient
 {
 	#region Variablles and References
@@ -55,7 +53,7 @@ public class UIDemo : USocketClient
 							ChangeCanvas(1);
 						}
 
-						publicViewer.Logs("WPID: " + response.data.id + " SNID: " + response.data.session + " Response: " + conStat.ToString());
+						UnityEngine.Debug.Log("WPID: " + response.data.id + " SNID: " + response.data.session + " Response: " + conStat.ToString() + " SID:" + netScript.Identity);
 					});
 					
 				}

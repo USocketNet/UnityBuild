@@ -1,4 +1,5 @@
 ﻿using System; 
+using System.Collections;
 using System.Collections.Generic;
 
 using SocketIO;
@@ -17,10 +18,13 @@ namespace BytesCrafter.USocketNet.Networks {
             usnClient = reference;
         }
 
-        private Threadset threadset = new Threadset();
-		private QueueCoder queueCoder = new QueueCoder();
-		private Thread socketThread;
-		private Thread pingThread;
+		public string socketId
+		{
+			get
+			{
+				return threadset.socketId;
+			}
+		}
 
 		public bool isConnected 
 		{
@@ -36,48 +40,11 @@ namespace BytesCrafter.USocketNet.Networks {
         }
 
 		#region Initialization - Done! 
-
-        public void Starts() 
-        {
-            threadset.IsInitialized = true;
-			queueCoder.Starts();
-			
-			//WEB SOCKET INITIALIZATION	
-			string hostUrl = usnClient.options.serverUrl + ":" + usnClient.options.serverPort;
-			string sioPath = "/socket.io/?EIO=4&transport=websocket";
-			string usrTok = "&wpid=" + usnClient.GetToken.wpid + "&snid=" + usnClient.GetToken.snid;
-
-			threadset.websocket = new WebSocket("ws://" + hostUrl + sioPath + usrTok);
-			threadset.websocket.OnOpen += OnOpen;
-			threadset.websocket.OnError += OnError;
-			threadset.websocket.OnClose += OnClose;
-			threadset.websocket.OnMessage += OnPacket;
-
-			threadset.wsCheck = false;
-			threadset.IsConnected = false;
-			threadset.packetId = 0;
-			threadset.socketId = null;
-			threadset.autoConnect = true;
-
-			// AddCallback("open", OnReceivedOpen);
-			// AddCallback("close", OnReceivedClose);
-			// AddCallback("error", OnReceivedError);
-        }
-
-		public void Stops()
-		{
-			threadset.IsInitialized = false;
-			queueCoder.Stops();
-
-			//WEB SOCKET INITIALIZATION										
-			threadset.websocket = null;
-
-			threadset.wsCheck = false;
-			threadset.IsConnected = false;
-			threadset.packetId = 0;
-			threadset.socketId = string.Empty;
-			threadset.autoConnect = false;
-		}
+		
+        private Threadset threadset = new Threadset();
+		private QueueCoder queueCoder = new QueueCoder();
+		private Thread socketThread;
+		private Thread pingThread;
 
         public void Update() 
         {
@@ -185,17 +152,47 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		#region Connection Mechanism
 
-        public void InitConnection() 
+        public void InitConnection(Action<ConStat> callback) 
         {
-            threadset.IsConnected = true;
-            threadset.autoConnect = false;
+			threadset.IsInitialized = true;
+			queueCoder.Starts();
+			
+			//WEB SOCKET INITIALIZATION	
+			string hostUrl = usnClient.options.serverUrl + ":" + usnClient.options.serverPort;
+			string sioPath = "/socket.io/?EIO=4&transport=websocket";
+			string usrTok = "&wpid=" + usnClient.GetToken.wpid + "&snid=" + usnClient.GetToken.snid;
+
+			threadset.websocket = new WebSocket("ws://" + hostUrl + sioPath + usrTok);
+			threadset.websocket.OnOpen += OnOpen;
+			threadset.websocket.OnError += OnError;
+			threadset.websocket.OnClose += OnClose;
+			threadset.websocket.OnMessage += OnPacket;
+
+			threadset.wsCheck = false;
+			threadset.IsConnected = true;
+			threadset.packetId = 0;
+			threadset.socketId = string.Empty;
+			threadset.autoConnect = true;
+
+			// AddCallback("open", OnReceivedOpen);
+			// AddCallback("close", OnReceivedClose);
+			// AddCallback("error", OnReceivedError);
 
             socketThread = new Thread(RunSocketThread);
             socketThread.Start(threadset.websocket);
 
             pingThread = new Thread(RunPingThread);
             pingThread.Start(threadset.websocket);
+
+			usnClient.StartCoroutine(WaitingForSocketId(callback));
         }
+
+		IEnumerator WaitingForSocketId(Action<ConStat> callback)
+		{
+			yield return new WaitUntil(() => threadset.socketId != string.Empty);
+
+			callback( ConStat.Success );
+		}
 
         public void AbortConnection()
 		{
@@ -214,15 +211,19 @@ namespace BytesCrafter.USocketNet.Networks {
 		{
 			if( threadset.IsInitialized )
 			{
-				//Send a packet to server to immediately close the connection.
 				EmitPacket(new Packet(EnginePacketType.MESSAGE, SocketPacketType.DISCONNECT, 0, "/", -1, new JSONObject("")));
 				EmitPacket(new Packet(EnginePacketType.CLOSE));
-
 				threadset.websocket.Close ();
-				threadset.IsConnected = false;
-				threadset.autoConnect = false;
 			}
-			Stops();
+
+			threadset.IsInitialized = false;
+			queueCoder.Stops();
+			threadset.websocket = null;
+			threadset.wsCheck = false;
+			threadset.IsConnected = false;
+			threadset.packetId = 0;
+			threadset.socketId = string.Empty;
+			threadset.autoConnect = false;
 		}
 
 		#endregion
@@ -272,7 +273,8 @@ namespace BytesCrafter.USocketNet.Networks {
 					EmitEvent("close"); 
 					break;
 				case EnginePacketType.PING: 
-					HandlePing (); break;
+					HandlePing (); 
+					break;
 				case EnginePacketType.PONG: 
 					HandlePong(); 
 					break;
