@@ -2,7 +2,7 @@
 
 namespace BytesCrafter.USocketNet.Toolsets 
 {
-    public enum Debugs 
+    public enum BC_USN_Debug
     { 
         Log, 
         Warn, 
@@ -17,20 +17,20 @@ namespace BytesCrafter.USocketNet.Toolsets
             usnClient = reference;
         }
 
-        public void Push(Debugs debugs, string title, string details) 
+        public void Push(BC_USN_Debug logType, string title, string details) 
         {
             if(!usnClient.bind.debugOnLog)
 				return;
 
-            switch( debugs ) 
+            switch( logType ) 
             {
-                case Debugs.Log:
+                case BC_USN_Debug.Log:
                     Debug.Log(title + " - " + details);
                     break;
-                case Debugs.Warn:
+                case BC_USN_Debug.Warn:
                     Debug.LogWarning(title + " - " + details);
                     break;
-                case Debugs.Error:
+                case BC_USN_Debug.Error:
                     Debug.LogError(title + " - " + details);
                     break;
                 default:

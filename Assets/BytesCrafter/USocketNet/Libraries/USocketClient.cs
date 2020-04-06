@@ -25,7 +25,7 @@ namespace BytesCrafter.USocketNet
 			}
 		}
 
-		public void Debug ( Debugs log, string title, string info ) {
+		public void Debug ( BC_USN_Debug log, string title, string info ) {
 			if(bc_usn_logger == null)
 				return;
 
@@ -78,7 +78,7 @@ namespace BytesCrafter.USocketNet
 		public void Authenticate( string uname, string pword, Action<Response> callback ) {
 			bc_usn_restapi.Authenticate(uname, pword, this, (Response response) => {
 				if( response.success ) {
-					Debug(Debugs.Log, "Code: " + response.code, " Message: " + response.message);
+					Debug(BC_USN_Debug.Log, "Code: " + response.code, " Message: " + response.message);
 					callback(response);
 				}
 			});
@@ -92,7 +92,7 @@ namespace BytesCrafter.USocketNet
 		{
 			if( bindings.serverUrl == string.Empty || bindings.serverPort == string.Empty )
 			{
-				bc_usn_logger.Push(Debugs.Warn, "ConnectionError", "Please fill up USocketNet host field on this USocketClient: " + name);
+				bc_usn_logger.Push(BC_USN_Debug.Warn, "ConnectionError", "Please fill up USocketNet host field on this USocketClient: " + name);
 				callback( ConStat.Error );
 				return;
 			}
@@ -107,7 +107,7 @@ namespace BytesCrafter.USocketNet
 
 			else
 			{
-				bc_usn_logger.Push(Debugs.Warn, "ConnectionSuccess", "Already connected to the server!");
+				bc_usn_logger.Push(BC_USN_Debug.Warn, "ConnectionSuccess", "Already connected to the server!");
 				callback( ConStat.Invalid );
 			}
 		}
@@ -128,7 +128,7 @@ namespace BytesCrafter.USocketNet
 
 		protected virtual void OnStart( bool auto )
 		{
-			Debug(Debugs.Log, "Starting", "");
+			Debug(BC_USN_Debug.Log, "Starting", "");
 		}
 
 
@@ -140,7 +140,7 @@ namespace BytesCrafter.USocketNet
 
 		protected virtual void OnConnection( bool recon )
 		{
-			Debug(Debugs.Log, "Connect", "");
+			Debug(BC_USN_Debug.Log, "Connect", "");
 		}
 
 		public void OnDisconnect( bool auto )
@@ -150,7 +150,7 @@ namespace BytesCrafter.USocketNet
 
 		protected virtual void OnDisconnection( bool auto )
 		{
-			Debug(Debugs.Log, "Disconnect", "");
+			Debug(BC_USN_Debug.Log, "Disconnect", "");
 		}
 	}
 }
