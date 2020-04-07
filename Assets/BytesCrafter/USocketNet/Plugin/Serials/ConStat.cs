@@ -1,7 +1,6 @@
-﻿
-#region License
+﻿#region License
 /*
- * Response.cs
+ * ConStat.cs
  *
  * Copyright (c) 2020 Bytes Crafter
  *
@@ -25,39 +24,49 @@
  */
 #endregion
 
-namespace BytesCrafter.USocketNet.Serializables 
+namespace BytesCrafter.USocketNet
 {
-    [System.Serializable]
-    public class BC_USN_Response
-    {
-        public string code = "error";
-        public string message = string.Empty;
-        public BC_USN_Response_Data data = null;
+	/// <summary>
+	/// Conn auth is an enum handler for the current client authentication.
+	/// </summary>
+	public enum ConStat
+	{ 
+		/// <summary>
+		/// Successfully enter the server. Code: 0
+		/// </summary>
+		Success, 
+		/// <summary>
+		/// Application id dont exist on the database. Code: 1
+		/// </summary>
+		Invalid, 
+		/// <summary>
+		/// Server found invalid arguments thus rejecting conn. Code: 2
+		/// </summary>
+		Rejected,
 
-        public bool success {
-            get {
-                return code == "success" ? true : false;
-            }
-        }
-    }
+		/// <summary>
+		/// Please check your socket host and port. Code: 3
+		/// </summary>
+		Error,
 
-    [System.Serializable]
-    public class BC_USN_Response_Data
-    {
-        public string session = string.Empty;
-        public string cookie = string.Empty;
-        public string avatar = string.Empty;
-        public string id = string.Empty;
-        public string uname = string.Empty;
-        public string dname = string.Empty;
-        public string email = string.Empty;
-        public string[] roles;
 
-        public  BC_USN_Token token {
-            get {
-                return new BC_USN_Token(id, session);
-            }
-        }
-        
-    }
+		
+		/// <summary>
+		/// Game is currenly inactive and block want new connection. Code: 4
+		/// </summary>
+		Inactive,
+		/// <summary>
+		/// Game is currenly at its limit and cant accept new connection Code: 5
+		/// </summary>
+		Overload,
+		/// <summary>
+		/// Users account is currently online. Code: 6
+		/// </summary>
+		Online,
+
+		/// <summary>
+		/// USocketClient is currently performing task. Code: 7
+		/// </summary>
+		Busy,
+	}
 }

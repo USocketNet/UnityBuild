@@ -91,13 +91,13 @@ namespace BytesCrafter.USocketNet.Networks {
 					if (threadset.websocket.IsConnected)
 					{
 						EmitEvent("connect");
-						usnClient.OnConnect( true );
+						//usnClient.OnConnect( true );
 					}
 
 					else
 					{
 						EmitEvent("disconnect");
-						usnClient.OnDisconnect( true );
+						//usnClient.OnDisconnect( true );
 					}
 				}
 
@@ -158,7 +158,7 @@ namespace BytesCrafter.USocketNet.Networks {
 			queueCoder.Starts();
 			
 			//WEB SOCKET INITIALIZATION	
-			string hostUrl = usnClient.options.serverUrl + ":" + usnClient.options.serverPort;
+			string hostUrl = usnClient.config.serverUrl + ":" + usnClient.config.serverPort;
 			string sioPath = "/socket.io/?EIO=4&transport=websocket";
 			string usrTok = "&wpid=" + usnClient.GetToken.wpid + "&snid=" + usnClient.GetToken.snid;
 

@@ -1,7 +1,6 @@
-﻿
-#region License
+﻿#region License
 /*
- * Response.cs
+ * JSONProcessor.cs
  *
  * Copyright (c) 2020 Bytes Crafter
  *
@@ -25,39 +24,19 @@
  */
 #endregion
 
-namespace BytesCrafter.USocketNet.Serializables 
-{
-    [System.Serializable]
-    public class BC_USN_Response
-    {
-        public string code = "error";
-        public string message = string.Empty;
-        public BC_USN_Response_Data data = null;
+using UnityEngine;
 
-        public bool success {
-            get {
-                return code == "success" ? true : false;
-            }
-        }
+public class JSONProcessor : MonoBehaviour
+{
+   public static T ToObject<T>(string jsonString)
+    {
+        string trimmed = jsonString.TrimStart ('[');
+        trimmed = trimmed.TrimEnd (']');
+        return JsonUtility.FromJson<T> (trimmed);
     }
 
-    [System.Serializable]
-    public class BC_USN_Response_Data
+    public static string FromObject(object jsonObject)
     {
-        public string session = string.Empty;
-        public string cookie = string.Empty;
-        public string avatar = string.Empty;
-        public string id = string.Empty;
-        public string uname = string.Empty;
-        public string dname = string.Empty;
-        public string email = string.Empty;
-        public string[] roles;
-
-        public  BC_USN_Token token {
-            get {
-                return new BC_USN_Token(id, session);
-            }
-        }
-        
+        return JsonUtility.ToJson(jsonObject);
     }
 }

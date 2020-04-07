@@ -1,3 +1,30 @@
+
+#region License
+/*
+ * JSONOject.cs
+ *
+ * Copyright (c) 2020 Bytes Crafter
+ *
+ * Permission is hereby granted to any person obtaining a copy from our store
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software with restriction to the rights to modify, merge, publish, 
+ * distribute, sublicense, and/or sell copies of the Software, and to permit 
+ * persons to whom the Software is furnished to do so, subject to the following 
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+#endregion
+
 #define PRETTY		//Comment out when you no longer need to read JSON to disable pretty Print system-wide
 //Using doubles will cause errors in VectorTemplates.cs; Unity speaks floats
 #define USEFLOAT	//Use floats for numbers instead of doubles	(enable if you're getting too many significant digits in string output)
@@ -9,13 +36,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using Debug = UnityEngine.Debug;
-
-/*
- * http://www.opensource.org/licenses/lgpl-2.1.php
- * JSONObject class
- * for use with Unity
- * Copyright Matt Schoen 2010 - 2013
- */
 
 public class JSONObject {
 #if POOLING

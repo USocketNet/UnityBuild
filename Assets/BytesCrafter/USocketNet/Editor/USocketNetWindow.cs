@@ -111,10 +111,10 @@ namespace BytesCrafter.USocketNet
 			EditorGUILayout.LabelField (totalLocalViews.ToString());
 			EditorGUILayout.EndHorizontal ();
 
-			EditorGUILayout.BeginHorizontal ();
-			EditorGUILayout.LabelField ("USocketView Peers: ");
-			EditorGUILayout.LabelField (USocketNet.Instance.socketIdentities.Count.ToString());
-			EditorGUILayout.EndHorizontal ();
+			// EditorGUILayout.BeginHorizontal ();
+			// EditorGUILayout.LabelField ("USocketView Peers: ");
+			// EditorGUILayout.LabelField (USocketNet.Instance.socketIdentities.Count.ToString());
+			// EditorGUILayout.EndHorizontal ();
 
 			EditorGUILayout.Separator ();
 			GUILayout.Label ("Data Traffics", EditorStyles.boldLabel);

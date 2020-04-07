@@ -19,7 +19,7 @@ namespace BytesCrafter.USocketNet.Toolsets
 
         public void Push(BC_USN_Debug logType, string title, string details) 
         {
-            if(!usnClient.options.debugOnLog)
+            if(!usnClient.config.debugOnLog)
 				return;
 
             switch( logType ) 

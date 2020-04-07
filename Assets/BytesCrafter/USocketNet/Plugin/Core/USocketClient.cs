@@ -2,6 +2,7 @@
 using UnityEngine;
 
 using BytesCrafter.USocketNet.Serializables;
+using BytesCrafter.USocketNet.Serials;
 using BytesCrafter.USocketNet.Networks;
 using BytesCrafter.USocketNet.Toolsets;
 using BytesCrafter.USocketNet.RestApi;
@@ -17,10 +18,10 @@ namespace BytesCrafter.USocketNet
 		#region VARIABLES
 
 		/// <summary>
-		/// This is the host and client options.
+		/// This is the host and client config.
 		/// </summary>
 		/// <returns></returns>
-		public BC_USN_Option options = new BC_USN_Option();
+		public Config config = new Config();
 
 		/// <summary>
 		/// Determines whether this client is connected to web socket server.
@@ -74,12 +75,12 @@ namespace BytesCrafter.USocketNet
 			bc_usn_restapi = new BC_USN_RestApi( this );
 			bc_usn_websocket = new BC_USN_WebSocket( this );
 
-			//Client INITIALIZATION options before it run.
-			if(options.dontDestroyOnLoad)
+			//Client INITIALIZATION config before it run.
+			if(config.dontDestroyOnLoad)
 			{
 				DontDestroyOnLoad(this);
 			}
-			Application.runInBackground = options.runOnBackground;
+			Application.runInBackground = config.runOnBackground;
 		}
 
 		void Update()
@@ -129,7 +130,7 @@ namespace BytesCrafter.USocketNet
 		/// <param name="callback">Callback.</param>
 		public void Connect( Action<ConStat> callback )
 		{
-			if( options.serverUrl == string.Empty || options.serverPort == string.Empty )
+			if( config.serverUrl == string.Empty || config.serverPort == string.Empty )
 			{
 				bc_usn_logger.Push(BC_USN_Debug.Warn, "ConnectionError", "Please fill up USocketNet host field on this USocketClient: " + name);
 				callback( ConStat.Error );
@@ -165,28 +166,6 @@ namespace BytesCrafter.USocketNet
 		protected virtual void OnStart( bool auto )
 		{
 			Logs(BC_USN_Debug.Log, "Starting", "");
-		}
-
-
-
-		public void OnConnect( bool recon )
-		{
-			OnConnection( recon );
-		}
-
-		protected virtual void OnConnection( bool recon )
-		{
-			Logs(BC_USN_Debug.Log, "Connect", "");
-		}
-
-		public void OnDisconnect( bool auto )
-		{
-			OnDisconnection( auto );
-		}
-
-		protected virtual void OnDisconnection( bool auto )
-		{
-			Logs(BC_USN_Debug.Log, "Disconnect", "");
 		}
 	}
 }

@@ -82,17 +82,17 @@ public class Demoguy : USocketClient
 	}
 
 
-	#region LISTENERS SAMPLE
-	protected override void OnConnection(bool auto)
-	{
-		UnityEngine.Debug.LogWarning("OnReconnection @ " + auto);
-	}
+	// #region LISTENERS SAMPLE
+	// protected override void OnConnection(bool auto)
+	// {
+	// 	UnityEngine.Debug.LogWarning("OnReconnection @ " + auto);
+	// }
 
-	protected override void OnDisconnection(bool auto)
-	{
-		UnityEngine.Debug.LogWarning("OnDisconnection @ " + auto);
-	}
-	#endregion
+	// protected override void OnDisconnection(bool auto)
+	// {
+	// 	UnityEngine.Debug.LogWarning("OnDisconnection @ " + auto);
+	// }
+	// #endregion
 
 
 	
@@ -181,33 +181,33 @@ public class Demoguy : USocketClient
 		// }
 	}
 
-	private void ListenOnMessage(MsgJson msgJson)
-	{
-		if(msgJson.mt == MsgType.Public)
-		{
-			publicViewer.Logs(msgJson.sd + ": " + msgJson.ct);
-		}
+	// private void ListenOnMessage(MsgJson msgJson)
+	// {
+	// 	if(msgJson.mt == MsgType.Public)
+	// 	{
+	// 		publicViewer.Logs(msgJson.sd + ": " + msgJson.ct);
+	// 	}
 
-		else if(msgJson.mt == MsgType.Private)
-		{
-			privateViewer.Logs(msgJson.sd + ": " + msgJson.ct);
-		}
+	// 	else if(msgJson.mt == MsgType.Private)
+	// 	{
+	// 		privateViewer.Logs(msgJson.sd + ": " + msgJson.ct);
+	// 	}
 
-		else
-		{
-			channelViewer.Logs(msgJson.sd + ": " + msgJson.ct);
-		}
-	}
+	// 	else
+	// 	{
+	// 		channelViewer.Logs(msgJson.sd + ": " + msgJson.ct);
+	// 	}
+	// }
 
-	private void ListenOnMatchJoined(PeerJson peerJson)
-	{
-		channelViewer.Logs(peerJson.id + " had joined.");
-	}
+	// private void ListenOnMatchJoined(PeerJson peerJson)
+	// {
+	// 	channelViewer.Logs(peerJson.id + " had joined.");
+	// }
 
-	private void listenOnLeaved(PeerJson peerJson)
-	{
-		channelViewer.Logs(peerJson.id + " had leaved.");
-	}
+	// private void listenOnLeaved(PeerJson peerJson)
+	// {
+	// 	channelViewer.Logs(peerJson.id + " had leaved.");
+	// }
 
 	#endregion
 

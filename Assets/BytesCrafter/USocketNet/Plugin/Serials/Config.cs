@@ -1,7 +1,7 @@
 ﻿
 #region License
 /*
- * Response.cs
+ * Config.cs
  *
  * Copyright (c) 2020 Bytes Crafter
  *
@@ -25,39 +25,21 @@
  */
 #endregion
 
-namespace BytesCrafter.USocketNet.Serializables 
+using UnityEngine;
+
+namespace BytesCrafter.USocketNet.Serials
 {
-    [System.Serializable]
-    public class BC_USN_Response
-    {
-        public string code = "error";
-        public string message = string.Empty;
-        public BC_USN_Response_Data data = null;
+	[System.Serializable]
+	public class Config
+	{
+		[Header("HOST SETTINGS")]
+		public string restapiUrl = "localhost";
+		public string serverUrl = "localhost";
+		public string serverPort = "19090";
 
-        public bool success {
-            get {
-                return code == "success" ? true : false;
-            }
-        }
-    }
-
-    [System.Serializable]
-    public class BC_USN_Response_Data
-    {
-        public string session = string.Empty;
-        public string cookie = string.Empty;
-        public string avatar = string.Empty;
-        public string id = string.Empty;
-        public string uname = string.Empty;
-        public string dname = string.Empty;
-        public string email = string.Empty;
-        public string[] roles;
-
-        public  BC_USN_Token token {
-            get {
-                return new BC_USN_Token(id, session);
-            }
-        }
-        
-    }
+		[Header("CLIENT SETTINGS")]
+		public bool debugOnLog = true;
+		public bool dontDestroyOnLoad = true;
+		public bool runOnBackground = true;
+	}
 }

@@ -27,7 +27,7 @@ namespace BytesCrafter.USocketNet.RestApi {
         private BC_USN_Response_Data curUser = new BC_USN_Response_Data();
         public void Authenticate(string uname, string pword, USocketClient usnClient, Action<BC_USN_Response> callback) 
         {
-            if( usnClient.options.restapiUrl == string.Empty )
+            if( usnClient.config.restapiUrl == string.Empty )
 			{
 				usnClient.Logs(BC_USN_Debug.Warn, "RestApi", "Please fill up RestApi url on this USocketClient: " + usnClient.name);
 				callback( new BC_USN_Response() );
@@ -43,7 +43,7 @@ namespace BytesCrafter.USocketNet.RestApi {
             creds.AddField("UN", uname);
             creds.AddField("PW", pword);
 
-            string rapi = usnClient.options.restapiUrl;
+            string rapi = usnClient.config.restapiUrl;
             string startString = rapi[0] == 'h' && rapi[1] == 't' && rapi[2] == 't' && rapi[3] == 'p' ? "" : "http://";
             string endString = rapi[rapi.Length - 1] == '/' ? "" : "/";
             var request = UnityWebRequest.Post( startString + rapi + endString + "wp-json/usocketnet/v1/auth", creds);

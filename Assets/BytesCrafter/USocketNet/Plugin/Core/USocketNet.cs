@@ -31,9 +31,6 @@ namespace BytesCrafter.USocketNet
 		/// </summary>
 		public List<USocketClient> usocketNets = new List<USocketClient>();
 
-		/// <summary>
-		/// The socket view of all the other machine's.
-		/// </summary>
-		public List<USocketView> socketIdentities = new List<USocketView>();
+
 	}
 }
