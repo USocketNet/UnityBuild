@@ -143,7 +143,6 @@ MonoBehaviour:
     serverUrl: localhost
     serverPort: 19090
     debugOnLog: 1
-    dontDestroyOnLoad: 1
     runOnBackground: 1
 --- !u!1001 &1556402040
 PrefabInstance:
@@ -293,5 +292,10 @@ PrefabInstance:
       propertyPath: m_Text
       value: admin
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 1520890568133654, guid: 2960126293d1e874cbd19fad233696c0, type: 3}
+      propertyPath: m_Name
+      value: SignOut
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 114250161575234646, guid: 2960126293d1e874cbd19fad233696c0, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2960126293d1e874cbd19fad233696c0, type: 3}

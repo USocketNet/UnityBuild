@@ -31,13 +31,11 @@ using UnityEngine;
 using BytesCrafter.USocketNet.Serials;
 using BytesCrafter.USocketNet.Networks;
 using BytesCrafter.USocketNet.Toolsets;
-using BytesCrafter.USocketNet.RestApi;
 
 namespace BytesCrafter.USocketNet
 {
 	public class USNClient : MonoBehaviour
 	{
-		
 		private BC_USN_WebSocket bc_usn_websocket = null;
 
 		#region VARIABLES
@@ -123,8 +121,6 @@ namespace BytesCrafter.USocketNet
 
 		#endregion
 
-		
-
 		/// <summary>
 		/// Connects to server using user specific credentials.
 		/// </summary>
@@ -159,14 +155,14 @@ namespace BytesCrafter.USocketNet
 			bc_usn_websocket.ForceDisconnect();
 		}
 
-		void Start() 
-		{
-			OnStart(true);
-		}
+		// void Start() 
+		// {
+		// 	OnStart(true);
+		// }
 
-		protected virtual void OnStart( bool auto )
-		{
-			USocketNet.Log(Logs.Log, "Starting", "");
-		}
+		// protected virtual void OnStart( bool auto )
+		// {
+		// 	USocketNet.Log(Logs.Log, "Starting", "");
+		// }
 	}
 }

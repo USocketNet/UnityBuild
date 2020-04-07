@@ -2774,7 +2774,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Connect
+  m_Text: SIGN IN
 --- !u!1 &1455686261176582
 GameObject:
   m_ObjectHideFlags: 0
@@ -4479,7 +4479,6 @@ MonoBehaviour:
     serverUrl: localhost
     serverPort: 19090
     debugOnLog: 1
-    dontDestroyOnLoad: 1
     runOnBackground: 1
 --- !u!114 &114934323213285524
 MonoBehaviour:
@@ -4493,20 +4492,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fe0513710b529e4c8226f0aaf8844b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  config:
-    restapiUrl: localhost
-    serverUrl: localhost
-    serverPort: 19090
-    debugOnLog: 1
-    dontDestroyOnLoad: 1
-    runOnBackground: 1
-  netScpt: {fileID: 114250161575234646}
   canvasGroup:
   - {fileID: 225953205541612174}
   - {fileID: 225920613851223360}
   - {fileID: 225706664512904932}
   username: {fileID: 114726328471849948}
   password: {fileID: 114286648730245742}
+  serverConfig:
+    restapiUrl: localhost
+    serverUrl: localhost
+    serverPort: 19090
+    debugOnLog: 1
+    runOnBackground: 1
   pubMsgContent: {fileID: 114613836745214860}
   publicViewer: {fileID: 114509137531617980}
   priMsgContent: {fileID: 114331141080882040}
@@ -4516,8 +4513,6 @@ MonoBehaviour:
   channelViewer: {fileID: 114772660469484532}
   roomname: {fileID: 114450572277314798}
   pingSocket: {fileID: 114219214286460100}
-  spawnPoint: []
-  gameVariant: Demoguy Single
 --- !u!1 &1671801635185572
 GameObject:
   m_ObjectHideFlags: 0
@@ -6575,7 +6570,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Disconnect
+  m_Text: SIGN OUT
 --- !u!1 &1812808642923052
 GameObject:
   m_ObjectHideFlags: 0

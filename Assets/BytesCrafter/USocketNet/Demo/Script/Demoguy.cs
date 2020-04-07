@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using BytesCrafter.USocketNet;
 using BytesCrafter.USocketNet.Serials;
 
-public class Demoguy : USocketNet
+public class Demoguy : MonoBehaviour
 {
 	#region Variablles and References
 
@@ -29,36 +29,30 @@ public class Demoguy : USocketNet
 
 	#region CONNECTION
 
-	//Connecting to server with callbacks.
 	public void ConnectToServer()
 	{
 		//STEP3: You now need to authenticate the user with username and password to ask for the
 		// server for a token to be able for us to connect to the websocket port.
 		USocketNet.Core.Authenticate (username.text, password.text, (BC_USN_Response response) =>
 		{
-			if( response.success )
-			{
+			if( response.success ) {
+				ChangeCanvas(1);
 				// netScript.Connect( (ConStat conStat) => {
-				// 	if( conStat == ConStat.Success ) {
-				// 		ChangeCanvas(1);
+					// if( conStat == ConStat.Success ) {
+					// 		UnityEngine.Debug.Log("WPID: " + response.data.id + " SNID: " + response.data.session + " Response: " + conStat.ToString() + " SID:" + netScript.Identity);
+					// });
 				// 	}
-
-				// 	UnityEngine.Debug.Log("WPID: " + response.data.id + " SNID: " + response.data.session + " Response: " + conStat.ToString() + " SID:" + netScript.Identity);
-				// });
-				
-			}
-
-			else
-			{
+			} else {
 				
 			}
 		});
 	}
 
-	//Disconnecting to server.
 	public void DisconnectFromServer()
 	{
-		//netScript.Disconnect ();
+		//OPTIONAL: You can call SignOut to forcibly close all client associated with this USocketNet
+		// instance. Also, the if Reauthentication on app load will be postpone.
+		USocketNet.Core.SignOut ();
 		ChangeCanvas(0);
 	}
 

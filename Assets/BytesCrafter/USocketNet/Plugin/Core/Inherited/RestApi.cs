@@ -105,5 +105,10 @@ namespace BytesCrafter.USocketNet.RestApi {
                 }
             }
         }
+
+        public void Deauthenticate()
+        {
+            responseData = new BC_USN_Response_Data();
+        }
     }
 }

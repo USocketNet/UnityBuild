@@ -71,6 +71,14 @@ namespace BytesCrafter.USocketNet
 		}
 		private static BC_USN_Logger logger;
 
+		public bool isAuthenticated
+        {
+            get
+            {
+                return restApi.isAuthenticated;
+            }
+        }
+
 		public static BC_USN_Response_Data User
 		{
 			get {
@@ -111,6 +119,16 @@ namespace BytesCrafter.USocketNet
 					callback(response);
 				}
 			});
+		}
+
+		public void SignOut()
+		{
+			if( restApi.isAuthenticated ) {
+				restApi.Deauthenticate();
+			} else {
+				USocketNet.Log(Logs.Warn, "RestApi", "You are not authenticated thus you dont have to sign out.");
+			}
+			
 		}
 	}
 }
