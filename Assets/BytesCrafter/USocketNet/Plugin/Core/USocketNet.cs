@@ -142,11 +142,11 @@ namespace BytesCrafter.USocketNet
 		}
 		private MasterClient masterClient;
 
-		public void Connect( Action<ConStat> callback )
+		public void Connect(string appsecret, Action<ConStat> callback )
 		{
 			if( masterClient == null ) {
 				masterClient = new GameObject("MasterClient").AddComponent<MasterClient>();
-				masterClient.Connect(callback);
+				masterClient.Connect(appsecret, callback);
 			} else {
 				callback( ConStat.Online );
 			}
@@ -164,10 +164,10 @@ namespace BytesCrafter.USocketNet
 
 		private ChatClient chatClient;
 
-		public void AddChatClient( Action<ConStat> callback )
+		public void AddChatClient(string appsecret, Action<ConStat> callback )
 		{
 			chatClient = new GameObject("ChatClient").AddComponent<ChatClient>();
-			chatClient.Connect(callback);
+			chatClient.Connect(appsecret, callback);
 		}
 
 		public void RemoveChatClient()
@@ -178,10 +178,10 @@ namespace BytesCrafter.USocketNet
 
 		private GameClient gameClient;
 
-		public void AddGameClient( Action<ConStat> callback )
+		public void AddGameClient(string appsecret, Action<ConStat> callback )
 		{
 			gameClient = new GameObject("GameClient").AddComponent<GameClient>();
-			gameClient.Connect(callback);
+			gameClient.Connect(appsecret, callback);
 		}
 
 		public void RemoveGameClient()

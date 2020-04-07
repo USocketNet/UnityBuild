@@ -25,6 +25,7 @@ public class Demoguy : MonoBehaviour
 	[Header("Connections")]
 	public InputField username = null;
 	public InputField password = null;
+	public InputField appsecret = null;
 
 	#endregion
 
@@ -38,7 +39,7 @@ public class Demoguy : MonoBehaviour
 		{
 			if( response.success ) {
 				ChangeCanvas(1);
-				USocketNet.Core.Connect( (ConStat conStat) => {
+				USocketNet.Core.Connect(appsecret.text, (ConStat conStat) => {
 					if( conStat == ConStat.Success ) {
 						USocketNet.Log(Logs.Warn, "Demogguy", "WPID: " + response.data.id + " SNID: " + response.data.session 
 							+ " Response: " + conStat.ToString() + " MID:" + USocketNet.Core.Master.Identity);
@@ -75,7 +76,7 @@ public class Demoguy : MonoBehaviour
 
 	public void AddChatClient()
 	{
-		USocketNet.Core.AddChatClient( (ConStat conStat) => {
+		USocketNet.Core.AddChatClient(appsecret.text, (ConStat conStat) => {
 
 		});
 	}
@@ -87,7 +88,7 @@ public class Demoguy : MonoBehaviour
 
 	public void AddGameClient()
 	{
-		USocketNet.Core.AddGameClient( (ConStat conStat) => {
+		USocketNet.Core.AddGameClient(appsecret.text, (ConStat conStat) => {
 
 		});
 	}

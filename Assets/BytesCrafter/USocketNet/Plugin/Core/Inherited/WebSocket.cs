@@ -173,7 +173,7 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		#region Connection Mechanism
 
-        public void InitConnection(string port, Action<ConStat> callback) 
+        public void InitConnection(string appsecret, string port, Action<ConStat> callback) 
         {
 			threadset.IsInitialized = true;
 			queueCoder.Starts();
@@ -181,7 +181,7 @@ namespace BytesCrafter.USocketNet.Networks {
 			//WEB SOCKET INITIALIZATION	
 			string hostUrl = USocketNet.config.serverUrl + ":" + port;
 			string sioPath = "/socket.io/?EIO=4&transport=websocket";
-			string usrTok = "&wpid=" + USocketNet.User.token.wpid + "&snid=" + USocketNet.User.token.snid;
+			string usrTok = "&wpid=" + USocketNet.User.token.wpid + "&snid=" + USocketNet.User.token.snid + "&apid=" + appsecret;
 
 			threadset.websocket = new WebSocket("ws://" + hostUrl + sioPath + usrTok);
 			threadset.websocket.OnOpen += OnOpen;
