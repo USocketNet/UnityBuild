@@ -28,7 +28,6 @@
 using System; 
 using UnityEngine;
 
-using BytesCrafter.USocketNet.Serializables;
 using BytesCrafter.USocketNet.Serials;
 using BytesCrafter.USocketNet.Networks;
 using BytesCrafter.USocketNet.Toolsets;
@@ -38,7 +37,7 @@ namespace BytesCrafter.USocketNet
 {
 	public class USNClient : MonoBehaviour
 	{
-		private BC_USN_RestApi bc_usn_restapi = null;
+		
 		private BC_USN_WebSocket bc_usn_websocket = null;
 
 		#region VARIABLES
@@ -79,7 +78,7 @@ namespace BytesCrafter.USocketNet
 		/// <value></value>
 		public BC_USN_Token GetToken {
 			get {
-				return bc_usn_restapi.GetUserData.token;
+				return USocketNet.User.token;
 			}
 		}
 
@@ -91,15 +90,10 @@ namespace BytesCrafter.USocketNet
 		void Awake()
 		{
 			//Put all child script to be initialized as CLASS.
-			
-			bc_usn_restapi = new BC_USN_RestApi( this );
 			bc_usn_websocket = new BC_USN_WebSocket( this );
 
 			//Client INITIALIZATION config before it run.
-			if(config.dontDestroyOnLoad)
-			{
-				DontDestroyOnLoad(this);
-			}
+			DontDestroyOnLoad(this);
 			Application.runInBackground = config.runOnBackground;
 		}
 
@@ -129,20 +123,7 @@ namespace BytesCrafter.USocketNet
 
 		#endregion
 
-		/// <summary>
-		/// Authenticate the user to your Rest Api host.
-		/// </summary>
-		/// <param name="uname">Username.</param>
-		/// <param name="pword">Password.</param>
-		/// <param name="callback">Callback.</param>
-		public void Authenticate( string uname, string pword, Action<BC_USN_Response> callback ) {
-			bc_usn_restapi.Authenticate(uname, pword, this, (BC_USN_Response response) => {
-				if( response.success ) {
-					USocketNet.Log(Logs.Log, "Code: " + response.code, " Message: " + response.message);
-					callback(response);
-				}
-			});
-		}
+		
 
 		/// <summary>
 		/// Connects to server using user specific credentials.

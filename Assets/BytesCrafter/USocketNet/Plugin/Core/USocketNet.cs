@@ -29,6 +29,7 @@ using System;
 using System.Collections.Generic;
 
 using UnityEngine;
+using BytesCrafter.USocketNet.RestApi;
 using BytesCrafter.USocketNet.Serials;
 using BytesCrafter.USocketNet.Toolsets;
 
@@ -40,14 +41,10 @@ namespace BytesCrafter.USocketNet
 		public static Config config
 		{
 			get {
-				if(isInitialized) {
-					return staticConfig;
-				} else {
-					return null;
-				}
+				return staticConfig;
 			}
 		}
-		private static Config staticConfig;  
+		private static Config staticConfig = new Config();  
 
 		public static bool isInitialized
 		{
@@ -70,15 +67,21 @@ namespace BytesCrafter.USocketNet
 
 		public static void Log ( Logs log, string title, string info ) 
 		{
-			if(isInitialized)
-			{
-				logger.Push(Logs.Warn, "USocketNet", "The USN core instance is not yet initialize.");
-				return;
-			}
-
 			logger.Push(log, title, info);
 		}
 		private static BC_USN_Logger logger;
+
+		public static BC_USN_Response_Data User
+		{
+			get {
+				if(restApi.isAuthenticated) {
+					return restApi.curUser;
+				} else {
+					return null;
+				}
+			}
+		}
+		private static BC_USN_RestApi restApi = new BC_USN_RestApi();
 
 		public static void Initialized(Config refsConfig)
 		{
@@ -93,6 +96,21 @@ namespace BytesCrafter.USocketNet
 		{
 			DontDestroyOnLoad(this);
 			Application.runInBackground = USocketNet.config.runOnBackground;
+		}
+
+		/// <summary>
+		/// Authenticate the user to your Rest Api host.
+		/// </summary>
+		/// <param name="uname">Username.</param>
+		/// <param name="pword">Password.</param>
+		/// <param name="callback">BC_USN_Response.</param>
+		public void Authenticate( string uname, string pword, Action<BC_USN_Response> callback )
+		{
+			restApi.Authenticate(this, uname, pword, (BC_USN_Response response) => {
+				if( response.success ) {
+					callback(response);
+				}
+			});
 		}
 	}
 }

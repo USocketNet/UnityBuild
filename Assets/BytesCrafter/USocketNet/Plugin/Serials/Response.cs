@@ -25,7 +25,7 @@
  */
 #endregion
 
-namespace BytesCrafter.USocketNet.Serializables 
+namespace BytesCrafter.USocketNet.Serials 
 {
     [System.Serializable]
     public class BC_USN_Response

@@ -3,26 +3,10 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using BytesCrafter.USocketNet;
 using BytesCrafter.USocketNet.Serials;
-using BytesCrafter.USocketNet.Serializables;
 
 public class Demoguy : USocketNet
 {
 	#region Variablles and References
-	
-	
-
-	public USNClient netScpt = null;
-	public USNClient netScript
-	{
-		get {
-			if(netScpt == null)
-			{
-				netScpt = GameObject.FindObjectOfType<USNClient> ();
-			}
-
-			return netScpt;
-		}
-	}
 
 	[Header("CANVAS DISPLAYS")]
 	public List<CanvasGroup> canvasGroup = new List<CanvasGroup>();
@@ -48,31 +32,33 @@ public class Demoguy : USocketNet
 	//Connecting to server with callbacks.
 	public void ConnectToServer()
 	{
-		netScript.Authenticate (username.text, password.text, (BC_USN_Response response) =>
+		//STEP3: You now need to authenticate the user with username and password to ask for the
+		// server for a token to be able for us to connect to the websocket port.
+		USocketNet.Core.Authenticate (username.text, password.text, (BC_USN_Response response) =>
+		{
+			if( response.success )
 			{
-				if( response.success )
-				{
-					netScript.Connect( (ConStat conStat) => {
-						if( conStat == ConStat.Success ) {
-							ChangeCanvas(1);
-						}
+				// netScript.Connect( (ConStat conStat) => {
+				// 	if( conStat == ConStat.Success ) {
+				// 		ChangeCanvas(1);
+				// 	}
 
-						UnityEngine.Debug.Log("WPID: " + response.data.id + " SNID: " + response.data.session + " Response: " + conStat.ToString() + " SID:" + netScript.Identity);
-					});
-					
-				}
+				// 	UnityEngine.Debug.Log("WPID: " + response.data.id + " SNID: " + response.data.session + " Response: " + conStat.ToString() + " SID:" + netScript.Identity);
+				// });
+				
+			}
 
-				else
-				{
-					
-				}
-			});
+			else
+			{
+				
+			}
+		});
 	}
 
 	//Disconnecting to server.
 	public void DisconnectFromServer()
 	{
-		netScript.Disconnect ();
+		//netScript.Disconnect ();
 		ChangeCanvas(0);
 	}
 
@@ -82,7 +68,7 @@ public class Demoguy : USocketNet
 	/// STEP1: Important! You need to declare 'Config' variable to set your restapi and websocket url.
 	/// The said class can be derived from this namespace: BytesCrafter.USocketNet.Serials;
 	/// </summary>
-	public Config serverConfig; 
+	public Config serverConfig = new Config(); 
 
 	void Awake()
 	{

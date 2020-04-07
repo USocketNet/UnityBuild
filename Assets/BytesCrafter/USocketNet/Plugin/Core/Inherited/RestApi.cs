@@ -32,36 +32,39 @@ using System;
 using System.Text;
 using System.Collections;
 
-using BytesCrafter.USocketNet.Serializables;
+using BytesCrafter.USocketNet.Serials;
 using BytesCrafter.USocketNet.Toolsets;
 
 namespace BytesCrafter.USocketNet.RestApi {
     public class BC_USN_RestApi 
     {
-        private USNClient usnClient = null;
-        public BC_USN_RestApi( USNClient reference )
-        {
-            usnClient = reference;
-        }
-
-        public BC_USN_Response_Data GetUserData
+        public BC_USN_Response_Data curUser
         {
             get 
             {
-                return curUser; 
+                return responseData; 
             }
         }
-        private BC_USN_Response_Data curUser = new BC_USN_Response_Data();
-        public void Authenticate(string uname, string pword, USNClient usnClient, Action<BC_USN_Response> callback) 
+        private BC_USN_Response_Data responseData = new BC_USN_Response_Data();
+
+        public bool isAuthenticated
         {
-            if( usnClient.config.restapiUrl == string.Empty )
+            get
+            {
+                return responseData.session != string.Empty ? true : false;
+            }
+        }
+
+        public void Authenticate(USocketNet usn, string uname, string pword, Action<BC_USN_Response> callback) 
+        {
+            if( USocketNet.config.restapiUrl == string.Empty )
 			{
-				USocketNet.Log(Logs.Warn, "RestApi", "Please fill up RestApi url on this USNClient: " + usnClient.name);
+				USocketNet.Log(Logs.Warn, "RestApi", "Please fill up RestApi url on this USocketNet core instance.");
 				callback( new BC_USN_Response() );
 				return;
 			}
             
-            usnClient.StartCoroutine( Authenticating(uname, pword, callback) );
+            USocketNet.Core.StartCoroutine( Authenticating(uname, pword, callback) );
         }
         
         IEnumerator Authenticating( string uname, string pword, Action<BC_USN_Response> callback ) 
@@ -70,7 +73,7 @@ namespace BytesCrafter.USocketNet.RestApi {
             creds.AddField("UN", uname);
             creds.AddField("PW", pword);
 
-            string rapi = usnClient.config.restapiUrl;
+            string rapi = USocketNet.config.restapiUrl;
             string startString = rapi[0] == 'h' && rapi[1] == 't' && rapi[2] == 't' && rapi[3] == 'p' ? "" : "http://";
             string endString = rapi[rapi.Length - 1] == '/' ? "" : "/";
             var request = UnityWebRequest.Post( startString + rapi + endString + "wp-json/usocketnet/v1/auth", creds);
@@ -91,7 +94,7 @@ namespace BytesCrafter.USocketNet.RestApi {
                 if( response.success )
                 {
                     USocketNet.Log(Logs.Log, "RestApi", "Welcome! " +response.data.dname+ " [" +response.data.email+ "]" );
-                    curUser = response.data;
+                    responseData = response.data;
                     callback( response );
                 }
 

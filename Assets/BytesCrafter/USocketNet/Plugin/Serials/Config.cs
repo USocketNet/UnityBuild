@@ -38,8 +38,7 @@ namespace BytesCrafter.USocketNet.Serials
 		public string serverPort = "19090";
 
 		[Header("CLIENT SETTINGS")]
-		public bool debugOnLog = true;
-		public bool dontDestroyOnLoad = true;
-		public bool runOnBackground = true;
+		public bool debugOnLog = false;
+		public bool runOnBackground = false;
 	}
 }
