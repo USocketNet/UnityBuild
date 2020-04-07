@@ -38,7 +38,7 @@ namespace BytesCrafter.USocketNet
 {
 	public class USocketClient : MonoBehaviour
 	{
-		private BC_USN_Logger bc_usn_logger = null;
+		
 		private BC_USN_RestApi bc_usn_restapi = null;
 		private BC_USN_WebSocket bc_usn_websocket = null;
 
@@ -87,18 +87,12 @@ namespace BytesCrafter.USocketNet
 		#endregion
 
 		#region MONOBEHAVIOUR
-		public void Logs ( BC_USN_Debug log, string title, string info ) 
-		{
-			if(bc_usn_logger == null)
-				return;
-
-			bc_usn_logger.Push(log, title, info);
-		}
+		
 
 		void Awake()
 		{
 			//Put all child script to be initialized as CLASS.
-			bc_usn_logger = new BC_USN_Logger( this );
+			
 			bc_usn_restapi = new BC_USN_RestApi( this );
 			bc_usn_websocket = new BC_USN_WebSocket( this );
 
@@ -145,7 +139,7 @@ namespace BytesCrafter.USocketNet
 		public void Authenticate( string uname, string pword, Action<BC_USN_Response> callback ) {
 			bc_usn_restapi.Authenticate(uname, pword, this, (BC_USN_Response response) => {
 				if( response.success ) {
-					Logs(BC_USN_Debug.Log, "Code: " + response.code, " Message: " + response.message);
+					USocketNet.Log(Logs.Log, "Code: " + response.code, " Message: " + response.message);
 					callback(response);
 				}
 			});
@@ -159,7 +153,7 @@ namespace BytesCrafter.USocketNet
 		{
 			if( config.serverUrl == string.Empty || config.serverPort == string.Empty )
 			{
-				bc_usn_logger.Push(BC_USN_Debug.Warn, "ConnectionError", "Please fill up USocketNet host field on this USocketClient: " + name);
+				USocketNet.Log(Logs.Warn, "ConnectionError", "Please fill up USocketNet host field on this USocketClient: " + name);
 				callback( ConStat.Error );
 				return;
 			}
@@ -171,7 +165,7 @@ namespace BytesCrafter.USocketNet
 
 			else
 			{
-				bc_usn_logger.Push(BC_USN_Debug.Warn, "ConnectionSuccess", "Already connected to the server!");
+				USocketNet.Log(Logs.Warn, "ConnectionSuccess", "Already connected to the server!");
 				callback( ConStat.Invalid );
 			}
 		}
@@ -192,7 +186,7 @@ namespace BytesCrafter.USocketNet
 
 		protected virtual void OnStart( bool auto )
 		{
-			Logs(BC_USN_Debug.Log, "Starting", "");
+			USocketNet.Log(Logs.Log, "Starting", "");
 		}
 	}
 }

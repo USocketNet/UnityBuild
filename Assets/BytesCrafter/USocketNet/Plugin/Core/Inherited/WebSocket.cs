@@ -156,14 +156,14 @@ namespace BytesCrafter.USocketNet.Networks {
 		{
 			if (!queueCoder.handlers.ContainsKey(events))
 			{
-				usnClient.Logs(BC_USN_Debug.Warn, "CallbackOffMissing", "No callbacks registered for event: " + events);
+				USocketNet.Log(Logs.Warn, "CallbackOffMissing", "No callbacks registered for event: " + events);
 				return;
 			}
 
 			List<Action<SocketIOEvent>> eventList = queueCoder.handlers[events];
 			if (!eventList.Contains(callback))
 			{
-				usnClient.Logs(BC_USN_Debug.Warn, "CallbackOffCantRemove", "Couldn't remove callback action for event: " + events);
+				USocketNet.Log(Logs.Warn, "CallbackOffCantRemove", "Couldn't remove callback action for event: " + events);
 				return;
 			}
 
@@ -259,17 +259,17 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		private void OnReceivedOpen(SocketIOEvent e)
 		{
-			usnClient.Logs(BC_USN_Debug.Warn, "[SocketIO]", " Open received: " + e.name + " " + e.data);
+			USocketNet.Log(Logs.Warn, "[SocketIO]", " Open received: " + e.name + " " + e.data);
 		}
 
 		private void OnReceivedError(SocketIOEvent e)
 		{
-			usnClient.Logs(BC_USN_Debug.Warn, "[SocketIO]", " Error received: " + e.name + " " + e.data);
+			USocketNet.Log(Logs.Warn, "[SocketIO]", " Error received: " + e.name + " " + e.data);
 		}
 
 		private void OnReceivedClose(SocketIOEvent e)
 		{	
-			usnClient.Logs(BC_USN_Debug.Warn, "[SocketIO]", " Close received: " + e.name + " " + e.data);
+			USocketNet.Log(Logs.Warn, "[SocketIO]", " Close received: " + e.name + " " + e.data);
 		}
 
 		private void OnOpen(object sender, EventArgs e)
@@ -468,7 +468,7 @@ namespace BytesCrafter.USocketNet.Networks {
 
 				catch (Exception except)
 				{
-					usnClient.Logs(BC_USN_Debug.Warn, "EmitEventCatch", except.Message);
+					USocketNet.Log(Logs.Warn, "EmitEventCatch", except.Message);
 				}
 			}
 		}
@@ -489,7 +489,7 @@ namespace BytesCrafter.USocketNet.Networks {
 			{
 				if (ex != null)
 				{
-					usnClient.Logs(BC_USN_Debug.Warn, "EmitPacketCatch", ex.Message);
+					USocketNet.Log(Logs.Warn, "EmitPacketCatch", ex.Message);
 				}
 			}
 		}

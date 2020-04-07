@@ -2,11 +2,14 @@
 using UnityEngine.UI;
 using System.Collections.Generic;
 using BytesCrafter.USocketNet;
+using BytesCrafter.USocketNet.Serials;
 using BytesCrafter.USocketNet.Serializables;
 
-public class Demoguy : USocketClient
+public class Demoguy : USocketNet
 {
 	#region Variablles and References
+	
+	public Config serverConfig; 
 
 	public USocketClient netScpt = null;
 	public USocketClient netScript
@@ -66,7 +69,7 @@ public class Demoguy : USocketClient
 			});
 	}
 
-	//Disconnecting to server with callbacks.
+	//Disconnecting to server.
 	public void DisconnectFromServer()
 	{
 		netScript.Disconnect ();
@@ -75,10 +78,11 @@ public class Demoguy : USocketClient
 
 	#endregion
 
-
-	protected override void OnStart(bool auto)
+	void Awake()
 	{
-		UnityEngine.Debug.LogWarning("sTARRTING @ " + auto);
+		USocketNet.Initialized(serverConfig);
+		Debug.Log("AAAAAAAAAAAAAAAA");
+		//UnityEngine.Debug.LogWarning("sTARRTING @ " + auto);
 	}
 
 
@@ -137,166 +141,4 @@ public class Demoguy : USocketClient
 
 	[Header("PING MECHANISM")]
 	public Text pingSocket = null;
-	float timer = 0f;
-
-	public List<Transform> spawnPoint = null;
-
-	public string gameVariant = "Default";
-
-
-	void Updates()
-	{
-		// pingSocket.text = netScript.PingCount + " ms";
-		// //Ping ASD = new Ping ();
-
-		// timer += Time.deltaTime;
-
-		// if(timer > 2f)
-		// 	return;
-
-		// if(netScript.localSockets.Count < 10)
-		// 	return;
-	}
-
-	#region LISTENERS
-
-	void Awake()
-	{
-		// netScript.ListenConnectionStatus (listenOnConnection);
-		// netScript.ListenMessagesEvent (ListenOnMessage);
-		// netScript.ListenMatchJoined (ListenOnMatchJoined);
-		// netScript.ListenMatchLeaved (listenOnLeaved);
-	}
-
-	private void listenOnConnection(ConStat conStat)
-	{
-		// if(conStat == ConnStat.Connected || conStat == ConnStat.Reconnected)
-		// {
-		// 	ChangeCanvas(1);
-		// }
-
-		// else
-		// {
-		// 	ChangeCanvas(0);
-		// }
-	}
-
-	// private void ListenOnMessage(MsgJson msgJson)
-	// {
-	// 	if(msgJson.mt == MsgType.Public)
-	// 	{
-	// 		publicViewer.Logs(msgJson.sd + ": " + msgJson.ct);
-	// 	}
-
-	// 	else if(msgJson.mt == MsgType.Private)
-	// 	{
-	// 		privateViewer.Logs(msgJson.sd + ": " + msgJson.ct);
-	// 	}
-
-	// 	else
-	// 	{
-	// 		channelViewer.Logs(msgJson.sd + ": " + msgJson.ct);
-	// 	}
-	// }
-
-	// private void ListenOnMatchJoined(PeerJson peerJson)
-	// {
-	// 	channelViewer.Logs(peerJson.id + " had joined.");
-	// }
-
-	// private void listenOnLeaved(PeerJson peerJson)
-	// {
-	// 	channelViewer.Logs(peerJson.id + " had leaved.");
-	// }
-
-	#endregion
-
-	
-
-	#region MESSAGINGS
-	//Send a public message on the server.
-	public void SendPublicMessage()
-	{
-		// netScript.SendPublicMessage (pubMsgContent.text, (Returned msgStat) =>
-		// {
-		// 		if(msgStat == Returned.Success)
-		// 		{
-		// 			publicViewer.Logs("Me: " + pubMsgContent.text);
-		// 			pubMsgContent.text = string.Empty;
-		// 		}
-		// });
-	}
-
-	//Send a private message on the server.
-	public void SendPrivateMessage()
-	{
-		// netScript.SendPrivateMessage (priMsgReceiver.text, priMsgContent.text, (Returned msgStat) =>
-		// {
-		// 	privateViewer.Logs("Me: " + pubMsgContent.text);
-		// 	priMsgContent.text = string.Empty;
-		// 	priMsgReceiver.text = string.Empty;
-		// });
-	}
-
-	public void SendChannelMessage()
-	{
-		// netScript.SendChannelMessage (chanMsgContent.text, (Returned msgStat) =>
-		// {
-		// 	channelViewer.Logs("Me: " + chanMsgContent.text);
-		// 	chanMsgContent.text = string.Empty;
-		// });
-	}
-	#endregion
-
-	#region CHANNELS
-
-	public void AutoJoinServerRoom()
-	{
-		// netScript.AutoMatchChannel (gameVariant, 10, (MatchRes matchRes, MatchMake matchMake) =>
-		// 	{
-		// 		if(matchRes == MatchRes.Success)
-		// 		{
-		// 			ChangeCanvas(2);
-		// 			netScript.Instantiate (0, Vector3.zero, Quaternion.identity, null); // spawnPoint.position, spawnPoint.rotation);
-		// 		}
-		// 	});
-	}
-
-	public void CreateServerRoom()
-	{
-		// netScript.CreateChannel (roomname.text, gameVariant, 2, (MatchRes result, MatchMake matchMake) => 
-		// 	{
-		// 		if(result == MatchRes.Success)
-		// 		{
-		// 			ChangeCanvas(2);
-		// 			netScript.Instantiate (0, Vector3.zero, Quaternion.identity, null);
-		// 		}
-		// 	});
-	}
-
-	public void JoinServerRoom()
-	{
-		// netScript.JoinChannel (roomname.text, gameVariant, (MatchRes result, MatchMake matchMake) =>
-		// 	{
-		// 		if(result == MatchRes.Success)
-		// 		{
-		// 			ChangeCanvas(2);
-		// 			netScript.Instantiate (0, Vector3.zero, Quaternion.identity, null);
-		// 		}
-		// 	});
-	}
-
-	public void LeaveServerRoom()
-	{
-		// netScript.LeaveChannel ((Returned returned, ChannelJson roomJson) =>
-		// 	{
-		// 		if(returned == Returned.Success)
-		// 		{
-		// 			ChangeCanvas(1);
-		// 		}
-		// 	});
-		
-	}
-
-	#endregion
 }

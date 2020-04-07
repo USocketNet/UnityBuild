@@ -29,12 +29,70 @@ using System;
 using System.Collections.Generic;
 
 using UnityEngine;
-using BytesCrafter.USocketNet;
+using BytesCrafter.USocketNet.Serials;
+using BytesCrafter.USocketNet.Toolsets;
 
 namespace BytesCrafter.USocketNet
 {
-	public class USocketNet
+	public class USocketNet : MonoBehaviour
 	{
+		#region  Static Components
+		public static Config config
+		{
+			get {
+				if(isInitialized) {
+					return staticConfig;
+				} else {
+					return null;
+				}
+			}
+		}
+		private static Config staticConfig;  
 
+		public static bool isInitialized
+		{
+			get {
+				return staticConfig != null ? true : false;
+			}
+		}
+
+		public static USocketNet Core
+		{
+			get {
+				if(isInitialized) {
+					return baseRefs;
+				} else {
+					return null;
+				}
+			}
+		}
+		private static USocketNet baseRefs;
+
+		public static void Log ( Logs log, string title, string info ) 
+		{
+			if(isInitialized)
+			{
+				logger.Push(Logs.Warn, "USocketNet", "The USN core instance is not yet initialize.");
+				return;
+			}
+
+			logger.Push(log, title, info);
+		}
+		private static BC_USN_Logger logger;
+
+		public static void Initialized(Config refsConfig)
+		{
+			staticConfig = refsConfig;
+			logger = new BC_USN_Logger();
+			baseRefs = new GameObject("USocketNet").AddComponent<USocketNet>();
+		}
+
+		#endregion
+
+		void Awake()
+		{
+			DontDestroyOnLoad(this);
+			Application.runInBackground = USocketNet.config.runOnBackground;
+		}
 	}
 }

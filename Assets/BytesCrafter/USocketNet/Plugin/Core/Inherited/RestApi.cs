@@ -56,7 +56,7 @@ namespace BytesCrafter.USocketNet.RestApi {
         {
             if( usnClient.config.restapiUrl == string.Empty )
 			{
-				usnClient.Logs(BC_USN_Debug.Warn, "RestApi", "Please fill up RestApi url on this USocketClient: " + usnClient.name);
+				USocketNet.Log(Logs.Warn, "RestApi", "Please fill up RestApi url on this USocketClient: " + usnClient.name);
 				callback( new BC_USN_Response() );
 				return;
 			}
@@ -79,7 +79,7 @@ namespace BytesCrafter.USocketNet.RestApi {
             
             if ( request.isNetworkError || request.isHttpError )
             {
-                usnClient.Logs(BC_USN_Debug.Error, "RestApi", "The Rest API url return 404 Not found. Please check and try again.");
+                USocketNet.Log(Logs.Error, "RestApi", "The Rest API url return 404 Not found. Please check and try again.");
                 callback( new BC_USN_Response() );
             }
 
@@ -90,14 +90,14 @@ namespace BytesCrafter.USocketNet.RestApi {
 
                 if( response.success )
                 {
-                    usnClient.Logs(BC_USN_Debug.Log, "RestApi", "Welcome! " +response.data.dname+ " [" +response.data.email+ "]" );
+                    USocketNet.Log(Logs.Log, "RestApi", "Welcome! " +response.data.dname+ " [" +response.data.email+ "]" );
                     curUser = response.data;
                     callback( response );
                 }
 
                 else
                 {
-                    usnClient.Logs(BC_USN_Debug.Warn, "RestApi", response.message);
+                    USocketNet.Log(Logs.Warn, "RestApi", response.message);
                     callback( new BC_USN_Response() );
                 }
             }
