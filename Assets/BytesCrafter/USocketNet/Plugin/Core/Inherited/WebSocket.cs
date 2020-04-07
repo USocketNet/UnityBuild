@@ -183,7 +183,6 @@ namespace BytesCrafter.USocketNet.Networks {
 			string sioPath = "/socket.io/?EIO=4&transport=websocket";
 			string usrTok = "&wpid=" + USocketNet.User.token.wpid + "&snid=" + USocketNet.User.token.snid;
 
-			Debug.Log("ws://" + hostUrl + sioPath + usrTok);
 			threadset.websocket = new WebSocket("ws://" + hostUrl + sioPath + usrTok);
 			threadset.websocket.OnOpen += OnOpen;
 			threadset.websocket.OnError += OnError;

@@ -153,6 +153,7 @@ namespace BytesCrafter.USocketNet
 		public void Disconnect()
 		{
 			masterClient.Disconnect();
+			Destroy(masterClient.gameObject);
 		}
 
 		public void AddChatClient()
