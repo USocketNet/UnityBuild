@@ -141,7 +141,6 @@ MonoBehaviour:
   config:
     restapiUrl: localhost
     serverUrl: localhost
-    serverPort: 19090
     debugOnLog: 1
     runOnBackground: 1
 --- !u!1001 &1556402040
@@ -291,6 +290,10 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Text
       value: admin
+      objectReference: {fileID: 0}
+    - target: {fileID: 1751335750401630, guid: 2960126293d1e874cbd19fad233696c0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1520890568133654, guid: 2960126293d1e874cbd19fad233696c0, type: 3}
       propertyPath: m_Name

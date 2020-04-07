@@ -26,8 +26,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-
 using UnityEngine;
 using BytesCrafter.USocketNet.RestApi;
 using BytesCrafter.USocketNet.Serials;
@@ -154,26 +152,37 @@ namespace BytesCrafter.USocketNet
 		{
 			masterClient.Disconnect();
 			Destroy(masterClient.gameObject);
+
+			RemoveChatClient();
+			RemoveGameClient();
 		}
 
-		public void AddChatClient()
-		{
+		private ChatClient chatClient;
 
+		public void AddChatClient( Action<ConStat> callback )
+		{
+			chatClient = new GameObject("ChatClient").AddComponent<ChatClient>();
+			chatClient.Connect(callback);
 		}
 
 		public void RemoveChatClient()
 		{
-			
+			chatClient.Disconnect();
+			Destroy(chatClient.gameObject);
 		}
 
-		public void AddGameClient()
-		{
+		private GameClient gameClient;
 
+		public void AddGameClient( Action<ConStat> callback )
+		{
+			gameClient = new GameObject("GameClient").AddComponent<GameClient>();
+			gameClient.Connect(callback);
 		}
 
 		public void RemoveGameClient()
 		{
-			
+			gameClient.Disconnect();
+			Destroy(gameClient.gameObject);
 		}
 	}
 }

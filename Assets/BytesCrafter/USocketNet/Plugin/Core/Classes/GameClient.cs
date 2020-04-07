@@ -1,8 +1,7 @@
-﻿
 
 #region License
 /*
- * MasterClient.cs
+ * GameClient.cs
  *
  * Copyright (c) 2020 Bytes Crafter
  *
@@ -31,7 +30,7 @@ using BytesCrafter.USocketNet.Toolsets;
 
 namespace BytesCrafter.USocketNet
 {
-    public class MasterClient : USNClient
+    public class GameClient : USNClient
     {
         /// <summary>
 		/// Connects to server using user specific credentials.
@@ -48,7 +47,7 @@ namespace BytesCrafter.USocketNet
 
 			if (!bc_usn_websocket.isConnected)
 			{
-				bc_usn_websocket.InitConnection(USocketNet.config.serverPort.master, callback);
+				bc_usn_websocket.InitConnection(USocketNet.config.serverPort.game, callback);
 			}
 
 			else

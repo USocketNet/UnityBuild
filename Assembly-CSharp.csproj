@@ -58,6 +58,8 @@
      <Compile Include="Assets\BytesCrafter\USocketNet\Demo\Script\SimpleControl.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Demo\Script\StressTest.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Demo\Script\TrackPoints.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Core\Classes\ChatClient.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Core\Classes\GameClient.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Core\Classes\MasterClient.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Core\Classes\USNClient.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Core\Inherited\Logger.cs" />

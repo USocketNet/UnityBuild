@@ -73,6 +73,30 @@ public class Demoguy : MonoBehaviour
 		USocketNet.Initialized(serverConfig);
 	}
 
+	public void AddChatClient()
+	{
+		USocketNet.Core.AddChatClient( (ConStat conStat) => {
+
+		});
+	}
+
+	public void RemoveChatClient()
+	{
+		USocketNet.Core.RemoveChatClient();
+	}
+
+	public void AddGameClient()
+	{
+		USocketNet.Core.AddGameClient( (ConStat conStat) => {
+
+		});
+	}
+
+	public void RemoveGameClient()
+	{
+		USocketNet.Core.RemoveGameClient();
+	}
+
 
 
 	
