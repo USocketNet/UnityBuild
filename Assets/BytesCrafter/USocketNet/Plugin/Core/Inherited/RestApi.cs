@@ -38,8 +38,8 @@ using BytesCrafter.USocketNet.Toolsets;
 namespace BytesCrafter.USocketNet.RestApi {
     public class BC_USN_RestApi 
     {
-        private USocketClient usnClient = null;
-        public BC_USN_RestApi( USocketClient reference )
+        private USNClient usnClient = null;
+        public BC_USN_RestApi( USNClient reference )
         {
             usnClient = reference;
         }
@@ -52,11 +52,11 @@ namespace BytesCrafter.USocketNet.RestApi {
             }
         }
         private BC_USN_Response_Data curUser = new BC_USN_Response_Data();
-        public void Authenticate(string uname, string pword, USocketClient usnClient, Action<BC_USN_Response> callback) 
+        public void Authenticate(string uname, string pword, USNClient usnClient, Action<BC_USN_Response> callback) 
         {
             if( usnClient.config.restapiUrl == string.Empty )
 			{
-				USocketNet.Log(Logs.Warn, "RestApi", "Please fill up RestApi url on this USocketClient: " + usnClient.name);
+				USocketNet.Log(Logs.Warn, "RestApi", "Please fill up RestApi url on this USNClient: " + usnClient.name);
 				callback( new BC_USN_Response() );
 				return;
 			}

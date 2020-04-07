@@ -36,9 +36,8 @@ using BytesCrafter.USocketNet.RestApi;
 
 namespace BytesCrafter.USocketNet
 {
-	public class USocketClient : MonoBehaviour
+	public class USNClient : MonoBehaviour
 	{
-		
 		private BC_USN_RestApi bc_usn_restapi = null;
 		private BC_USN_WebSocket bc_usn_websocket = null;
 

@@ -39,8 +39,8 @@ using BytesCrafter.USocketNet.Toolsets;
 namespace BytesCrafter.USocketNet.Networks {
     public class BC_USN_WebSocket
     {
-        private USocketClient usnClient = null;
-        public BC_USN_WebSocket( USocketClient reference )
+        private USNClient usnClient = null;
+        public BC_USN_WebSocket( USNClient reference )
         {
             usnClient = reference;
         }

@@ -6,7 +6,7 @@ using BytesCrafter.USocketNet;
 public class StressTest : MonoBehaviour
 {
 	public string gameVariant = "Demoguy Stress";
-	public USocketClient clientPrefab = null;
+	public USNClient clientPrefab = null;
 
 	void Update()
 	{
@@ -18,7 +18,7 @@ public class StressTest : MonoBehaviour
 		
 	public void ConnectCreateMove()
 	{
-		USocketClient uClient = Instantiate (clientPrefab.transform).GetComponent<USocketClient>();
+		USNClient uClient = Instantiate (clientPrefab.transform).GetComponent<USNClient>();
 		// uClient.ConnectToServer("Demoguy", "1234567", (ConStat cs) => {
 		// 	if(ca == ConnAuth.Success)
 		// 	{
@@ -54,13 +54,13 @@ public class StressTest : MonoBehaviour
 
 	IEnumerator Connecting ()
 	{
-		USocketClient socket = Instantiate (gobjects).GetComponent<USocketClient> ();
+		USNClient socket = Instantiate (gobjects).GetComponent<USNClient> ();
 		yield return socket;
 		 
 		ConnectAndJoin (socket);
 	}
 
-	private void ConnectAndJoin(USocketClient socket)
+	private void ConnectAndJoin(USNClient socket)
 	{
 
 		socket.ConnectToServer ("", "", (ConnStat conStat, ConnAuth connAuth) =>

@@ -58,10 +58,10 @@
      <Compile Include="Assets\BytesCrafter\USocketNet\Demo\Script\SimpleControl.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Demo\Script\StressTest.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Demo\Script\TrackPoints.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Core\Classes\USNClient.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Core\Inherited\Logger.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Core\Inherited\RestApi.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Core\Inherited\WebSocket.cs" />
-     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Core\USocketClient.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Core\USocketNet.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Core\USocketNetWebGL.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\Config.cs" />

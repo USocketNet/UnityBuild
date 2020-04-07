@@ -11,13 +11,13 @@ public class Demoguy : USocketNet
 	
 	
 
-	public USocketClient netScpt = null;
-	public USocketClient netScript
+	public USNClient netScpt = null;
+	public USNClient netScript
 	{
 		get {
 			if(netScpt == null)
 			{
-				netScpt = GameObject.FindObjectOfType<USocketClient> ();
+				netScpt = GameObject.FindObjectOfType<USNClient> ();
 			}
 
 			return netScpt;
