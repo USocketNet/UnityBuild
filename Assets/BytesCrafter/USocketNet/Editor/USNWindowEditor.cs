@@ -31,12 +31,12 @@ using UnityEditor;
 
 namespace BytesCrafter.USocketNet
 {
-	public class USNWindow : EditorWindow
+	public class USNWindowEditor : EditorWindow
 	{
 		[MenuItem("Bytes Crafter/USocketNet/Show")]
 		public static void ShowWindow()
 		{
-			GetWindow<USNWindow> ("USocketNet");
+			GetWindow<USNWindowEditor> ("USocketNet");
 		}
 
 		[MenuItem("Bytes Crafter/USocketNet/Demo")]
