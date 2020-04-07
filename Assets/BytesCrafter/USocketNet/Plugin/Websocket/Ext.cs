@@ -2,26 +2,14 @@
 /*
  * Ext.cs
  *
- * Some parts of this code are derived from Mono (http://www.mono-project.com):
- * - GetStatusDescription is derived from System.Net.HttpListenerResponse.cs
- * - IsPredefinedScheme is derived from System.Uri.cs
- * - MaybeUri is derived from System.Uri.cs
+ * Copyright (c) 2020 Bytes Crafter
  *
- * The MIT License
- *
- * Copyright (c) 2001 Garrett Rooney
- * Copyright (c) 2003 Ian MacLean
- * Copyright (c) 2003 Ben Maurer
- * Copyright (c) 2003, 2005, 2009 Novell, Inc. (http://www.novell.com)
- * Copyright (c) 2009 Stephane Delcroix
- * Copyright (c) 2010-2014 sta.blockhead
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted to any person obtaining a copy from our store
  * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * in the Software with restriction to the rights to modify, merge, publish, 
+ * distribute, sublicense, and/or sell copies of the Software, and to permit 
+ * persons to whom the Software is furnished to do so, subject to the following 
+ * conditions:
  *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.

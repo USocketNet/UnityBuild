@@ -2,22 +2,14 @@
 /*
  * WebSocket.cs
  *
- * A C# implementation of the WebSocket interface.
+ * Copyright (c) 2020 Bytes Crafter
  *
- * This code is derived from WebSocket.java
- * (http://github.com/adamac/Java-WebSocket-client).
- *
- * The MIT License
- *
- * Copyright (c) 2009 Adam MacBeth
- * Copyright (c) 2010-2014 sta.blockhead
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted to any person obtaining a copy from our store
  * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * in the Software with restriction to the rights to modify, merge, publish, 
+ * distribute, sublicense, and/or sell copies of the Software, and to permit 
+ * persons to whom the Software is furnished to do so, subject to the following 
+ * conditions:
  *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.

@@ -2,26 +2,14 @@
 /*
  * HttpStatusCode.cs
  *
- * This code is derived from System.Net.HttpStatusCode.cs of Mono
- * (http://www.mono-project.com).
+ * Copyright (c) 2020 Bytes Crafter
  *
- * It was automatically generated from ECMA CLI XML Library Specification.
- * Generator: libgen.xsl [1.0; (C) Sergey Chaban (serge@wildwestsoftware.com)]
- * Created: Wed, 5 Sep 2001 06:32:05 UTC
- * Source file: AllTypes.xml
- * URL: http://msdn.microsoft.com/net/ecma/AllTypes.xml
- *
- * The MIT License
- *
- * Copyright (c) 2001 Ximian, Inc. (http://www.ximian.com)
- * Copyright (c) 2012-2014 sta.blockhead
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted to any person obtaining a copy from our store
  * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * in the Software with restriction to the rights to modify, merge, publish, 
+ * distribute, sublicense, and/or sell copies of the Software, and to permit 
+ * persons to whom the Software is furnished to do so, subject to the following 
+ * conditions:
  *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
