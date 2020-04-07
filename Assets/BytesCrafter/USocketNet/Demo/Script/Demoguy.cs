@@ -9,7 +9,7 @@ public class Demoguy : USocketNet
 {
 	#region Variablles and References
 	
-	public Config serverConfig; 
+	
 
 	public USocketClient netScpt = null;
 	public USocketClient netScript
@@ -78,25 +78,19 @@ public class Demoguy : USocketNet
 
 	#endregion
 
+	/// <summary>
+	/// STEP1: Important! You need to declare 'Config' variable to set your restapi and websocket url.
+	/// The said class can be derived from this namespace: BytesCrafter.USocketNet.Serials;
+	/// </summary>
+	public Config serverConfig; 
+
 	void Awake()
 	{
+		//STEP2: Important! Next is to initialize the 'USocketNet' instance with the 'Config' which is
+		// is previously declared as a variable and set the values before app starts.
 		USocketNet.Initialized(serverConfig);
-		Debug.Log("AAAAAAAAAAAAAAAA");
-		//UnityEngine.Debug.LogWarning("sTARRTING @ " + auto);
 	}
 
-
-	// #region LISTENERS SAMPLE
-	// protected override void OnConnection(bool auto)
-	// {
-	// 	UnityEngine.Debug.LogWarning("OnReconnection @ " + auto);
-	// }
-
-	// protected override void OnDisconnection(bool auto)
-	// {
-	// 	UnityEngine.Debug.LogWarning("OnDisconnection @ " + auto);
-	// }
-	// #endregion
 
 
 	
