@@ -36,7 +36,7 @@ namespace BytesCrafter.USocketNet
 {
 	public class USNClient : MonoBehaviour
 	{
-		private BC_USN_WebSocket bc_usn_websocket = null;
+		protected BC_USN_WebSocket bc_usn_websocket = new BC_USN_WebSocket();
 
 		#region VARIABLES
 
@@ -87,9 +87,7 @@ namespace BytesCrafter.USocketNet
 
 		void Awake()
 		{
-			//Put all child script to be initialized as CLASS.
-			bc_usn_websocket = new BC_USN_WebSocket( this );
-
+			bc_usn_websocket = new BC_USN_WebSocket();
 			//Client INITIALIZATION config before it run.
 			DontDestroyOnLoad(this);
 			Application.runInBackground = config.runOnBackground;
@@ -121,39 +119,7 @@ namespace BytesCrafter.USocketNet
 
 		#endregion
 
-		/// <summary>
-		/// Connects to server using user specific credentials.
-		/// </summary>
-		/// <param name="callback">Callback.</param>
-		public void Connect( Action<ConStat> callback )
-		{
-			if( config.serverUrl == string.Empty || config.serverPort == string.Empty )
-			{
-				USocketNet.Log(Logs.Warn, "ConnectionError", "Please fill up USocketNet host field on this USocketClient: " + name);
-				callback( ConStat.Error );
-				return;
-			}
-
-			if (!bc_usn_websocket.isConnected)
-			{
-				bc_usn_websocket.InitConnection(callback);
-			}
-
-			else
-			{
-				USocketNet.Log(Logs.Warn, "ConnectionSuccess", "Already connected to the server!");
-				callback( ConStat.Invalid );
-			}
-		}
-
-		/// <summary>
-		/// Disconnect to server using user specific credentials.
-		/// </summary>
-		/// <param name="callback">Callback.</param>
-		public void Disconnect()
-		{
-			bc_usn_websocket.ForceDisconnect();
-		}
+		
 
 		// void Start() 
 		// {

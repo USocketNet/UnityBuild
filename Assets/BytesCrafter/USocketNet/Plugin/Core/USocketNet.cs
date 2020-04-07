@@ -120,14 +120,58 @@ namespace BytesCrafter.USocketNet
 				}
 			});
 		}
-
+		
 		public void SignOut()
 		{
 			if( restApi.isAuthenticated ) {
 				restApi.Deauthenticate();
+				Disconnect();
 			} else {
 				USocketNet.Log(Logs.Warn, "RestApi", "You are not authenticated thus you dont have to sign out.");
 			}
+			
+		}
+
+		public MasterClient Master
+		{
+			get {
+				if(isInitialized) {
+					return masterClient;
+				} else {
+					return null;
+				}
+			}
+		}
+		private MasterClient masterClient;
+
+		public void Connect( Action<ConStat> callback )
+		{
+			masterClient = new GameObject("MasterClient").AddComponent<MasterClient>();
+			masterClient.Connect(callback);
+		}
+
+		public void Disconnect()
+		{
+			masterClient.Disconnect();
+		}
+
+		public void AddChatClient()
+		{
+
+		}
+
+		public void RemoveChatClient()
+		{
+			
+		}
+
+		public void AddGameClient()
+		{
+
+		}
+
+		public void RemoveGameClient()
+		{
 			
 		}
 	}

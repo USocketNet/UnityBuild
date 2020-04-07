@@ -39,12 +39,6 @@ using BytesCrafter.USocketNet.Toolsets;
 namespace BytesCrafter.USocketNet.Networks {
     public class BC_USN_WebSocket
     {
-        private USNClient usnClient = null;
-        public BC_USN_WebSocket( USNClient reference )
-        {
-            usnClient = reference;
-        }
-
 		public string socketId
 		{
 			get
@@ -179,16 +173,17 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		#region Connection Mechanism
 
-        public void InitConnection(Action<ConStat> callback) 
+        public void InitConnection(string port, Action<ConStat> callback) 
         {
 			threadset.IsInitialized = true;
 			queueCoder.Starts();
 			
 			//WEB SOCKET INITIALIZATION	
-			string hostUrl = usnClient.config.serverUrl + ":" + usnClient.config.serverPort;
+			string hostUrl = USocketNet.config.serverUrl + ":" + port;
 			string sioPath = "/socket.io/?EIO=4&transport=websocket";
-			string usrTok = "&wpid=" + usnClient.GetToken.wpid + "&snid=" + usnClient.GetToken.snid;
+			string usrTok = "&wpid=" + USocketNet.User.token.wpid + "&snid=" + USocketNet.User.token.snid;
 
+			Debug.Log("ws://" + hostUrl + sioPath + usrTok);
 			threadset.websocket = new WebSocket("ws://" + hostUrl + sioPath + usrTok);
 			threadset.websocket.OnOpen += OnOpen;
 			threadset.websocket.OnError += OnError;
@@ -211,7 +206,7 @@ namespace BytesCrafter.USocketNet.Networks {
             pingThread = new Thread(RunPingThread);
             pingThread.Start(threadset.websocket);
 
-			usnClient.StartCoroutine(WaitingForSocketId(callback));
+			USocketNet.Core.StartCoroutine(WaitingForSocketId(callback));
         }
 
 		IEnumerator WaitingForSocketId(Action<ConStat> callback)

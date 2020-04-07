@@ -35,7 +35,7 @@ namespace BytesCrafter.USocketNet.Serials
 		[Header("HOST SETTINGS")]
 		public string restapiUrl = "localhost";
 		public string serverUrl = "localhost";
-		public string serverPort = "19090";
+		public Ports serverPort = new Ports();
 
 		[Header("CLIENT SETTINGS")]
 		public bool debugOnLog = false;

@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using BytesCrafter.USocketNet;
 using BytesCrafter.USocketNet.Serials;
+using BytesCrafter.USocketNet.Toolsets;
 
 public class Demoguy : MonoBehaviour
 {
@@ -37,11 +38,12 @@ public class Demoguy : MonoBehaviour
 		{
 			if( response.success ) {
 				ChangeCanvas(1);
-				// netScript.Connect( (ConStat conStat) => {
-					// if( conStat == ConStat.Success ) {
-					// 		UnityEngine.Debug.Log("WPID: " + response.data.id + " SNID: " + response.data.session + " Response: " + conStat.ToString() + " SID:" + netScript.Identity);
-					// });
-				// 	}
+				USocketNet.Core.Connect( (ConStat conStat) => {
+					if( conStat == ConStat.Success ) {
+						USocketNet.Log(Logs.Log, "Test", "WPID: " + response.data.id + " SNID: " + response.data.session 
+							+ " Response: " + conStat.ToString() + " MID:" + USocketNet.Core.Master.Identity);
+					}
+				});
 			} else {
 				
 			}
