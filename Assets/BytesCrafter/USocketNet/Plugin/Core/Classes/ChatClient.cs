@@ -42,7 +42,7 @@ namespace BytesCrafter.USocketNet
 			if( config.serverUrl == string.Empty )
 			{
 				USocketNet.Log(Logs.Warn, "ConnectionError", "Please fill up USocketNet host field on this USocketClient: " + name);
-				callback( ConStat.Error );
+				callback( ConStat.Invalid );
 				return;
 			}
 
@@ -54,7 +54,7 @@ namespace BytesCrafter.USocketNet
 			else
 			{
 				USocketNet.Log(Logs.Warn, "ConnectionSuccess", "Already connected to the server!");
-				callback( ConStat.Invalid );
+				callback( ConStat.Error );
 			}
 		}
 

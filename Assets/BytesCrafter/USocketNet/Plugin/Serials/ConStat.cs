@@ -36,37 +36,31 @@ namespace BytesCrafter.USocketNet
 		/// </summary>
 		Success, 
 		/// <summary>
-		/// Application id dont exist on the database. Code: 1
+		/// Users account is currently online. Code: 1
+		/// </summary>
+		Online,
+		/// <summary>
+		/// RestApi url is invalid, try again. Code 2
 		/// </summary>
 		Invalid, 
-		/// <summary>
-		/// Server found invalid arguments thus rejecting conn. Code: 2
-		/// </summary>
-		Rejected,
-
 		/// <summary>
 		/// Please check your socket host and port. Code: 3
 		/// </summary>
 		Error,
-
-
-		
 		/// <summary>
-		/// Game is currenly inactive and block want new connection. Code: 4
+		/// Websocket server found invalid arguments. Code: 4
+		/// </summary>
+		Rejected,
+		
+
+
+		/// <summary>
+		/// Game is currenly inactive and block want new connection. Code: 5
 		/// </summary>
 		Inactive,
 		/// <summary>
-		/// Game is currenly at its limit and cant accept new connection Code: 5
+		/// Game is currenly at its limit and cant accept new connection Code: 6
 		/// </summary>
-		Overload,
-		/// <summary>
-		/// Users account is currently online. Code: 6
-		/// </summary>
-		Online,
-
-		/// <summary>
-		/// USocketClient is currently performing task. Code: 7
-		/// </summary>
-		Busy,
+		Overload
 	}
 }

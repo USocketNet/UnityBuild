@@ -144,8 +144,13 @@ namespace BytesCrafter.USocketNet
 
 		public void Connect( Action<ConStat> callback )
 		{
-			masterClient = new GameObject("MasterClient").AddComponent<MasterClient>();
-			masterClient.Connect(callback);
+			if( masterClient == null ) {
+				masterClient = new GameObject("MasterClient").AddComponent<MasterClient>();
+				masterClient.Connect(callback);
+			} else {
+				callback( ConStat.Online );
+			}
+			
 		}
 
 		public void Disconnect()
