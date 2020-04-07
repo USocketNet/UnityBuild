@@ -138,7 +138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc0fbfc5d03cf714a9ffa636e0af40a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  options:
+  config:
     restapiUrl: localhost
     serverUrl: localhost
     serverPort: 19090
@@ -292,11 +292,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Text
       value: admin
-      objectReference: {fileID: 0}
-    - target: {fileID: 114250161575234646, guid: 2960126293d1e874cbd19fad233696c0,
-        type: 3}
-      propertyPath: options.restapiUrl
-      value: localhost
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2960126293d1e874cbd19fad233696c0, type: 3}

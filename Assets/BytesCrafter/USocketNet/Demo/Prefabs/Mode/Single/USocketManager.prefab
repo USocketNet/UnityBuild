@@ -4474,8 +4474,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc0fbfc5d03cf714a9ffa636e0af40a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  options:
-    restapiUrl: localhost
+  config:
+    restapiUrl: localhost/wordpress
     serverUrl: localhost
     serverPort: 19090
     debugOnLog: 1
@@ -4493,8 +4493,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fe0513710b529e4c8226f0aaf8844b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  options:
-    restapiUrl: localhost/wordpress
+  config:
+    restapiUrl: localhost
     serverUrl: localhost
     serverPort: 19090
     debugOnLog: 1
