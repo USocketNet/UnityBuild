@@ -61,6 +61,10 @@ namespace BytesCrafter.USocketNet
 		/// <summary>
 		/// Game is currenly at its limit and cant accept new connection Code: 6
 		/// </summary>
-		Overload
+		Overload,
+		/// <summary>
+		/// Game cant be found or api is not correct. Code: 7
+		/// </summary>
+		Unknown
 	}
 }

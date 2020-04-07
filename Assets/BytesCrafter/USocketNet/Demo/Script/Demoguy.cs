@@ -40,12 +40,12 @@ public class Demoguy : MonoBehaviour
 				ChangeCanvas(1);
 				USocketNet.Core.Connect( (ConStat conStat) => {
 					if( conStat == ConStat.Success ) {
-						USocketNet.Log(Logs.Log, "Test", "WPID: " + response.data.id + " SNID: " + response.data.session 
+						USocketNet.Log(Logs.Warn, "Demogguy", "WPID: " + response.data.id + " SNID: " + response.data.session 
 							+ " Response: " + conStat.ToString() + " MID:" + USocketNet.Core.Master.Identity);
 					}
 				});
 			} else {
-				
+				USocketNet.Log(Logs.Warn, "Demogguy", "Failed connection to websocket server.");
 			}
 		});
 	}
