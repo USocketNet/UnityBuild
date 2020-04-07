@@ -36,7 +36,7 @@ namespace BytesCrafter.USocketNet
 		[MenuItem("Bytes Crafter/USocketNet/Show")]
 		public static void ShowWindow()
 		{
-			GetWindow<USocketNetWindow> ("USocketNet");
+			GetWindow<USNWindow> ("USocketNet");
 		}
 
 		[MenuItem("Bytes Crafter/USocketNet/Demo")]
@@ -119,20 +119,20 @@ namespace BytesCrafter.USocketNet
 			EditorGUILayout.Separator ();
 			GUILayout.Label ("Network Instances", EditorStyles.boldLabel);
 
-			EditorGUILayout.BeginHorizontal ();
-			EditorGUILayout.LabelField ("USocketNet Clients: ");
-			EditorGUILayout.LabelField (USocketNet.Instance.usocketNets.Count.ToString());
-			EditorGUILayout.EndHorizontal ();
+			// EditorGUILayout.BeginHorizontal ();
+			// EditorGUILayout.LabelField ("USocketNet Clients: ");
+			// EditorGUILayout.LabelField (USocketNet.Instance.usocketNets.Count.ToString());
+			// EditorGUILayout.EndHorizontal ();
 
-			EditorGUILayout.BeginHorizontal ();
-			int totalLocalViews = 0;
-			foreach(USocketClient unets in USocketNet.Instance.usocketNets)
-			{
-				// totalLocalViews += unets.localSockets.Count;
-			}
-			EditorGUILayout.LabelField ("USocketView Locals: ");
-			EditorGUILayout.LabelField (totalLocalViews.ToString());
-			EditorGUILayout.EndHorizontal ();
+			// EditorGUILayout.BeginHorizontal ();
+			// int totalLocalViews = 0;
+			// foreach(USocketClient unets in USocketNet.Instance.usocketNets)
+			// {
+			// 	// totalLocalViews += unets.localSockets.Count;
+			// }
+			// EditorGUILayout.LabelField ("USocketView Locals: ");
+			// EditorGUILayout.LabelField (totalLocalViews.ToString());
+			// EditorGUILayout.EndHorizontal ();
 
 			// EditorGUILayout.BeginHorizontal ();
 			// EditorGUILayout.LabelField ("USocketView Peers: ");
@@ -142,28 +142,28 @@ namespace BytesCrafter.USocketNet
 			EditorGUILayout.Separator ();
 			GUILayout.Label ("Data Traffics", EditorStyles.boldLabel);
 
-			EditorGUILayout.BeginHorizontal ();
-			EditorGUILayout.LabelField ("Sync Rate: ");
-			if(USocketNet.Instance.usocketNets.Count > 0)
-			{
-				EditorGUILayout.LabelField (USocketNet.Instance.synchRate.ToString() + " sync/second");
-			}
+			// EditorGUILayout.BeginHorizontal ();
+			// EditorGUILayout.LabelField ("Sync Rate: ");
+			// if(USocketNet.Instance.usocketNets.Count > 0)
+			// {
+			// 	EditorGUILayout.LabelField (USocketNet.Instance.synchRate.ToString() + " sync/second");
+			// }
 
-			else
-			{
-				EditorGUILayout.LabelField ("0 sync/second");
-			}
-			EditorGUILayout.EndHorizontal ();
+			// else
+			// {
+			// 	EditorGUILayout.LabelField ("0 sync/second");
+			// }
+			// EditorGUILayout.EndHorizontal ();
 
-			EditorGUILayout.BeginHorizontal ();
-			EditorGUILayout.LabelField ("Upload Rate: ");
-			EditorGUILayout.LabelField (USocketNet.Instance.uploadRate.ToString() + " bytes/sent");
-			EditorGUILayout.EndHorizontal ();
+			// EditorGUILayout.BeginHorizontal ();
+			// EditorGUILayout.LabelField ("Upload Rate: ");
+			// EditorGUILayout.LabelField (USNWindow.Instance.uploadRate.ToString() + " bytes/sent");
+			// EditorGUILayout.EndHorizontal ();
 
-			EditorGUILayout.BeginHorizontal ();
-			EditorGUILayout.LabelField ("Download Rate: ");
-			EditorGUILayout.LabelField (USocketNet.Instance.downloadRate.ToString() + " bytes/received");
-			EditorGUILayout.EndHorizontal ();
+			// EditorGUILayout.BeginHorizontal ();
+			// EditorGUILayout.LabelField ("Download Rate: ");
+			// EditorGUILayout.LabelField (USNWindow.Instance.downloadRate.ToString() + " bytes/received");
+			// EditorGUILayout.EndHorizontal ();
 
 			EditorGUILayout.Separator ();
 		}
