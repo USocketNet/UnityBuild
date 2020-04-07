@@ -3,7 +3,8 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using BytesCrafter.USocketNet;
 using BytesCrafter.USocketNet.Serializables;
-public class UIDemo : USocketClient
+
+public class Demoguy : USocketClient
 {
 	#region Variablles and References
 
