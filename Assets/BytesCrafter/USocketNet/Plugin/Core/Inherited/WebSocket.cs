@@ -39,7 +39,7 @@ using BytesCrafter.USocketNet.Toolsets;
 namespace BytesCrafter.USocketNet.Networks {
     public class BC_USN_WebSocket
     {
-		public string socketId
+		public string getSocketId
 		{
 			get
 			{
@@ -69,9 +69,6 @@ namespace BytesCrafter.USocketNet.Networks {
 
         public void Update() 
         {
-            if(threadset.websocket == null)
-				return;
-
 			if (threadset.IsInitialized)
 			{
 				lock (queueCoder.eventQueueLock)
@@ -112,13 +109,13 @@ namespace BytesCrafter.USocketNet.Networks {
 					if (threadset.websocket.IsConnected)
 					{
 						EmitEvent("connect");
-						//usnClient.OnConnect( true );
+						curClient.OnConnect( true );
 					}
 
 					else
 					{
 						EmitEvent("disconnect");
-						//usnClient.OnDisconnect( true );
+						curClient.OnDisconnect( true );
 					}
 				}
 
@@ -134,47 +131,11 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		#endregion
 
-		#region Listeners Callback
-
-		private void AddCallback(string events, Action<SocketIOEvent> callback)
-		{
-			if (!queueCoder.handlers.ContainsKey(events))
-			{
-				queueCoder.handlers[events] = new List<Action<SocketIOEvent>>();
-			}
-
-			queueCoder.handlers[events].Add(callback);
-		}
-
-		private void RemoveCallback(string events, Action<SocketIOEvent> callback)
-		{
-			if (!queueCoder.handlers.ContainsKey(events))
-			{
-				USocketNet.Log(Logs.Warn, "CallbackOffMissing", "No callbacks registered for event: " + events);
-				return;
-			}
-
-			List<Action<SocketIOEvent>> eventList = queueCoder.handlers[events];
-			if (!eventList.Contains(callback))
-			{
-				USocketNet.Log(Logs.Warn, "CallbackOffCantRemove", "Couldn't remove callback action for event: " + events);
-				return;
-			}
-
-			eventList.Remove(callback);
-
-			if (eventList.Count == 0)
-			{
-				queueCoder.handlers.Remove(events);
-			}
-		}
-
-		#endregion
-
 		#region Connection Mechanism
-
-        public void InitConnection(string appsecret, string port, Action<ConStat> callback) 
+		private USNClient curClient = null;
+        public void InitConnection(string appsecret, string port, USNClient usnClient, Action<ConStat> callback) 
         {
+			curClient = usnClient;
 			threadset.IsInitialized = true;
 			queueCoder.Starts();
 			
@@ -195,9 +156,9 @@ namespace BytesCrafter.USocketNet.Networks {
 			threadset.socketId = string.Empty;
 			threadset.autoConnect = true;
 
-			// AddCallback("open", OnReceivedOpen);
-			// AddCallback("close", OnReceivedClose);
-			// AddCallback("error", OnReceivedError);
+			AddCallback("open", OnReceivedOpen);
+			AddCallback("close", OnReceivedClose);
+			AddCallback("error", OnReceivedError);
 
             socketThread = new Thread(RunSocketThread);
             socketThread.Start(threadset.websocket);
@@ -249,6 +210,43 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		#endregion
 
+		#region Listeners Callback
+
+		private void AddCallback(string events, Action<SocketIOEvent> callback)
+		{
+			if (!queueCoder.handlers.ContainsKey(events))
+			{
+				queueCoder.handlers[events] = new List<Action<SocketIOEvent>>();
+			}
+
+			queueCoder.handlers[events].Add(callback);
+		}
+
+		private void RemoveCallback(string events, Action<SocketIOEvent> callback)
+		{
+			if (!queueCoder.handlers.ContainsKey(events))
+			{
+				USocketNet.Log(Logs.Warn, "CallbackOffMissing", "No callbacks registered for event: " + events);
+				return;
+			}
+
+			List<Action<SocketIOEvent>> eventList = queueCoder.handlers[events];
+			if (!eventList.Contains(callback))
+			{
+				USocketNet.Log(Logs.Warn, "CallbackOffCantRemove", "Couldn't remove callback action for event: " + events);
+				return;
+			}
+
+			eventList.Remove(callback);
+
+			if (eventList.Count == 0)
+			{
+				queueCoder.handlers.Remove(events);
+			}
+		}
+
+		#endregion
+
         #region Socket Event
 
 		private void OnReceivedOpen(SocketIOEvent e)
@@ -258,6 +256,7 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		private void OnReceivedError(SocketIOEvent e)
 		{
+			threadset.autoConnect = false;
 			USocketNet.Log(Logs.Warn, "[SocketIO]", " Error received: " + e.name + " " + e.data);
 		}
 
@@ -306,7 +305,7 @@ namespace BytesCrafter.USocketNet.Networks {
 		}
 
 		private void HandleOpen(Packet packet)
-		{
+		{				
 			threadset.socketId = packet.json["sid"].str;
 			EmitEvent("open");
 		}
@@ -323,7 +322,7 @@ namespace BytesCrafter.USocketNet.Networks {
 		}
 
 		private void HandleMessage(Packet packet)
-		{
+		{			
 			if (packet.json == null)
 				return;
 
@@ -400,7 +399,7 @@ namespace BytesCrafter.USocketNet.Networks {
 					threadset.wsPinging = true; 
 					threadset.wsPonging = false;
 					EmitPacket(new Packet(EnginePacketType.PING));
-					pingStart = DateTime.Now;
+					pingStart = DateTime.Now;					
 
 					while (webSocket.IsConnected && threadset.wsPinging && (DateTime.Now.Subtract(pingStart).TotalSeconds < timeoutMilis))
 					{

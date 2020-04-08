@@ -60,7 +60,7 @@ namespace BytesCrafter.USocketNet.RestApi {
             if( USocketNet.config.restapiUrl == string.Empty )
 			{
 				USocketNet.Log(Logs.Warn, "RestApi", "Please fill up RestApi url on this USocketNet core instance.");
-				callback( new BC_USN_Response() );
+				callback( new BC_USN_Response("urlempty", "Please fill up RestApi url on this USocketNet core instance.") );
 				return;
 			}
             
@@ -74,16 +74,15 @@ namespace BytesCrafter.USocketNet.RestApi {
             creds.AddField("PW", pword);
 
             string rapi = USocketNet.config.restapiUrl;
-            string startString = rapi[0] == 'h' && rapi[1] == 't' && rapi[2] == 't' && rapi[3] == 'p' ? "" : "http://";
             string endString = rapi[rapi.Length - 1] == '/' ? "" : "/";
-            var request = UnityWebRequest.Post( startString + rapi + endString + "wp-json/usocketnet/v1/auth", creds);
+            var request = UnityWebRequest.Post( rapi + endString + "wp-json/usocketnet/v1/auth", creds);
             
             yield return request.SendWebRequest();
             
             if ( request.isNetworkError || request.isHttpError )
             {
-                USocketNet.Log(Logs.Error, "RestApi", "The Rest API url return 404 Not found. Please check and try again.");
-                callback( new BC_USN_Response() );
+                USocketNet.Log(Logs.Error, "RestApi", "Request failed with status code of "+request.responseCode+", Try again.");
+                callback( new BC_USN_Response("reqerror", "Request failed with status code of "+request.responseCode+", Try again." ) );
             }
 
             else
@@ -101,7 +100,7 @@ namespace BytesCrafter.USocketNet.RestApi {
                 else
                 {
                     USocketNet.Log(Logs.Warn, "RestApi", response.message);
-                    callback( new BC_USN_Response() );
+                    callback( new BC_USN_Response(response.code, response.message) );
                 }
             }
         }

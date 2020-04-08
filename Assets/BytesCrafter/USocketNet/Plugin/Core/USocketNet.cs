@@ -113,9 +113,7 @@ namespace BytesCrafter.USocketNet
 		public void Authenticate( string uname, string pword, Action<BC_USN_Response> callback )
 		{
 			restApi.Authenticate(this, uname, pword, (BC_USN_Response response) => {
-				if( response.success ) {
-					callback(response);
-				}
+				callback(response);
 			});
 		}
 		
@@ -172,6 +170,9 @@ namespace BytesCrafter.USocketNet
 
 		public void RemoveChatClient()
 		{
+			if(chatClient == null)
+				return;
+
 			chatClient.Disconnect();
 			Destroy(chatClient.gameObject);
 		}
@@ -186,6 +187,9 @@ namespace BytesCrafter.USocketNet
 
 		public void RemoveGameClient()
 		{
+			if(gameClient == null)
+				return;
+
 			gameClient.Disconnect();
 			Destroy(gameClient.gameObject);
 		}

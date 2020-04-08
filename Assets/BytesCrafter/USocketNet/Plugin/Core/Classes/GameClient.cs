@@ -47,7 +47,7 @@ namespace BytesCrafter.USocketNet
 
 			if (!bc_usn_websocket.isConnected)
 			{
-				bc_usn_websocket.InitConnection(appsecret, USocketNet.config.serverPort.game, callback);
+				bc_usn_websocket.InitConnection(appsecret, USocketNet.config.serverPort.game, this, callback);
 			}
 
 			else

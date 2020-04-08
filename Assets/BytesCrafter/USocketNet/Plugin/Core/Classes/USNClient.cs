@@ -30,7 +30,6 @@ using UnityEngine;
 
 using BytesCrafter.USocketNet.Serials;
 using BytesCrafter.USocketNet.Networks;
-using BytesCrafter.USocketNet.Toolsets;
 
 namespace BytesCrafter.USocketNet
 {
@@ -66,7 +65,7 @@ namespace BytesCrafter.USocketNet
 		{
 			get
 			{
-				return bc_usn_websocket.socketId;
+				return bc_usn_websocket.getSocketId;
 			}
 		}
 
@@ -130,5 +129,15 @@ namespace BytesCrafter.USocketNet
 		// {
 		// 	USocketNet.Log(Logs.Log, "Starting", "");
 		// }
+
+		public virtual void OnConnect(bool recon)
+		{
+			Debug.Log("OnConnect");
+		}
+
+		public virtual void OnDisconnect(bool auto)
+		{
+			Debug.Log("OnDisconnect");
+		}
 	}
 }

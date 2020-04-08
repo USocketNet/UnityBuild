@@ -34,6 +34,11 @@ namespace BytesCrafter.USocketNet.Serials
         public string message = string.Empty;
         public BC_USN_Response_Data data = null;
 
+        public BC_USN_Response(string shortCode, string errorMsg) {
+            code = shortCode;
+            message = errorMsg;
+        }
+
         public bool success {
             get {
                 return code == "success" ? true : false;
