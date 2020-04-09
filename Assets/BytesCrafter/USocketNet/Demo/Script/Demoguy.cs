@@ -31,32 +31,46 @@ public class Demoguy : MonoBehaviour
 
 	#region CONNECTION
 
-	public void ConnectToServer()
+	public void SignIn()
 	{
 		//STEP3: You now need to authenticate the user with username and password to ask for the
 		// server for a token to be able for us to connect to the websocket port.
 		USocketNet.Core.Authenticate (username.text, password.text, (BC_USN_Response response) =>
 		{
 			if( response.success ) {
+				USocketNet.Log(Logs.Warn, "Demogguy", "WPID: " + response.data.id + " SNID: " + response.data.session 
+					+ " Response: " + " Welcome! :" + response.data.uname);
 				ChangeCanvas(1);
-				USocketNet.Core.Connect(appsecret.text, (ConStat conStat) => {
-					if( conStat == ConStat.Success ) {
-						USocketNet.Log(Logs.Warn, "Demogguy", "WPID: " + response.data.id + " SNID: " + response.data.session 
-							+ " Response: " + conStat.ToString() + " MID:" + USocketNet.Core.Master.Identity);
-					}
-				});
 			} else {
 				USocketNet.Log(Logs.Warn, "Demogguy", "Failed connection to websocket server.");
 			}
 		});
 	}
 
-	public void DisconnectFromServer()
+	public void SignOut()
 	{
 		//OPTIONAL: You can call SignOut to forcibly close all client associated with this USocketNet
 		// instance. Also, the if Reauthentication on app load will be postpone.
 		USocketNet.Core.SignOut ();
 		ChangeCanvas(0);
+	}
+
+	public void ConnectToServer()
+	{
+		USocketNet.Core.Connect(appsecret.text, (ConStat conStat) => {
+			if( conStat == ConStat.Success ) {
+				ChangeCanvas(2);
+				USocketNet.Log(Logs.Warn, "Demogguy", "You are now connected with id: " + USocketNet.Core.Master.Identity );
+			} else {
+				USocketNet.Log(Logs.Warn, "Demogguy", "You did not connect successfully: " + conStat.ToString() );
+			}
+		});
+	}
+
+	public void DisconnectFromServer()
+	{
+		USocketNet.Core.Disconnect();
+		ChangeCanvas(1);
 	}
 
 	#endregion
@@ -69,16 +83,28 @@ public class Demoguy : MonoBehaviour
 
 	void Awake()
 	{
+		ChangeCanvas(0);
+
 		//STEP2: Important! Next is to initialize the 'USocketNet' instance with the 'Config' which is
 		// is previously declared as a variable and set the values before app starts.
 		USocketNet.Initialized(serverConfig);
 	}
 
+	[Header("MESSAGING")]
+	public InputField priMsgContent = null;
+	public InputField priMsgReceiver = null;
+	public MessageDisplay privateViewer = null;
+
 	public void AddChatClient()
 	{
 		USocketNet.Core.AddChatClient(appsecret.text, (ConStat conStat) => {
-
+			USocketNet.Log(Logs.Warn, "Demogguy", "Connection to Chat Server return: " + conStat.ToString() );
 		});
+	}
+
+	public void SendMessage()
+	{
+
 	}
 
 	public void RemoveChatClient()
@@ -86,10 +112,11 @@ public class Demoguy : MonoBehaviour
 		USocketNet.Core.RemoveChatClient();
 	}
 
+
 	public void AddGameClient()
 	{
 		USocketNet.Core.AddGameClient(appsecret.text, (ConStat conStat) => {
-
+			USocketNet.Log(Logs.Warn, "Demogguy", "Connection to Game Server return: " + conStat.ToString() );
 		});
 	}
 
@@ -128,10 +155,7 @@ public class Demoguy : MonoBehaviour
 	public InputField pubMsgContent = null;
 	public MessageDisplay publicViewer = null;
 
-	[Header("PRIVATE MESSAGE")]
-	public InputField priMsgContent = null;
-	public InputField priMsgReceiver = null;
-	public MessageDisplay privateViewer = null;
+	
 
 	[Header("CHANNEL MESSAGE")]
 	public InputField chanMsgContent = null;

@@ -89,7 +89,6 @@ namespace BytesCrafter.USocketNet
 			bc_usn_websocket = new BC_USN_WebSocket();
 			//Client INITIALIZATION config before it run.
 			DontDestroyOnLoad(this);
-			Application.runInBackground = config.runOnBackground;
 		}
 
 		void Update()
@@ -130,14 +129,24 @@ namespace BytesCrafter.USocketNet
 		// 	USocketNet.Log(Logs.Log, "Starting", "");
 		// }
 
-		public virtual void OnConnect(bool recon)
+		public void OnConnection(bool recon)
 		{
-			Debug.Log("OnConnect");
+			OnConnect(recon);
 		}
 
-		public virtual void OnDisconnect(bool auto)
+		public void OnDisconnection(bool auto)
 		{
-			Debug.Log("OnDisconnect");
+			OnDisconnect(auto);
+		}
+
+		protected virtual void OnConnect(bool recon)
+		{
+			Debug.Log("OnConnect on USNClient from " + this.name);
+		}
+
+		protected virtual void OnDisconnect(bool auto)
+		{
+			Debug.Log("OnDisconnect on USNClient from " + this.name);
 		}
 	}
 }

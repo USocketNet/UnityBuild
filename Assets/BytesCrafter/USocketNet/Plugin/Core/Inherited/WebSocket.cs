@@ -109,13 +109,13 @@ namespace BytesCrafter.USocketNet.Networks {
 					if (threadset.websocket.IsConnected)
 					{
 						EmitEvent("connect");
-						curClient.OnConnect( true );
+						curClient.OnConnection( true );
 					}
 
 					else
 					{
 						EmitEvent("disconnect");
-						curClient.OnDisconnect( true );
+						curClient.OnDisconnection( true );
 					}
 				}
 
@@ -156,9 +156,9 @@ namespace BytesCrafter.USocketNet.Networks {
 			threadset.socketId = string.Empty;
 			threadset.autoConnect = true;
 
-			AddCallback("open", OnReceivedOpen);
-			AddCallback("close", OnReceivedClose);
-			AddCallback("error", OnReceivedError);
+			// AddCallback("open", OnReceivedOpen);
+			// AddCallback("close", OnReceivedClose);
+			// AddCallback("error", OnReceivedError);
 
             socketThread = new Thread(RunSocketThread);
             socketThread.Start(threadset.websocket);
@@ -179,14 +179,13 @@ namespace BytesCrafter.USocketNet.Networks {
         public void AbortConnection()
 		{
 			if (socketThread != null)
-			{
 				socketThread.Abort();
-			}
 
 			if (pingThread != null)
-			{
 				pingThread.Abort();
-			}
+
+			if(curClient != null)
+				curClient.OnDisconnection( true );
 		}
 
         public void ForceDisconnect()

@@ -27,6 +27,7 @@
 #endregion
 
 using System;
+using UnityEngine;
 using BytesCrafter.USocketNet.Toolsets;
 
 namespace BytesCrafter.USocketNet
@@ -66,6 +67,16 @@ namespace BytesCrafter.USocketNet
 		{
 			bc_usn_websocket.ForceDisconnect();
 		}
+
+        protected override void OnConnect(bool recon)
+        {
+            Debug.Log("OnConnect on ChatClient from " + this.name);
+        }
+
+        protected override void OnDisconnect(bool recon)
+        {
+            Debug.Log("OnDisconnect on ChatClient from " + this.name);
+        }
     }
 }
 

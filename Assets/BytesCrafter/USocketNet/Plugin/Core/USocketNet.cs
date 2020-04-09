@@ -92,6 +92,8 @@ namespace BytesCrafter.USocketNet
 		public static void Initialized(Config refsConfig)
 		{
 			staticConfig = refsConfig;
+			Application.runInBackground = USocketNet.config.runOnBackground;
+			
 			logger = new BC_USN_Logger();
 			baseRefs = new GameObject("USocketNet").AddComponent<USocketNet>();
 		}
@@ -101,7 +103,6 @@ namespace BytesCrafter.USocketNet
 		void Awake()
 		{
 			DontDestroyOnLoad(this);
-			Application.runInBackground = USocketNet.config.runOnBackground;
 		}
 
 		/// <summary>
@@ -153,8 +154,11 @@ namespace BytesCrafter.USocketNet
 
 		public void Disconnect()
 		{
-			masterClient.Disconnect();
-			Destroy(masterClient.gameObject);
+			if(masterClient != null)
+			{
+				masterClient.Disconnect();
+				Destroy(masterClient.gameObject);
+			}
 
 			RemoveChatClient();
 			RemoveGameClient();
@@ -167,6 +171,8 @@ namespace BytesCrafter.USocketNet
 			chatClient = new GameObject("ChatClient").AddComponent<ChatClient>();
 			chatClient.Connect(appsecret, callback);
 		}
+
+		//public void SendMessage( )
 
 		public void RemoveChatClient()
 		{
