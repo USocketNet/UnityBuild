@@ -51,12 +51,13 @@ namespace BytesCrafter.USocketNet.Networks {
 		{
             get 
 			{
-                return threadset.IsConnected && threadset.websocket.IsConnected;
-            }
-
-            set 
-			{
-                threadset.IsConnected = value;
+                 if(threadset.websocket != null) {
+					return threadset.websocket.IsConnected 
+						&& threadset.websocket.IsAlive 
+						&& threadset.websocket.ReadyState == WebSocketState.Open;
+				} else {
+					return false;
+				}
             }
         }
 
@@ -69,7 +70,16 @@ namespace BytesCrafter.USocketNet.Networks {
 
         public void Update() 
         {
-			if (threadset.IsInitialized)
+			// if(Input.GetMouseButtonDown(1) && threadset.websocket != null)
+			// {
+			// 	Debug.Log("IsInitialized: " + threadset.isInitialized);
+			// 	Debug.Log("ReadyState: " + threadset.websocket.ReadyState);
+			// 	Debug.Log("isConnected: " + threadset.websocket.IsConnected);
+			// 	Debug.Log("IsAlive: " + threadset.websocket.IsAlive);
+			// 	Debug.Log("IsSecure: " + threadset.websocket.IsSecure);
+			// }
+
+			if (threadset.isInitialized)
 			{
 				lock (queueCoder.eventQueueLock)
 				{
@@ -100,15 +110,17 @@ namespace BytesCrafter.USocketNet.Networks {
 				}
 
 				//Check for websocket connection status change.
-				if (threadset.wsCheck != threadset.websocket.IsConnected)
+				if (threadset.wsCheck != threadset.isWsConnected)
 				{
 					//Save the current websocket connetion status as bool.
-					threadset.wsCheck = threadset.websocket.IsConnected;
+					threadset.wsCheck = threadset.isWsConnected;
 
 					//If websocket instance is currently connected.
-					if (threadset.websocket.IsConnected)
+					if (threadset.isWsConnected)
 					{
 						EmitEvent("connect");
+						connectCallback(ConStat.Success);
+						connectCallback = null;
 						curClient.OnConnection( true );
 					}
 
@@ -136,25 +148,8 @@ namespace BytesCrafter.USocketNet.Networks {
         public void InitConnection(string appsecret, string port, USNClient usnClient, Action<ConStat> callback) 
         {
 			curClient = usnClient;
-			threadset.IsInitialized = true;
 			queueCoder.Starts();
-			
-			//WEB SOCKET INITIALIZATION	
-			string hostUrl = USocketNet.config.serverUrl + ":" + port;
-			string sioPath = "/socket.io/?EIO=4&transport=websocket";
-			string usrTok = "&wpid=" + USocketNet.User.token.wpid + "&snid=" + USocketNet.User.token.snid + "&apid=" + appsecret;
-
-			threadset.websocket = new WebSocket("ws://" + hostUrl + sioPath + usrTok);
-			threadset.websocket.OnOpen += OnOpen;
-			threadset.websocket.OnError += OnError;
-			threadset.websocket.OnClose += OnClose;
-			threadset.websocket.OnMessage += OnPacket;
-
-			threadset.wsCheck = false;
-			threadset.IsConnected = true;
-			threadset.packetId = 0;
-			threadset.socketId = string.Empty;
-			threadset.autoConnect = true;
+			threadset.Start(appsecret, port, OnOpen, OnError, OnClose, OnPacket);
 
 			// AddCallback("open", OnReceivedOpen);
 			// AddCallback("close", OnReceivedClose);
@@ -169,11 +164,25 @@ namespace BytesCrafter.USocketNet.Networks {
 			USocketNet.Core.StartCoroutine(WaitingForSocketId(callback));
         }
 
-		IEnumerator WaitingForSocketId(Action<ConStat> callback)
-		{
-			yield return new WaitUntil(() => threadset.socketId != string.Empty);
+		private Action<ConStat> connectCallback;
 
-			callback( ConStat.Success );
+		IEnumerator WaitingForSocketId(Action<ConStat> callback)
+		{	
+			connectCallback = callback;
+
+			yield return new WaitForSeconds(USocketNet.config.connectDelay);
+
+			if(connectCallback == null)
+				yield break;
+
+			if(isConnected) {
+				connectCallback( ConStat.Success );
+			} else {
+				AbortConnection();
+				ForceDisconnect();
+				connectCallback( ConStat.Error );
+				curClient.Destroys();
+			}
 		}
 
         public void AbortConnection()
@@ -190,26 +199,20 @@ namespace BytesCrafter.USocketNet.Networks {
 
         public void ForceDisconnect()
 		{
-			if( threadset.IsInitialized )
+			if( threadset.isConnected )
 			{
 				EmitPacket(new Packet(EnginePacketType.MESSAGE, SocketPacketType.DISCONNECT, 0, "/", -1, new JSONObject("")));
 				EmitPacket(new Packet(EnginePacketType.CLOSE));
-				threadset.websocket.Close ();
+				threadset.Close ();
 			}
 
-			threadset.IsInitialized = false;
 			queueCoder.Stops();
-			threadset.websocket = null;
-			threadset.wsCheck = false;
-			threadset.IsConnected = false;
-			threadset.packetId = 0;
-			threadset.socketId = string.Empty;
-			threadset.autoConnect = false;
+			threadset.Reset();
 		}
 
 		#endregion
 
-		#region Listeners Callback
+		#region Listeners Callback - Ongoing!
 
 		private void AddCallback(string events, Action<SocketIOEvent> callback)
 		{
@@ -246,7 +249,7 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		#endregion
 
-        #region Socket Event
+        #region Socket Event - Done!
 
 		private void OnReceivedOpen(SocketIOEvent e)
 		{
@@ -255,7 +258,6 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		private void OnReceivedError(SocketIOEvent e)
 		{
-			threadset.autoConnect = false;
 			USocketNet.Log(Logs.Warn, "[SocketIO]", " Error received: " + e.name + " " + e.data);
 		}
 
@@ -362,7 +364,7 @@ namespace BytesCrafter.USocketNet.Networks {
 		{
 			WebSocket webSocket = (WebSocket)obj;
 
-			while (threadset.IsConnected)
+			while (threadset.isConnected)
 			{
 				if (webSocket.IsConnected)
 				{
@@ -386,9 +388,9 @@ namespace BytesCrafter.USocketNet.Networks {
 			int timeoutMilis = Mathf.FloorToInt(threadset.pingTimeout * 1000);
 			int intervalMilis = Mathf.FloorToInt(threadset.pingInterval * 1000);
 
-			while (threadset.IsConnected)
+			while (threadset.isConnected)
 			{
-				if (!threadset.websocket.IsConnected)
+				if (!threadset.isWsConnected)
 				{
 					Thread.Sleep(threadset.reconDelay);
 				}
@@ -417,7 +419,7 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		#endregion
 
-        #region Emit Listeners
+        #region Emit Listeners - Done!
 
 		private void SendEmit(string events)
 		{
@@ -474,7 +476,7 @@ namespace BytesCrafter.USocketNet.Networks {
 		{
 			try
 			{
-				threadset.websocket.Send(queueCoder.encoder.Encode(packet));
+				threadset.Send(queueCoder.encoder.Encode(packet));
 			}
 
 			catch (SocketIOException ex)

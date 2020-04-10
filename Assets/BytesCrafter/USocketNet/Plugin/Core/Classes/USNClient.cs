@@ -82,7 +82,6 @@ namespace BytesCrafter.USocketNet
 		#endregion
 
 		#region MONOBEHAVIOUR
-		
 
 		void Awake()
 		{
@@ -115,10 +114,14 @@ namespace BytesCrafter.USocketNet
 			bc_usn_websocket.AbortConnection();
 		}
 
+		public void Destroys()
+		{
+			Destroy(this.gameObject);
+		}
+
 		#endregion
 
 		
-
 		// void Start() 
 		// {
 		// 	OnStart(true);

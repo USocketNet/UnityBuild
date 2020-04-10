@@ -141,6 +141,7 @@ MonoBehaviour:
   config:
     restapiUrl: localhost
     serverUrl: localhost
+    connectDelay: 1
     debugOnLog: 1
     runOnBackground: 1
 --- !u!1001 &1556402040
@@ -338,6 +339,11 @@ PrefabInstance:
         type: 3}
       propertyPath: serverConfig.serverUrl
       value: localhost
+      objectReference: {fileID: 0}
+    - target: {fileID: 114934323213285524, guid: 2960126293d1e874cbd19fad233696c0,
+        type: 3}
+      propertyPath: serverConfig.connectDelay
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 224625372023300380, guid: 2960126293d1e874cbd19fad233696c0,
         type: 3}

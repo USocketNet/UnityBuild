@@ -65,6 +65,11 @@ namespace BytesCrafter.USocketNet
 		/// <summary>
 		/// Game cant be found or api is not correct. Code: 7
 		/// </summary>
-		Unknown
+		Unknown,
+
+		/// <summary>
+		/// USocketNet client is currently connecting. Code: 8
+		/// </summary>
+		Connecting
 	}
 }

@@ -47,16 +47,7 @@ namespace BytesCrafter.USocketNet
 				return;
 			}
 
-			if (!bc_usn_websocket.isConnected)
-			{
-				bc_usn_websocket.InitConnection(appsecret, USocketNet.config.serverPort.chat, this, callback);
-			}
-
-			else
-			{
-				USocketNet.Log(Logs.Warn, "ConnectionSuccess", "Already connected to the server!");
-				callback( ConStat.Error );
-			}
+			bc_usn_websocket.InitConnection(appsecret, USocketNet.config.serverPort.game, this, callback);
 		}
 
         /// <summary>

@@ -93,7 +93,7 @@ namespace BytesCrafter.USocketNet
 		{
 			staticConfig = refsConfig;
 			Application.runInBackground = USocketNet.config.runOnBackground;
-			
+
 			logger = new BC_USN_Logger();
 			baseRefs = new GameObject("USocketNet").AddComponent<USocketNet>();
 		}
@@ -147,7 +147,11 @@ namespace BytesCrafter.USocketNet
 				masterClient = new GameObject("MasterClient").AddComponent<MasterClient>();
 				masterClient.Connect(appsecret, callback);
 			} else {
-				callback( ConStat.Online );
+				if(masterClient.IsConnected) {
+					callback( ConStat.Online );
+				} else {
+					callback( ConStat.Connecting );
+				}
 			}
 			
 		}

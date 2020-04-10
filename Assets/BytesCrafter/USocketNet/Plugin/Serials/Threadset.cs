@@ -1,7 +1,7 @@
 ﻿
 #region License
 /*
- * Threadset.cs
+ * cs
  *
  * Copyright (c) 2020 Bytes Crafter
  *
@@ -25,6 +25,7 @@
  */
 #endregion
 
+using System;
 using WebSocketSharp;
 
 namespace BytesCrafter.USocketNet.Networks
@@ -32,22 +33,41 @@ namespace BytesCrafter.USocketNet.Networks
 	[System.Serializable]
 	public class Threadset
 	{
-		public WebSocket websocket = null; //An instance of Web Socket for connection.
+		private WebSocket curWebsocket = null; //An instance of Web Socket for connection.
 
-		public bool wsCheck { get { return wscheck; } set { wscheck = value; } }
-		private volatile bool wscheck;
+		public WebSocket websocket {
+			get {
+				return curWebsocket;
+			}
+		}
 
-		public bool IsConnected { get { return connected; } set { connected = value; } }
-		private volatile bool connected;
+		public bool isWsConnected {
+			get {
+				return curWebsocket.IsConnected;
+			}
+		}
+
+		public void Close()
+		{
+			curWebsocket.Close();
+		}
+
+		public void Send(string data)
+		{
+			curWebsocket.Send(data);
+		}
 
 		public string socketId { get; set; }
 		public int packetId; 
 
-		public bool IsInitialized { get { return wsinit; } set { wsinit = value; } }
-		private volatile bool wsinit;
+		public bool isConnected { get { return connected; } set { connected = value; } }
+		private volatile bool connected;
 
-		public bool autoConnect { get { return autoConn; } set { autoConn = value; } }
-		private volatile bool autoConn;
+		public bool wsCheck { get { return wscheck; } set { wscheck = value; } }
+		private volatile bool wscheck;
+
+		public bool isInitialized { get { return wsinit; } set { wsinit = value; } }
+		private volatile bool wsinit;
 
 		public bool wsPinging { get { return wspinging; } set { wspinging = value; } }
 		private volatile bool wspinging; 
@@ -55,9 +75,57 @@ namespace BytesCrafter.USocketNet.Networks
 		public bool wsPonging { get { return wsponging; } set { wsponging = value; } }
 		private volatile bool wsponging;
 
-		public int reconDelay = 5;
-		public float ackExpireTime = 1800f;
-		public float pingInterval = 25f;
-		public float pingTimeout = 60f;
+		public int reconDelay {
+			get {
+				return 5;
+			}
+		}
+		public float ackExpireTime {
+			get {
+				return 1800f;
+			}
+		}
+		public float pingInterval {
+			get {
+				return 25f;
+			}
+		}
+
+		public float pingTimeout {
+			get {
+				return 60f;
+			}
+		}
+
+		public void Start(string appsecret, string port, EventHandler OnOpen, EventHandler<ErrorEventArgs> OnError, EventHandler<CloseEventArgs> OnClose, EventHandler<MessageEventArgs> OnPacket) 
+		{
+			string hostUrl = USocketNet.config.serverUrl + ":" + port;
+			string sioPath = "/socket.io/?EIO=4&transport=websocket";
+			string usrTok = "&wpid=" + USocketNet.User.token.wpid + "&snid=" + USocketNet.User.token.snid + "&apid=" + appsecret;
+
+			curWebsocket = new WebSocket("ws://" + hostUrl + sioPath + usrTok);
+			curWebsocket.OnOpen += OnOpen;
+			curWebsocket.OnError += OnError;
+			curWebsocket.OnClose += OnClose;
+			curWebsocket.OnMessage += OnPacket;
+
+			wsCheck = false;
+			isConnected = true;
+			packetId = 0;
+			socketId = string.Empty;
+			isInitialized = true;
+		}
+
+		public void Reset()
+		{
+			isInitialized = false;
+			curWebsocket = null;
+
+			wsCheck = false;
+			isConnected = false;
+
+			packetId = 0;
+			socketId = string.Empty;
+		}
 	}
 }
