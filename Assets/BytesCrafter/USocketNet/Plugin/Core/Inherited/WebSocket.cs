@@ -70,14 +70,14 @@ namespace BytesCrafter.USocketNet.Networks {
 
         public void Update() 
         {
-			// if(Input.GetMouseButtonDown(1) && threadset.websocket != null)
-			// {
-			// 	Debug.Log("IsInitialized: " + threadset.isInitialized);
-			// 	Debug.Log("ReadyState: " + threadset.websocket.ReadyState);
-			// 	Debug.Log("isConnected: " + threadset.websocket.IsConnected);
-			// 	Debug.Log("IsAlive: " + threadset.websocket.IsAlive);
-			// 	Debug.Log("IsSecure: " + threadset.websocket.IsSecure);
-			// }
+			if(Input.GetMouseButtonDown(1) && threadset.websocket != null)
+			{
+				Debug.Log("IsInitialized: " + threadset.isInitialized);
+				Debug.Log("ReadyState: " + threadset.websocket.ReadyState);
+				Debug.Log("isConnected: " + threadset.websocket.IsConnected);
+				Debug.Log("IsAlive: " + threadset.websocket.IsAlive);
+				Debug.Log("IsSecure: " + threadset.websocket.IsSecure);
+			}
 
 			if (threadset.isInitialized)
 			{
@@ -119,15 +119,13 @@ namespace BytesCrafter.USocketNet.Networks {
 					if (threadset.isWsConnected)
 					{
 						EmitEvent("connect");
-						connectCallback(ConStat.Success);
-						connectCallback = null;
-						curClient.OnConnection( true );
+						//curClient.OnConnection( true );
 					}
 
 					else
 					{
 						EmitEvent("disconnect");
-						curClient.OnDisconnection( true );
+						//curClient.OnDisconnection( true );
 					}
 				}
 
@@ -164,23 +162,16 @@ namespace BytesCrafter.USocketNet.Networks {
 			USocketNet.Core.StartCoroutine(WaitingForSocketId(callback));
         }
 
-		private Action<ConStat> connectCallback;
-
 		IEnumerator WaitingForSocketId(Action<ConStat> callback)
 		{	
-			connectCallback = callback;
-
-			yield return new WaitForSeconds(USocketNet.config.connectDelay);
-
-			if(connectCallback == null)
-				yield break;
+			yield return new WaitUntil(() => getSocketId != string.Empty && isConnected );
 
 			if(isConnected) {
-				connectCallback( ConStat.Success );
+				callback( ConStat.Success );
 			} else {
 				AbortConnection();
 				ForceDisconnect();
-				connectCallback( ConStat.Error );
+				callback( ConStat.Error );
 				curClient.Destroys();
 			}
 		}

@@ -43,6 +43,7 @@ namespace BytesCrafter.USocketNet
 		/// This is the host and client config.
 		/// </summary>
 		/// <returns></returns>
+		[HideInInspector]
 		public Config config = new Config();
 
 		/// <summary>
