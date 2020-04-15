@@ -87,13 +87,13 @@ namespace BytesCrafter.USocketNet.Networks
 		}
 		public float pingInterval {
 			get {
-				return 25f;
+				return 10f;
 			}
 		}
 
 		public float pingTimeout {
 			get {
-				return 60f;
+				return 5f;
 			}
 		}
 
