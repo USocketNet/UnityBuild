@@ -70,15 +70,6 @@ namespace BytesCrafter.USocketNet.Networks {
 
         public void Update() 
         {
-			if(Input.GetMouseButtonDown(1) && threadset.websocket != null)
-			{
-				Debug.Log("IsInitialized: " + threadset.isInitialized);
-				Debug.Log("ReadyState: " + threadset.websocket.ReadyState);
-				Debug.Log("isConnected: " + threadset.websocket.IsConnected);
-				Debug.Log("IsAlive: " + threadset.websocket.IsAlive);
-				Debug.Log("IsSecure: " + threadset.websocket.IsSecure);
-			}
-
 			if (threadset.isInitialized)
 			{
 				lock (queueCoder.eventQueueLock)
@@ -149,9 +140,21 @@ namespace BytesCrafter.USocketNet.Networks {
 			queueCoder.Starts();
 			threadset.Start(appsecret, port, OnOpen, OnError, OnClose, OnPacket);
 
-			// AddCallback("open", OnReceivedOpen);
-			// AddCallback("close", OnReceivedClose);
-			// AddCallback("error", OnReceivedError);
+			AddCallback("open", OnReceivedOpen);
+			AddCallback("close", OnReceivedClose);
+			AddCallback("error", OnReceivedError);
+
+			//AddCallback("disconnect", OnDisconnects);
+			// AddCallback("reconnect", OnDisconnects);
+			// AddCallback("reconnect_attempt", OnDisconnects);
+			// AddCallback("reconnecting", OnDisconnects);
+
+			// AddCallback("reconnect_error", OnDisconnects);
+			// AddCallback("reconnect_failed", OnDisconnects);
+			// AddCallback("reconnecting", OnDisconnects);
+
+			// AddCallback("ping", OnDisconnects);
+			//AddCallback("pong", Ponging);
 
             socketThread = new Thread(RunSocketThread);
             socketThread.Start(threadset.websocket);
@@ -162,17 +165,29 @@ namespace BytesCrafter.USocketNet.Networks {
 			USocketNet.Core.StartCoroutine(WaitingForSocketId(callback));
         }
 
+		void OnDisconnects(SocketIOEvent e)
+		{
+			//MsgJson msgJson = JsonUtility.FromJson<MsgJson>(_eventArgs.data.ToString());
+			USocketNet.Log(Logs.Warn, "[OnDisconnects]", " OnDisconnects received: " + e.name + " " + e.data.ToString());
+		}
+
+		void Ponging(SocketIOEvent e)
+		{
+			//MsgJson msgJson = JsonUtility.FromJson<MsgJson>(_eventArgs.data.ToString());
+			USocketNet.Log(Logs.Warn, "[Ponging]", " Ponging received: " + e.name + " " + e.data.ToString());
+		}
+
 		IEnumerator WaitingForSocketId(Action<ConStat> callback)
 		{	
-			yield return new WaitUntil(() => getSocketId != string.Empty && isConnected );
+			DateTime timer = DateTime.Now;
+
+			yield return new WaitUntil(() => (getSocketId != string.Empty && isConnected) || DateTime.Now.Subtract(timer).TotalSeconds > 1 );
 
 			if(isConnected) {
 				callback( ConStat.Success );
 			} else {
-				AbortConnection();
-				ForceDisconnect();
-				callback( ConStat.Error );
 				curClient.Destroys();
+				callback( ConStat.Error );
 			}
 		}
 
@@ -244,37 +259,44 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		private void OnReceivedOpen(SocketIOEvent e)
 		{
-			USocketNet.Log(Logs.Warn, "[SocketIO]", " Open received: " + e.name + " " + e.data);
+			USocketNet.Log(Logs.Warn, "[SocketIO]", " Open received: " + e.name + " " + e.data.ToString());
 		}
 
 		private void OnReceivedError(SocketIOEvent e)
 		{
-			USocketNet.Log(Logs.Warn, "[SocketIO]", " Error received: " + e.name + " " + e.data);
+			USocketNet.Log(Logs.Warn, "[SocketIO]", " Error received: " + e.name + " " + e.data.ToString());
 		}
 
 		private void OnReceivedClose(SocketIOEvent e)
 		{	
-			USocketNet.Log(Logs.Warn, "[SocketIO]", " Close received: " + e.name + " " + e.data);
+			USocketNet.Log(Logs.Warn, "[SocketIO]", " Close received: " + e.name + " " + e.data.ToString());
 		}
 
 		private void OnOpen(object sender, EventArgs e)
 		{ 
 			EmitEvent("open");
+			USocketNet.Log(Logs.Warn, "[DEMOGUY OnOpen]", " open: " + JsonUtility.ToJson(sender) + " - " + e.ToString());
 		}
 
 		private void OnError(object sender, ErrorEventArgs e)
 		{
 			EmitEvent("error");
+			// if(e.Message == "Message: An exception has occurred while connecting." || e.Message == "An exception has occurred while OnClose.") {
+			// 	curClient.Destroys();
+			// }
+			USocketNet.Log(Logs.Warn, "[DEMOGUY OnError]", "Message: " + e.Message);
 		}
 
 		private void OnClose(object sender, CloseEventArgs e)
 		{
 			EmitEvent("close");
+			USocketNet.Log(Logs.Warn, "[DEMOGUY OnClose]", "Code: " + e.Code + " - Reason: " + e.Reason + " - WasClean: " + e.WasClean);
 		}
 
 		private void OnPacket(object sender, MessageEventArgs e)
 		{
 			Packet packet = queueCoder.decoder.Decode(e); 
+			Debug.Log(packet.enginePacketType.ToString() +"-"+ JsonUtility.ToJson(packet.json));
 
 			switch (packet.enginePacketType)
 			{
@@ -297,7 +319,11 @@ namespace BytesCrafter.USocketNet.Networks {
 		}
 
 		private void HandleOpen(Packet packet)
-		{				
+		{		
+			threadset.wsPinging = true; 
+			threadset.wsPonging = false;		
+			EmitPacket(new Packet(EnginePacketType.PING));
+
 			threadset.socketId = packet.json["sid"].str;
 			EmitEvent("open");
 		}
@@ -307,10 +333,19 @@ namespace BytesCrafter.USocketNet.Networks {
 			EmitPacket(new Packet(EnginePacketType.PONG));
 		}
 
+		private DateTime pTimer;
+		private int pValue = 0;
+		public int getPingInMS {
+			get {
+				return pValue;
+			}
+		}
+
 		private void HandlePong()
 		{
 			threadset.wsPonging = true;
 			threadset.wsPinging = false;
+			pValue = Convert.ToInt16(DateTime.Now.Subtract(pTimer).TotalMilliseconds);
 		}
 
 		private void HandleMessage(Packet packet)
@@ -349,7 +384,7 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		#endregion
 
-        #region Threading Mechanism
+        #region Threading Mechanism - Done!
 
 		private void RunSocketThread(object obj)
 		{
@@ -388,10 +423,12 @@ namespace BytesCrafter.USocketNet.Networks {
 
 				else
 				{
+					pTimer = DateTime.Now;
+					pingStart = DateTime.Now;
+
 					threadset.wsPinging = true; 
 					threadset.wsPonging = false;
 					EmitPacket(new Packet(EnginePacketType.PING));
-					pingStart = DateTime.Now;					
 
 					while (webSocket.IsConnected && threadset.wsPinging && (DateTime.Now.Subtract(pingStart).TotalSeconds < timeoutMilis))
 					{

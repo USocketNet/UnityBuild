@@ -43,8 +43,7 @@ namespace BytesCrafter.USocketNet
 		/// This is the host and client config.
 		/// </summary>
 		/// <returns></returns>
-		[HideInInspector]
-		public Config config = new Config();
+		protected Config config = new Config();
 
 		/// <summary>
 		/// Determines whether this client is connected to web socket server.
@@ -71,12 +70,18 @@ namespace BytesCrafter.USocketNet
 		}
 
 		/// <summary>
-		/// Get the Token that your RestApi respond.
+		/// Get the Token that your RestApi respond during user authentication.
 		/// </summary>
-		/// <value></value>
-		public BC_USN_Token GetToken {
+		/// <value> An object of wpid(WordPress id) and snid(Auth Session Token).</value>
+		public BC_USN_Token AuthToken {
 			get {
 				return USocketNet.User.token;
+			}
+		}
+
+		public int GetPingInMS {
+			get {
+				return bc_usn_websocket.getPingInMS;
 			}
 		}
 

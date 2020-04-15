@@ -22,6 +22,9 @@ public class Demoguy : MonoBehaviour
 		canvasGroup [index].gameObject.SetActive (true);
 	}
 
+	[Header("PING MECHANISM")]
+	public Text pingSocket = null;
+
 	[Header("Connections")]
 	public InputField username = null;
 	public InputField password = null;
@@ -125,6 +128,11 @@ public class Demoguy : MonoBehaviour
 		USocketNet.Core.RemoveGameClient();
 	}
 
+	void Update()
+	{
+		if(USocketNet.Core.Master != null)
+			pingSocket.text = USocketNet.Core.Master.GetPingInMS + "ms";
+	}
 
 
 	
@@ -164,6 +172,5 @@ public class Demoguy : MonoBehaviour
 	[Header("Server Room")]
 	public InputField roomname = null;
 
-	[Header("PING MECHANISM")]
-	public Text pingSocket = null;
+	
 }
