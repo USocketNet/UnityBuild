@@ -36,6 +36,11 @@ namespace BytesCrafter.USocketNet
 	public class USocketNet : MonoBehaviour
 	{
 		#region  Static Components
+
+		/// <summary>
+		/// Get the initialized config for this specific USocketNet core instance.
+		/// </summary>
+		/// <value>{ restapiUrl, serverUrl, debugOnLog, runOnBackground }</value>
 		public static Config config
 		{
 			get {
@@ -44,6 +49,12 @@ namespace BytesCrafter.USocketNet
 		}
 		private static Config staticConfig = new Config();  
 
+		/// <summary>
+		/// Check if this current USocketNet core instance is initialize or not.
+		/// You need to initialize the instance before trying to pass commands. 
+		/// You just need to call, USocketNet.Initialize(config, callback);
+		/// </summary>
+		/// <value> bool: true or false. </value>
 		public static bool isInitialized
 		{
 			get {
@@ -51,10 +62,16 @@ namespace BytesCrafter.USocketNet
 			}
 		}
 
+		/// <summary>
+		/// Current core instance of USocketNet. This will also return false if 
+		/// this instance is actually null or not initialized else will return 
+		/// the reference of the core instance.
+		/// </summary>
+		/// <value>bool: USocketNet or null.</value>
 		public static USocketNet Core
 		{
 			get {
-				if(isInitialized) {
+				if(isInitialized && baseRefs != null) {
 					return baseRefs;
 				} else {
 					return null;
@@ -63,20 +80,36 @@ namespace BytesCrafter.USocketNet
 		}
 		private static USocketNet baseRefs;
 
+		/// <summary>
+		/// Static logging of USocketNet and will only work for if USocketNet.config.debugOnLog
+		/// is enable or equal to true. During build, it is best to disable that bool.
+		/// </summary>
+		/// <param name="log">Type of Log if Log, Warn, or Error.</param>
+		/// <param name="title">Main Category of this log.</param>
+		/// <param name="info">Short description of this log.</param>
 		public static void Log ( Logs log, string title, string info ) 
 		{
 			logger.Push(log, title, info);
 		}
 		private static BC_USN_Logger logger;
 
+		/// <summary>
+		/// Check whether the current core instance is authenticated from its restapiUrl 
+		/// or not. Call USocketNet.Core.Authenticate(username, password, callback); 
+		/// </summary>
+		/// <value></value>
 		public bool isAuthenticated
         {
-            get
-            {
+            get {
                 return restApi.isAuthenticated;
             }
         }
 
+		/// <summary>
+		/// If this core instance is previously authenticated to server, this object 
+		/// will have a value or if not will and is not authenticated return null. 
+		/// </summary>
+		/// <value> { session, cookie, avatar, id, uname, dname, email, roles[] } or null. </value>
 		public static BC_USN_Response_Data User
 		{
 			get {
@@ -89,6 +122,11 @@ namespace BytesCrafter.USocketNet
 		}
 		private static BC_USN_RestApi restApi = new BC_USN_RestApi();
 
+		/// <summary>
+		/// To be able to pass commands to this core instance, you need to call this 
+		/// function and pass the client configuration for this core instance.
+		/// </summary>
+		/// <param name="refsConfig"> Type of USocketNet.Config </param>
 		public static void Initialized(Config refsConfig)
 		{
 			staticConfig = refsConfig;
@@ -100,108 +138,151 @@ namespace BytesCrafter.USocketNet
 
 		#endregion
 
-		void Awake()
-		{
-			DontDestroyOnLoad(this);
-		}
-
-		/// <summary>
-		/// Authenticate the user to your Rest Api host.
-		/// </summary>
-		/// <param name="uname">Username.</param>
-		/// <param name="pword">Password.</param>
-		/// <param name="callback">BC_USN_Response.</param>
-		public void Authenticate( string uname, string pword, Action<BC_USN_Response> callback )
-		{
-			restApi.Authenticate(this, uname, pword, (BC_USN_Response response) => {
-				callback(response);
-			});
-		}
-		
-		public void SignOut()
-		{
-			if( restApi.isAuthenticated ) {
-				restApi.Deauthenticate();
-				Disconnect();
-			} else {
-				USocketNet.Log(Logs.Warn, "RestApi", "You are not authenticated thus you dont have to sign out.");
-			}
-			
-		}
-
-		public MasterClient Master
-		{
-			get {
-				if(isInitialized) {
-					return masterClient;
-				} else {
-					return null;
-				}
-			}
-		}
-		private MasterClient masterClient;
-
-		public void Connect(string appsecret, Action<ConStat> callback )
-		{
-			if( masterClient == null ) {
-				masterClient = new GameObject("MasterClient").AddComponent<MasterClient>();
-				masterClient.Connect(appsecret, callback);
-			} else {
-				if(masterClient.IsConnected) {
-					callback( ConStat.Online );
-				} else {
-					callback( ConStat.Connecting );
-				}
-			}
-			
-		}
-
-		public void Disconnect()
-		{
-			if(masterClient != null)
+		#region Class Components
+			void Awake()
 			{
-				masterClient.Disconnect();
-				Destroy(masterClient.gameObject);
+				DontDestroyOnLoad(this);
 			}
 
-			RemoveChatClient();
-			RemoveGameClient();
-		}
+			/// <summary>
+			/// Authenticate the user to your RestApi host.
+			/// </summary>
+			/// <param name="uname">Username.</param>
+			/// <param name="pword">Password.</param>
+			/// <param name="callback">BC_USN_Response.</param>
+			public void Authenticate( string uname, string pword, Action<BC_USN_Response> callback )
+			{
+				restApi.Authenticate(this, uname, pword, (BC_USN_Response response) => {
+					callback(response);
+				});
+			}
 
-		private ChatClient chatClient;
+			/// <summary>
+			/// Signout the user and will delete previous user authentication data. 
+			/// This will also disconnect all connected USNClient instances.
+			/// </summary>
+			public void SignOut()
+			{
+				if( restApi.isAuthenticated ) {
+					restApi.Deauthenticate();
+					Disconnect();
+				} else {
+					USocketNet.Log(Logs.Warn, "RestApi", "You are not authenticated thus you dont have to sign out.");
+				}
+				
+			}
 
-		public void AddChatClient(string appsecret, Action<ConStat> callback )
-		{
-			chatClient = new GameObject("ChatClient").AddComponent<ChatClient>();
-			chatClient.Connect(appsecret, callback);
-		}
+			/// <summary>
+			/// Connect you Master client to server for us to have this core instance 
+			/// neccessary permissions for chat and game client to connect.
+			/// </summary>
+			/// <param name="appsecret">App Secret Key from your backend. </param>
+			/// <param name="callback">Callback that will return typeof ConStat.</param>
+			public void Connect(string appsecret, Action<ConStat> callback )
+			{
+				if( masterClient == null ) {
+					masterClient = new GameObject("MasterClient").AddComponent<MasterClient>();
+					masterClient.Connect(appsecret, callback);
+				} else {
+					if(masterClient.IsConnected) {
+						callback( ConStat.Online );
+					} else {
+						callback( ConStat.Connecting );
+					}
+				}
+			}
 
-		//public void SendMessage( )
+			/// <summary>
+			/// Forcibly close all USocketNet clients from the existing connection 
+			/// to the server caused by Masters disconnection. Includes: Chat and Game client.
+			/// </summary>
+			public void Disconnect()
+			{
+				if(masterClient != null)
+				{
+					masterClient.Disconnect();
+					Destroy(masterClient.gameObject);
+				}
 
-		public void RemoveChatClient()
-		{
-			if(chatClient == null)
-				return;
+				RemoveChatClient();
+				RemoveGameClient();
+			}
 
-			chatClient.Disconnect();
-			Destroy(chatClient.gameObject);
-		}
+			/// <summary>
+			/// This is the Master Client of this USocketNet core. 
+			/// Use this if you have any query to server.
+			/// </summary>
+			/// <value></value>
+			public MasterClient Master
+			{
+				get {
+					if(isInitialized) {
+						return masterClient;
+					} else {
+						return null;
+					}
+				}
+			}
+			private MasterClient masterClient;
 
-		private GameClient gameClient;
+			private ChatClient chatClient;
 
-		public void AddGameClient(string appsecret, Action<ConStat> callback )
-		{
-			gameClient = new GameObject("GameClient").AddComponent<GameClient>();
-			gameClient.Connect(appsecret, callback);
-		}
+			/// <summary>
+			/// Add and Connect a USocketNet Chat client for listening or dealing with messages.
+			/// </summary>
+			/// <param name="appsecret">App Secret Key from your backend. </param>
+			/// <param name="callback">Callback that will return typeof ConStat.</param>
+			public void AddChatClient(string appsecret, Action<ConStat> callback )
+			{
+				if(masterClient != null) {
+					chatClient = new GameObject("ChatClient").AddComponent<ChatClient>();
+					chatClient.Connect(appsecret, callback);
+				} else {
+					callback(ConStat.Invalid);
+				}
+			}
 
-		public void RemoveGameClient()
-		{
-			if(gameClient == null)
-				return;
+			/// <summary>
+			/// Removed and Disconnect USocketNet Chat client from the server.
+			/// </summary>
+			public void RemoveChatClient()
+			{
+				if(chatClient == null)
+					return;
 
-			gameClient.Disconnect();
-			Destroy(gameClient.gameObject);
-		}
+				chatClient.Disconnect();
+				Destroy(chatClient.gameObject);
+			}
+
+			private GameClient gameClient;
+
+			/// <summary>
+			/// Add and Connect a USocketNet Game client for listening or dealing with messages.
+			/// </summary>
+			/// <param name="appsecret">App Secret Key from your backend. </param>
+			/// <param name="callback">Callback that will return typeof ConStat.</param>
+			public void AddGameClient(string appsecret, Action<ConStat> callback )
+			{
+				if(masterClient != null) {
+					gameClient = new GameObject("GameClient").AddComponent<GameClient>();
+					gameClient.Connect(appsecret, callback);
+				} else {
+					callback(ConStat.Invalid);
+				}
+			}
+
+			/// <summary>
+			/// Removed and Disconnect USocketNet Game client from the server.
+			/// </summary>
+			public void RemoveGameClient()
+			{
+				if(gameClient == null)
+					return;
+
+				gameClient.Disconnect();
+				Destroy(gameClient.gameObject);
+			}
+
+		#endregion
 	}
 }
