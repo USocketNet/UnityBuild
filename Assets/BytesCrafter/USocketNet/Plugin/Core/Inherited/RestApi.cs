@@ -51,7 +51,7 @@ namespace BytesCrafter.USocketNet.RestApi {
         {
             get
             {
-                return responseData.session != string.Empty ? true : false;
+                return responseData.snid != string.Empty ? true : false;
             }
         }
 

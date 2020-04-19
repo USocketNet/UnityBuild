@@ -1,7 +1,7 @@
 ﻿
 #region License
 /*
- * cs
+ * Threadset.cs
  *
  * Copyright (c) 2020 Bytes Crafter
  *

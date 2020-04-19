@@ -37,13 +37,15 @@ namespace BytesCrafter.USocketNet
 	{
 		protected BC_USN_WebSocket bc_usn_websocket = new BC_USN_WebSocket();
 
-		#region VARIABLES
+		public void ListensOnMessage(MsgType msgType, Action<MsgJson> listener) 
+		{
+			if(bc_usn_websocket == null)
+				return;
 
-		/// <summary>
-		/// This is the host and client config.
-		/// </summary>
-		/// <returns></returns>
-		protected Config config = new Config();
+			bc_usn_websocket.ListensOnMessage(msgType, listener);
+		}
+
+		#region VARIABLES
 
 		/// <summary>
 		/// Determines whether this client is connected to web socket server.

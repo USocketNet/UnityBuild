@@ -89,6 +89,9 @@ namespace BytesCrafter.USocketNet
 		/// <param name="info">Short description of this log.</param>
 		public static void Log ( Logs log, string title, string info ) 
 		{
+			if(title == "disable")
+				return;
+
 			logger.Push(log, title, info);
 		}
 		private static BC_USN_Logger logger;
@@ -225,6 +228,16 @@ namespace BytesCrafter.USocketNet
 			}
 			private MasterClient masterClient;
 
+			public ChatClient chat
+			{
+				get {
+					if(isInitialized) {
+						return chatClient;
+					} else {
+						return null;
+					}
+				}
+			}
 			private ChatClient chatClient;
 
 			/// <summary>
@@ -254,6 +267,16 @@ namespace BytesCrafter.USocketNet
 				Destroy(chatClient.gameObject);
 			}
 
+			public GameClient game
+			{
+				get {
+					if(isInitialized) {
+						return gameClient;
+					} else {
+						return null;
+					}
+				}
+			}
 			private GameClient gameClient;
 
 			/// <summary>
@@ -284,5 +307,25 @@ namespace BytesCrafter.USocketNet
 			}
 
 		#endregion
+
+		public bool IsMasterConnected {
+			get {
+				if(masterClient != null) {
+					return masterClient.IsConnected ? true : false;
+				} else {
+					return false;
+				}
+			}
+		}
+
+		public bool IsChatConnected {
+			get {
+				if(chatClient != null) {
+					return chatClient.IsConnected ? true : false;
+				} else {
+					return false;
+				}
+			}
+		}
 	}
 }

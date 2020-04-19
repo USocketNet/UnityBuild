@@ -62,9 +62,12 @@
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\ConStat.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\Config.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\MsgJson.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\MsgType.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\Ports.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\QueueCoder.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\RStats.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\Response.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\ServType.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\Threadset.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\Token.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\VectorJson.cs" />

@@ -41,11 +41,11 @@ public class Demoguy : MonoBehaviour
 		USocketNet.Core.Authenticate (username.text, password.text, (BC_USN_Response response) =>
 		{
 			if( response.success ) {
-				USocketNet.Log(Logs.Warn, "Demogguy", "WPID: " + response.data.id + " SNID: " + response.data.session 
+				USocketNet.Log(Logs.Log, "Demogguy", "WPID: " + response.data.wpid + " SNID: " + response.data.snid 
 					+ " Response: " + " Welcome! :" + response.data.uname);
 				ChangeCanvas(1);
 			} else {
-				USocketNet.Log(Logs.Warn, "Demogguy", "Failed connection to websocket server.");
+				USocketNet.Log(Logs.Log, "Demogguy", "Failed connection to websocket server.");
 			}
 		});
 	}
@@ -63,9 +63,9 @@ public class Demoguy : MonoBehaviour
 		USocketNet.Core.Connect(appsecret.text, (ConStat conStat) => {
 			if( conStat == ConStat.Success ) {
 				ChangeCanvas(2);
-				USocketNet.Log(Logs.Warn, "Demogguy", "You are now connected with id: " + USocketNet.Core.Master.Identity );
+				USocketNet.Log(Logs.Log, "Demogguy", "You are now connected with id: " + USocketNet.Core.Master.Identity );
 			} else {
-				USocketNet.Log(Logs.Warn, "Demogguy", "You did not connect successfully: " + conStat.ToString() );
+				USocketNet.Log(Logs.Log, "Demogguy", "You did not connect successfully: " + conStat.ToString() );
 			}
 		});
 	}
@@ -94,20 +94,38 @@ public class Demoguy : MonoBehaviour
 	}
 
 	[Header("MESSAGING")]
+	public Toggle chatBotEnabled = null;
 	public InputField priMsgContent = null;
 	public InputField priMsgReceiver = null;
 	public MessageDisplay privateViewer = null;
+	public Text msgPrefabItem = null;
+	public Transform msgPrefabParent = null;
 
 	public void AddChatClient()
 	{
 		USocketNet.Core.AddChatClient(appsecret.text, (ConStat conStat) => {
-			USocketNet.Log(Logs.Warn, "Demogguy", "Connection to Chat Server return: " + conStat.ToString() );
+			if( conStat == ConStat.Success ) {
+				USocketNet.Core.chat.ListensOnMessage(MsgType.pub, OnPublicMessage);
+			}
+			USocketNet.Log(Logs.Log, "Demogguy", "Connection to Chat Server return: " + conStat.ToString() );
 		});
+	}
+
+	private void OnPublicMessage(MsgJson msgJson)
+	{
+		Text msgView = Instantiate(msgPrefabItem.gameObject, msgPrefabParent).GetComponent<Text>();
+		msgView.text = msgJson.username  + " (" + msgJson.datestamp +"): " + msgJson.message;
+		msgView.gameObject.SetActive(true);
 	}
 
 	public void SendMessage()
 	{
-
+		USocketNet.Core.chat.SendMessage(MsgType.pub, priMsgContent.text, (MsgRes msgRes) => {
+			if(msgRes.status == RStats.Success) {
+				priMsgContent.text = string.Empty;
+			}
+			USocketNet.Log(Logs.Log, "Demogguy", "Auto Public Message Send: " + msgRes.status.ToString() );
+		});
 	}
 
 	public void RemoveChatClient()
@@ -119,7 +137,7 @@ public class Demoguy : MonoBehaviour
 	public void AddGameClient()
 	{
 		USocketNet.Core.AddGameClient(appsecret.text, (ConStat conStat) => {
-			USocketNet.Log(Logs.Warn, "Demogguy", "Connection to Game Server return: " + conStat.ToString() );
+			USocketNet.Log(Logs.Log, "Demogguy", "Connection to Game Server return: " + conStat.ToString() );
 		});
 	}
 
@@ -128,13 +146,41 @@ public class Demoguy : MonoBehaviour
 		USocketNet.Core.RemoveGameClient();
 	}
 
+	float timer = 0f;
+
 	void Update()
 	{
-		if(USocketNet.Core.Master != null)
+		if(USocketNet.Core.IsMasterConnected) {
 			pingSocket.text = USocketNet.Core.Master.GetPingInMS + "ms";
+		}
+
+		if(USocketNet.Core.IsChatConnected)
+		{	
+			timer += Time.deltaTime;
+			if( timer > 2f) {
+				if(chatBotEnabled != null) {
+					if(chatBotEnabled.isOn) {
+						//Send Random Message.
+						USocketNet.Core.chat.SendMessage(MsgType.pub, RandomMessage, (MsgRes msgRes) => {
+							USocketNet.Log(Logs.Log, "Demogguy", "Manual Public Message Send: " + msgRes.status.ToString() );
+						});
+					}
+				}
+				timer = 0f;
+			}
+		}
 	}
 
-
+	string RandomMessage {
+		get {
+			string result = string.Empty;
+			string charList = " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+			for ( var i = 0; i < 15; i++ ) {
+				result += charList[Random.Range(0, 20)];
+			}
+			return result;
+		}
+	}
 	
 
 	

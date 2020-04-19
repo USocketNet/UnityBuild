@@ -175,7 +175,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1369701552983486, guid: 2960126293d1e874cbd19fad233696c0, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1520890568133654, guid: 2960126293d1e874cbd19fad233696c0, type: 3}
       propertyPath: m_Name
@@ -198,12 +198,12 @@ PrefabInstance:
     - target: {fileID: 114934323213285524, guid: 2960126293d1e874cbd19fad233696c0,
         type: 3}
       propertyPath: serverConfig.restapiUrl
-      value: http://usn-asia.bytescrafter.net/wordpress
+      value: http://localhost/wordpress
       objectReference: {fileID: 0}
     - target: {fileID: 114934323213285524, guid: 2960126293d1e874cbd19fad233696c0,
         type: 3}
       propertyPath: serverConfig.serverUrl
-      value: usn-asia.bytescrafter.net
+      value: localhost
       objectReference: {fileID: 0}
     - target: {fileID: 114934323213285524, guid: 2960126293d1e874cbd19fad233696c0,
         type: 3}
@@ -398,7 +398,7 @@ PrefabInstance:
     - target: {fileID: 776646076784637707, guid: 2960126293d1e874cbd19fad233696c0,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000015258789
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 776646076784637707, guid: 2960126293d1e874cbd19fad233696c0,
         type: 3}
@@ -1303,7 +1303,7 @@ PrefabInstance:
     - target: {fileID: 4200836615607104813, guid: 2960126293d1e874cbd19fad233696c0,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4201486863966288756, guid: 2960126293d1e874cbd19fad233696c0,
         type: 3}
@@ -1544,6 +1544,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4695610082253436656, guid: 2960126293d1e874cbd19fad233696c0,
+        type: 3}
+      propertyPath: m_Text
+      value: 93c92d1222223a92de556ca2db02b
       objectReference: {fileID: 0}
     - target: {fileID: 4953765061125603840, guid: 2960126293d1e874cbd19fad233696c0,
         type: 3}

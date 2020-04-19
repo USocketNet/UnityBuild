@@ -38,7 +38,7 @@ namespace BytesCrafter.USocketNet
 		/// <param name="callback">Callback.</param>
 		public void Connect( string appsecret, Action<ConStat> callback )
 		{
-			if( config.serverUrl == string.Empty )
+			if( USocketNet.config.serverUrl == string.Empty )
 			{
 				USocketNet.Log(Logs.Warn, "ConnectionError", "Please fill up USocketNet host field on this USocketClient: " + name);
 				callback( ConStat.Invalid );

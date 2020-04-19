@@ -40,14 +40,14 @@ namespace BytesCrafter.USocketNet
 		/// <param name="callback">Callback.</param>
 		public void Connect( string appsecret, Action<ConStat> callback )
 		{
-			if( config.serverUrl == string.Empty )
+			if( USocketNet.config.serverUrl == string.Empty )
 			{
 				USocketNet.Log(Logs.Warn, "ConnectionError", "Please fill up USocketNet host field on this USocketClient: " + name);
 				callback( ConStat.Invalid );
 				return;
 			}
 
-			bc_usn_websocket.InitConnection(appsecret, USocketNet.config.serverPort.game, this, callback);
+			bc_usn_websocket.InitConnection(appsecret, USocketNet.config.serverPort.chat, this, callback);
 		}
 
         /// <summary>
@@ -58,6 +58,24 @@ namespace BytesCrafter.USocketNet
 		{
 			bc_usn_websocket.ForceDisconnect();
 		}
+
+		/// <summary>
+		/// Send any type of human message to the other clients.
+		/// </summary>
+		/// <param name="msgType"></param>
+		/// <param name="msgContent"></param>
+		/// <param name="callback"></param>
+		public void SendMessage(MsgType msgType, string msgContent, Action<MsgRes> callback) 
+		{
+			string sendData = JsonUtility.ToJson(new MsgRaw(msgContent));
+			bc_usn_websocket.SendEmit("pub", new JSONObject(sendData), (JSONObject jsonObj) => {
+				callback( JSONProcessor.ToObject<MsgRes>(jsonObj.ToString()) );
+			});
+		}
+
+
+
+
 
         protected override void OnConnect(bool recon)
         {

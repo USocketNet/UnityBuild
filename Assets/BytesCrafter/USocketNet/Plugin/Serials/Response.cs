@@ -49,10 +49,9 @@ namespace BytesCrafter.USocketNet.Serials
     [System.Serializable]
     public class BC_USN_Response_Data
     {
-        public string session = string.Empty;
-        public string cookie = string.Empty;
+        public string snid = string.Empty;
         public string avatar = string.Empty;
-        public string id = string.Empty;
+        public string wpid = string.Empty;
         public string uname = string.Empty;
         public string dname = string.Empty;
         public string email = string.Empty;
@@ -60,7 +59,7 @@ namespace BytesCrafter.USocketNet.Serials
 
         public  BC_USN_Token token {
             get {
-                return new BC_USN_Token(id, session);
+                return new BC_USN_Token(wpid, snid);
             }
         }
         

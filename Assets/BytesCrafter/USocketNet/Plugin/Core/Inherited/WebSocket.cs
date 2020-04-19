@@ -34,6 +34,7 @@ using WebSocketSharp;
 using System.Threading; 
 using UnityEngine;
 
+using BytesCrafter.USocketNet.Serials;
 using BytesCrafter.USocketNet.Toolsets;
 
 namespace BytesCrafter.USocketNet.Networks {
@@ -155,6 +156,10 @@ namespace BytesCrafter.USocketNet.Networks {
 
 			// AddCallback("ping", OnDisconnects);
 			//AddCallback("pong", Ponging);
+			
+			if(USocketNet.config.serverPort.GetServType(port) == ServType.Chat) {
+				AddCallback("pub", OnPublicMessage);
+			}
 
             socketThread = new Thread(RunSocketThread);
             socketThread.Start(threadset.websocket);
@@ -165,16 +170,40 @@ namespace BytesCrafter.USocketNet.Networks {
 			USocketNet.Core.StartCoroutine(WaitingForSocketId(callback));
         }
 
-		void OnDisconnects(SocketIOEvent e)
+		private Dictionary<string, List<Action<MsgJson>>> eventListeners = new Dictionary<string, List<Action<MsgJson>>>();
+		public void ListensOnMessage(MsgType msgType, Action<MsgJson> listener) 
+		{
+			string mType = msgType.ToString();
+			if (!eventListeners.ContainsKey(mType))
+			{
+				eventListeners[mType] = new List<Action<MsgJson>>();
+			}
+
+			eventListeners[mType].Add(listener);
+		}
+
+		private void OnPublicMessage(SocketIOEvent e)
+		{
+			string mType = MsgType.pub.ToString();
+			if (!eventListeners.ContainsKey(mType))
+				return;
+			
+			MsgJson msgJson = new MsgJson(JsonUtility.FromJson<MsgRaw>(e.data.ToString()));
+
+			foreach (Action<MsgJson> handler in eventListeners[mType])
+			{
+				try {
+					handler(msgJson);
+				} catch (Exception except) {
+					USocketNet.Log(Logs.Warn, "disable", "OnPublicMessage ->" + except.Message);
+				}
+			}
+		}
+
+		private void OnDisconnects(SocketIOEvent e)
 		{
 			//MsgJson msgJson = JsonUtility.FromJson<MsgJson>(_eventArgs.data.ToString());
 			USocketNet.Log(Logs.Warn, "[OnDisconnects]", " OnDisconnects received: " + e.name + " " + e.data.ToString());
-		}
-
-		void Ponging(SocketIOEvent e)
-		{
-			//MsgJson msgJson = JsonUtility.FromJson<MsgJson>(_eventArgs.data.ToString());
-			USocketNet.Log(Logs.Warn, "[Ponging]", " Ponging received: " + e.name + " " + e.data.ToString());
 		}
 
 		IEnumerator WaitingForSocketId(Action<ConStat> callback)
@@ -198,9 +227,6 @@ namespace BytesCrafter.USocketNet.Networks {
 
 			if (pingThread != null)
 				pingThread.Abort();
-
-			if(curClient != null)
-				curClient.OnDisconnection( true );
 		}
 
         public void ForceDisconnect()
@@ -218,7 +244,7 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		#endregion
 
-		#region Listeners Callback - Ongoing!
+		#region Listeners Callback - Done!
 
 		private void AddCallback(string events, Action<SocketIOEvent> callback)
 		{
@@ -259,44 +285,41 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		private void OnReceivedOpen(SocketIOEvent e)
 		{
-			USocketNet.Log(Logs.Warn, "[SocketIO]", " Open received: " + e.name + " " + e.data.ToString());
+			USocketNet.Log(Logs.Warn, "disable", " [SocketIO] Open received: " + e.name + " " + e.data.ToString());
 		}
 
 		private void OnReceivedError(SocketIOEvent e)
 		{
-			USocketNet.Log(Logs.Warn, "[SocketIO]", " Error received: " + e.name + " " + e.data.ToString());
+			USocketNet.Log(Logs.Warn, "disable", " [SocketIO] Error received: " + e.name + " " + e.data.ToString());
 		}
 
 		private void OnReceivedClose(SocketIOEvent e)
 		{	
-			USocketNet.Log(Logs.Warn, "[SocketIO]", " Close received: " + e.name + " " + e.data.ToString());
+			USocketNet.Log(Logs.Warn, "disable", " [SocketIO] Close received: " + e.name + " " + e.data.ToString());
 		}
 
 		private void OnOpen(object sender, EventArgs e)
 		{ 
 			EmitEvent("open");
-			USocketNet.Log(Logs.Warn, "[DEMOGUY OnOpen]", " open: " + JsonUtility.ToJson(sender) + " - " + e.ToString());
+			USocketNet.Log(Logs.Warn, "disable", "[CALLBACK OPEN] " + JsonUtility.ToJson(sender) + " - " + e.ToString());
 		}
 
 		private void OnError(object sender, ErrorEventArgs e)
 		{
 			EmitEvent("error");
-			// if(e.Message == "Message: An exception has occurred while connecting." || e.Message == "An exception has occurred while OnClose.") {
-			// 	curClient.Destroys();
-			// }
-			USocketNet.Log(Logs.Warn, "[DEMOGUY OnError]", "Message: " + e.Message);
+			USocketNet.Log(Logs.Warn, "disable", "[CALLBACK ERROR] Message: " + e.Message);
 		}
 
 		private void OnClose(object sender, CloseEventArgs e)
 		{
 			EmitEvent("close");
-			USocketNet.Log(Logs.Warn, "[DEMOGUY OnClose]", "Code: " + e.Code + " - Reason: " + e.Reason + " - WasClean: " + e.WasClean);
+			USocketNet.Log(Logs.Warn, "disable", "[CALLBACK CLOSE] Code: " + e.Code + " - Reason: " + e.Reason + " - WasClean: " + e.WasClean);
 		}
 
 		private void OnPacket(object sender, MessageEventArgs e)
 		{
 			Packet packet = queueCoder.decoder.Decode(e); 
-			Debug.Log(packet.enginePacketType.ToString() +"-"+ JsonUtility.ToJson(packet.json));
+			USocketNet.Log(Logs.Warn, "disable", packet.enginePacketType.ToString() +"-"+ JsonUtility.ToJson(packet.json));
 
 			switch (packet.enginePacketType)
 			{
@@ -449,23 +472,23 @@ namespace BytesCrafter.USocketNet.Networks {
 
         #region Emit Listeners - Done!
 
-		private void SendEmit(string events)
+		public void SendEmit(string events)
 		{
 			EmitMessage(-1, string.Format("[\"{0}\"]", events));
 		}
 
-		private void SendEmit(string events, Action<JSONObject> action)
+		public void SendEmit(string events, Action<JSONObject> action)
 		{
 			EmitMessage(++threadset.packetId, string.Format("[\"{0}\"]", events));
 			queueCoder.ackList.Add(new Ack(threadset.packetId, action));
 		}
 
-		private void SendEmit(string events, JSONObject data)
+		public void SendEmit(string events, JSONObject data)
 		{
 			EmitMessage(-1, string.Format("[\"{0}\",{1}]", events, data));
 		}
 
-		private void SendEmit(string events, JSONObject data, Action<JSONObject> action)
+		public void SendEmit(string events, JSONObject data, Action<JSONObject> action)
 		{
 			EmitMessage(++threadset.packetId, string.Format("[\"{0}\",{1}]", events, data));
 			queueCoder.ackList.Add(new Ack(threadset.packetId, action));
@@ -478,19 +501,17 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		private void EmitEvent(SocketIOEvent eventArgs)
 		{
+			USocketNet.Log(Logs.Warn, "EmitEventReceived", eventArgs.name + " event = " + " data: " + eventArgs.ToString());
+
 			if (!queueCoder.handlers.ContainsKey(eventArgs.name))
 				return;
 
 			foreach (Action<SocketIOEvent> handler in queueCoder.handlers[eventArgs.name])
 			{
-				try
-				{
+				try {
 					handler(eventArgs);
-				}
-
-				catch (Exception except)
-				{
-					USocketNet.Log(Logs.Warn, "EmitEventCatch", except.Message);
+				} catch (Exception except) {
+					USocketNet.Log(Logs.Warn, "disable", "EmitEventCatch ->" + except.Message);
 				}
 			}
 		}
@@ -502,15 +523,10 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		private void EmitPacket(Packet packet)
 		{
-			try
-			{
+			try {
 				threadset.Send(queueCoder.encoder.Encode(packet));
-			}
-
-			catch (SocketIOException ex)
-			{
-				if (ex != null)
-				{
+			} catch (SocketIOException ex) {
+				if (ex != null) {
 					USocketNet.Log(Logs.Warn, "EmitPacketCatch", ex.Message);
 				}
 			}

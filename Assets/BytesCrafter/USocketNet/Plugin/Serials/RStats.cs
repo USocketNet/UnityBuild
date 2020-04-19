@@ -1,8 +1,7 @@
-﻿
 
 #region License
 /*
- * MasterClient.cs
+ * RStats.cs
  *
  * Copyright (c) 2020 Bytes Crafter
  *
@@ -26,37 +25,13 @@
  */
 #endregion
 
-using System;
-using BytesCrafter.USocketNet.Toolsets;
-
 namespace BytesCrafter.USocketNet
-{
-    public class MasterClient : USNClient
+{ 
+    public enum RStats 
     {
-        /// <summary>
-		/// Connects to server using user specific credentials.
-		/// </summary>
-		/// <param name="callback">Callback.</param>
-		public void Connect(string appsecret, Action<ConStat> callback )
-		{
-			if( USocketNet.config.serverUrl == string.Empty )
-			{
-				USocketNet.Log(Logs.Warn, "ConnectionError", "Please fill up USocketNet host field on this USocketClient: " + name);
-				callback( ConStat.Invalid );
-				return;
-			}
-
-			bc_usn_websocket.InitConnection(appsecret, USocketNet.config.serverPort.master, this, callback);
-		}
-
-        /// <summary>
-		/// Disconnect to server using user specific credentials.
-		/// </summary>
-		/// <param name="callback">Callback.</param>
-		public void Disconnect()
-		{
-			bc_usn_websocket.ForceDisconnect();
-		}
+        //Success
+        Success = 0,
+        //AppWide
+        Failed = 1
     }
 }
-
