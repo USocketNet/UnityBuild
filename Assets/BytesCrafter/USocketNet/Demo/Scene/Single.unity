@@ -198,12 +198,12 @@ PrefabInstance:
     - target: {fileID: 114934323213285524, guid: 2960126293d1e874cbd19fad233696c0,
         type: 3}
       propertyPath: serverConfig.restapiUrl
-      value: http://localhost/wordpress
+      value: https://usocketnet.bytescrafter.net
       objectReference: {fileID: 0}
     - target: {fileID: 114934323213285524, guid: 2960126293d1e874cbd19fad233696c0,
         type: 3}
       propertyPath: serverConfig.serverUrl
-      value: localhost
+      value: usn-demo.bytescrafter.net
       objectReference: {fileID: 0}
     - target: {fileID: 114934323213285524, guid: 2960126293d1e874cbd19fad233696c0,
         type: 3}
