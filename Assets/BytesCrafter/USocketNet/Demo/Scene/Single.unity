@@ -169,6 +169,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1270402145027622, guid: 2960126293d1e874cbd19fad233696c0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1340404919481472, guid: 2960126293d1e874cbd19fad233696c0, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -198,12 +202,12 @@ PrefabInstance:
     - target: {fileID: 114934323213285524, guid: 2960126293d1e874cbd19fad233696c0,
         type: 3}
       propertyPath: serverConfig.restapiUrl
-      value: https://usocketnet.bytescrafter.net
+      value: http://localhost:81
       objectReference: {fileID: 0}
     - target: {fileID: 114934323213285524, guid: 2960126293d1e874cbd19fad233696c0,
         type: 3}
       propertyPath: serverConfig.serverUrl
-      value: usn-demo.bytescrafter.net
+      value: localhost
       objectReference: {fileID: 0}
     - target: {fileID: 114934323213285524, guid: 2960126293d1e874cbd19fad233696c0,
         type: 3}

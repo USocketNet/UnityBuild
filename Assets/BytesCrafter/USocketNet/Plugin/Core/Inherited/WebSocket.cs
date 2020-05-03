@@ -210,7 +210,8 @@ namespace BytesCrafter.USocketNet.Networks {
 		{	
 			DateTime timer = DateTime.Now;
 
-			yield return new WaitUntil(() => (getSocketId != string.Empty && isConnected) || DateTime.Now.Subtract(timer).TotalSeconds > 1 );
+			yield return new WaitUntil(() => (getSocketId != string.Empty && isConnected) || 
+				DateTime.Now.Subtract(timer).TotalSeconds > USocketNet.config.connectTimeout );
 
 			if(isConnected) {
 				callback( ConStat.Success );

@@ -39,6 +39,7 @@ namespace BytesCrafter.USocketNet.Serials
 		public Ports serverPort = new Ports();
 
 		[Header("CLIENT SETTINGS")]
+		public float connectTimeout = 5f;
 		public bool debugOnLog = false;
 		public bool runOnBackground = false;
 	}

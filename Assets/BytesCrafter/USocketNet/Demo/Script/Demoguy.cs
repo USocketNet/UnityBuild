@@ -45,7 +45,7 @@ public class Demoguy : MonoBehaviour
 					+ " Response: " + " Welcome! :" + response.data.uname);
 				ChangeCanvas(1);
 			} else {
-				USocketNet.Log(Logs.Log, "Demogguy", "Failed connection to websocket server.");
+				USocketNet.Log(Logs.Log, "Demoguy", "RestAPI failed to respond properly, check the url.");
 			}
 		});
 	}
@@ -63,9 +63,9 @@ public class Demoguy : MonoBehaviour
 		USocketNet.Core.Connect(appsecret.text, (ConStat conStat) => {
 			if( conStat == ConStat.Success ) {
 				ChangeCanvas(2);
-				USocketNet.Log(Logs.Log, "Demogguy", "You are now connected with id: " + USocketNet.Core.Master.Identity );
+				USocketNet.Log(Logs.Log, "Demoguy", "You are now connected with id: " + USocketNet.Core.Master.Identity );
 			} else {
-				USocketNet.Log(Logs.Log, "Demogguy", "You did not connect successfully: " + conStat.ToString() );
+				USocketNet.Log(Logs.Log, "Demoguy", "Connection failed on status of: " + conStat.ToString() );
 			}
 		});
 	}

@@ -155,7 +155,7 @@ namespace BytesCrafter.USocketNet
 			/// <param name="callback">BC_USN_Response.</param>
 			public void Authenticate( string uname, string pword, Action<BC_USN_Response> callback )
 			{
-				restApi.Authenticate(this, uname, pword, (BC_USN_Response response) => {
+				restApi.Authenticate(uname, pword, (BC_USN_Response response) => {
 					callback(response);
 				});
 			}

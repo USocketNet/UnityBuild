@@ -55,7 +55,7 @@ namespace BytesCrafter.USocketNet.RestApi {
             }
         }
 
-        public void Authenticate(USocketNet usn, string uname, string pword, Action<BC_USN_Response> callback) 
+        public void Authenticate(string uname, string pword, Action<BC_USN_Response> callback) 
         {
             if( USocketNet.config.restapiUrl == string.Empty )
 			{
@@ -75,7 +75,7 @@ namespace BytesCrafter.USocketNet.RestApi {
 
             string rapi = USocketNet.config.restapiUrl;
             string endString = rapi[rapi.Length - 1] == '/' ? "" : "/";
-            var request = UnityWebRequest.Post( rapi + endString + "wp-json/usocketnet/v1/auth", creds);
+            var request = UnityWebRequest.Post( rapi + endString + "wp-json/usocketnet/v1/user/auth", creds);
             
             yield return request.SendWebRequest();
             
@@ -100,7 +100,7 @@ namespace BytesCrafter.USocketNet.RestApi {
                 else
                 {
                     USocketNet.Log(Logs.Warn, "RestApi", response.message);
-                    callback( new BC_USN_Response(response.code, response.message) );
+                    callback( new BC_USN_Response(response.status, response.message) );
                 }
             }
         }

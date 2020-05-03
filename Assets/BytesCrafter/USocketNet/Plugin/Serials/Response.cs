@@ -30,18 +30,18 @@ namespace BytesCrafter.USocketNet.Serials
     [System.Serializable]
     public class BC_USN_Response
     {
-        public string code = "error";
+        public string status = "error";
         public string message = string.Empty;
         public BC_USN_Response_Data data = null;
 
         public BC_USN_Response(string shortCode, string errorMsg) {
-            code = shortCode;
+            status = shortCode;
             message = errorMsg;
         }
 
         public bool success {
             get {
-                return code == "success" ? true : false;
+                return status == "success" ? true : false;
             }
         }
     }
