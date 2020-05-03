@@ -1,7 +1,0 @@
-D:\Projects\DLL\Socket.IO.dll
-D:\Projects\DLL\Socket.IO.dll.CodeAnalysisLog.xml
-D:\Projects\DLL\Socket.IO.dll.lastcodeanalysissucceeded
-D:\Projects\Plugin - USocketNet\Compile\USocketNet\USocketRaw\obj\Release\USocketRaw.csprojAssemblyReference.cache
-D:\Projects\Plugin - USocketNet\Compile\USocketNet\USocketRaw\obj\Release\USocketRaw.csproj.CoreCompileInputs.cache
-D:\Projects\Plugin - USocketNet\Compile\USocketNet\USocketRaw\obj\Release\USocketRaw.csproj.CopyComplete
-D:\Projects\Plugin - USocketNet\Compile\USocketNet\USocketRaw\obj\Release\Socket.IO.dll
