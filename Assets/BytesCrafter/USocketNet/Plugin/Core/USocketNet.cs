@@ -177,7 +177,7 @@ namespace BytesCrafter.USocketNet
 
 			/// <summary>
 			/// Connect you Master client to server for us to have this core instance 
-			/// neccessary permissions for chat and game client to connect.
+			/// neccessary permissions for message and game client to connect.
 			/// </summary>
 			/// <param name="appsecret">App Secret Key from your backend. </param>
 			/// <param name="callback">Callback that will return typeof ConStat.</param>
@@ -197,7 +197,7 @@ namespace BytesCrafter.USocketNet
 
 			/// <summary>
 			/// Forcibly close all USocketNet clients from the existing connection 
-			/// to the server caused by Masters disconnection. Includes: Chat and Game client.
+			/// to the server caused by Masters disconnection. Includes: Message and Game client.
 			/// </summary>
 			public void Disconnect()
 			{
@@ -207,7 +207,7 @@ namespace BytesCrafter.USocketNet
 					Destroy(masterClient.gameObject);
 				}
 
-				RemoveChatClient();
+				RemoveMessageClient();
 				RemoveGameClient();
 			}
 
@@ -228,43 +228,43 @@ namespace BytesCrafter.USocketNet
 			}
 			private MasterClient masterClient;
 
-			public ChatClient chat
+			public MessageClient message
 			{
 				get {
 					if(isInitialized) {
-						return chatClient;
+						return messageClient;
 					} else {
 						return null;
 					}
 				}
 			}
-			private ChatClient chatClient;
+			private MessageClient messageClient;
 
 			/// <summary>
-			/// Add and Connect a USocketNet Chat client for listening or dealing with messages.
+			/// Add and Connect a USocketNet Message client for listening or dealing with messages.
 			/// </summary>
 			/// <param name="appsecret">App Secret Key from your backend. </param>
 			/// <param name="callback">Callback that will return typeof ConStat.</param>
-			public void AddChatClient(string appsecret, Action<ConStat> callback )
+			public void AddMessageClient(string appsecret, Action<ConStat> callback )
 			{
 				if(masterClient != null) {
-					chatClient = new GameObject("ChatClient").AddComponent<ChatClient>();
-					chatClient.Connect(appsecret, callback);
+					messageClient = new GameObject("MessageClient").AddComponent<MessageClient>();
+					messageClient.Connect(appsecret, callback);
 				} else {
 					callback(ConStat.Invalid);
 				}
 			}
 
 			/// <summary>
-			/// Removed and Disconnect USocketNet Chat client from the server.
+			/// Removed and Disconnect USocketNet Message client from the server.
 			/// </summary>
-			public void RemoveChatClient()
+			public void RemoveMessageClient()
 			{
-				if(chatClient == null)
+				if(messageClient == null)
 					return;
 
-				chatClient.Disconnect();
-				Destroy(chatClient.gameObject);
+				messageClient.Disconnect();
+				Destroy(messageClient.gameObject);
 			}
 
 			public GameClient game
@@ -318,10 +318,10 @@ namespace BytesCrafter.USocketNet
 			}
 		}
 
-		public bool IsChatConnected {
+		public bool IsMessageConnected {
 			get {
-				if(chatClient != null) {
-					return chatClient.IsConnected ? true : false;
+				if(messageClient != null) {
+					return messageClient.IsConnected ? true : false;
 				} else {
 					return false;
 				}

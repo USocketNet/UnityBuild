@@ -1,7 +1,7 @@
 
 #region License
 /*
- * ServType.cs
+ * MatchClient.cs
  *
  * Copyright (c) 2020 Bytes Crafter
  *
@@ -25,14 +25,37 @@
  */
 #endregion
 
-namespace BytesCrafter.USocketNet.Serials
-{ 
-    public enum ServType 
+using System;
+using BytesCrafter.USocketNet.Toolsets;
+
+namespace BytesCrafter.USocketNet
+{
+    public class MatchClient : USNClient
     {
-        None = 0,
-        Master = 1,
-        Message = 2,
-        Match = 3,
-        Game = 4
+        /// <summary>
+		/// Connects to server using user specific credentials.
+		/// </summary>
+		/// <param name="callback">Callback.</param>
+		public void Connect( string appsecret, Action<ConStat> callback )
+		{
+			if( USocketNet.config.serverUrl == string.Empty )
+			{
+				USocketNet.Log(Logs.Warn, "ConnectionError", "Please fill up USocketNet host field on this USocketClient: " + name);
+				callback( ConStat.Invalid );
+				return;
+			}
+
+			bc_usn_websocket.InitConnection(appsecret, USocketNet.config.serverPort.game, this, callback);
+		}
+
+        /// <summary>
+		/// Disconnect to server using user specific credentials.
+		/// </summary>
+		/// <param name="callback">Callback.</param>
+		public void Disconnect()
+		{
+			bc_usn_websocket.ForceDisconnect();
+		}
     }
 }
+

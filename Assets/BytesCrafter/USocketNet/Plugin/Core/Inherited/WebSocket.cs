@@ -157,7 +157,7 @@ namespace BytesCrafter.USocketNet.Networks {
 			// AddCallback("ping", OnDisconnects);
 			//AddCallback("pong", Ponging);
 			
-			if(USocketNet.config.serverPort.GetServType(port) == ServType.Chat) {
+			if(USocketNet.config.serverPort.GetServType(port) == ServType.Message) {
 				AddCallback("pub", OnPublicMessage);
 			}
 

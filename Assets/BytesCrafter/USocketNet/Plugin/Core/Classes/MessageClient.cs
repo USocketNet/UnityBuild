@@ -2,7 +2,7 @@
 
 #region License
 /*
- * ChatClient.cs
+ * MessageClient.cs
  *
  * Copyright (c) 2020 Bytes Crafter
  *
@@ -32,7 +32,7 @@ using BytesCrafter.USocketNet.Toolsets;
 
 namespace BytesCrafter.USocketNet
 {
-    public class ChatClient : USNClient
+    public class MessageClient : USNClient
     {
         /// <summary>
 		/// Connects to server using user specific credentials.
@@ -47,7 +47,7 @@ namespace BytesCrafter.USocketNet
 				return;
 			}
 
-			bc_usn_websocket.InitConnection(appsecret, USocketNet.config.serverPort.chat, this, callback);
+			bc_usn_websocket.InitConnection(appsecret, USocketNet.config.serverPort.message, this, callback);
 		}
 
         /// <summary>
@@ -79,12 +79,12 @@ namespace BytesCrafter.USocketNet
 
         protected override void OnConnect(bool recon)
         {
-            Debug.Log("OnConnect on ChatClient from " + this.name);
+            Debug.Log("OnConnect on MessageClient from " + this.name);
         }
 
         protected override void OnDisconnect(bool recon)
         {
-            Debug.Log("OnDisconnect on ChatClient from " + this.name);
+            Debug.Log("OnDisconnect on MessageClient from " + this.name);
         }
     }
 }

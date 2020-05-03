@@ -103,9 +103,9 @@ public class Demoguy : MonoBehaviour
 
 	public void AddChatClient()
 	{
-		USocketNet.Core.AddChatClient(appsecret.text, (ConStat conStat) => {
+		USocketNet.Core.AddMessageClient(appsecret.text, (ConStat conStat) => {
 			if( conStat == ConStat.Success ) {
-				USocketNet.Core.chat.ListensOnMessage(MsgType.pub, OnPublicMessage);
+				USocketNet.Core.message.ListensOnMessage(MsgType.pub, OnPublicMessage);
 			}
 			USocketNet.Log(Logs.Log, "Demogguy", "Connection to Chat Server return: " + conStat.ToString() );
 		});
@@ -120,7 +120,7 @@ public class Demoguy : MonoBehaviour
 
 	public void SendMessage()
 	{
-		USocketNet.Core.chat.SendMessage(MsgType.pub, priMsgContent.text, (MsgRes msgRes) => {
+		USocketNet.Core.message.SendMessage(MsgType.pub, priMsgContent.text, (MsgRes msgRes) => {
 			if(msgRes.status == RStats.Success) {
 				priMsgContent.text = string.Empty;
 			}
@@ -130,7 +130,7 @@ public class Demoguy : MonoBehaviour
 
 	public void RemoveChatClient()
 	{
-		USocketNet.Core.RemoveChatClient();
+		USocketNet.Core.RemoveMessageClient();
 	}
 
 
@@ -154,14 +154,14 @@ public class Demoguy : MonoBehaviour
 			pingSocket.text = USocketNet.Core.Master.GetPingInMS + "ms";
 		}
 
-		if(USocketNet.Core.IsChatConnected)
+		if(USocketNet.Core.IsMessageConnected)
 		{	
 			timer += Time.deltaTime;
 			if( timer > 2f) {
 				if(chatBotEnabled != null) {
 					if(chatBotEnabled.isOn) {
 						//Send Random Message.
-						USocketNet.Core.chat.SendMessage(MsgType.pub, RandomMessage, (MsgRes msgRes) => {
+						USocketNet.Core.message.SendMessage(MsgType.pub, RandomMessage, (MsgRes msgRes) => {
 							USocketNet.Log(Logs.Log, "Demogguy", "Manual Public Message Send: " + msgRes.status.ToString() );
 						});
 					}

@@ -42,7 +42,7 @@ public class StressTest : MonoBehaviour
 
 	}
 
-	public void ConnectPublicChat()
+	public void ConnectPublicMessage()
 	{
 
 	}

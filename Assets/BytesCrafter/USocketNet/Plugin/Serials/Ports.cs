@@ -39,13 +39,21 @@ namespace BytesCrafter.USocketNet.Serials
         }
         private int masterPort = 19090;
 
-         public string chat
+         public string message
         {
             get {
-                return chatPort.ToString();
+                return messagePort.ToString();
             }
         }
-        private int chatPort = 6060;
+        private int messagePort = 6060;
+
+        public string match
+        {
+            get {
+                return matchPort.ToString();
+            }
+        }
+        private int matchPort = 4530;
 
          public string game
         {
@@ -59,8 +67,10 @@ namespace BytesCrafter.USocketNet.Serials
         {
             if(curPort == master) {
                 return ServType.Master;
-            } else if(curPort == chat) {
-                return ServType.Chat;
+            } else if(curPort == message) {
+                return ServType.Message;
+            } else if(curPort == match) {
+                return ServType.Match;
             } else if(curPort == game) {
                 return ServType.Game;
             } else {
