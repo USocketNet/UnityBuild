@@ -11,8 +11,7 @@ public class Demoguy : MonoBehaviour
 
 	[Header("CANVAS DISPLAYS")]
 	public List<CanvasGroup> canvasGroup = new List<CanvasGroup>();
-	public void ChangeCanvas(int index)
-	{
+	public void ChangeCanvas(int index) {
 		canvasGroup.ForEach ((CanvasGroup cgroup) => {
 			cgroup.alpha = 0f;
 			cgroup.gameObject.SetActive(false);
@@ -34,12 +33,10 @@ public class Demoguy : MonoBehaviour
 
 	#region CONNECTION
 
-	public void SignIn()
-	{
+	public void SignIn() {
 		//STEP3: You now need to authenticate the user with username and password to ask for the
 		// server for a token to be able for us to connect to the websocket port.
-		USocketNet.Core.Authenticate (username.text, password.text, (BC_USN_Response response) =>
-		{
+		USocketNet.Core.Authenticate (username.text, password.text, (BC_USN_Response response) => {
 			if( response.success ) {
 				USocketNet.Log(Logs.Log, "Demogguy", "WPID: " + response.data.wpid + " SNID: " + response.data.snid 
 					+ " Response: " + " Welcome! :" + response.data.uname);
@@ -50,16 +47,26 @@ public class Demoguy : MonoBehaviour
 		});
 	}
 
-	public void SignOut()
-	{
+	public void Select() {
+		USocketNet.Core.VerifyProject (appsecret.text, (ProjectObject response) => {
+			if( response.success ) {
+				USocketNet.Log(Logs.Log, "Demogguy", "Name: " + response.data.name + " Desc: " + response.data.desc 
+					+ " Match User: " + response.data.matchcap + " Capacity! :" + response.data.capacity);
+				ChangeCanvas(2);
+			} else {
+				USocketNet.Log(Logs.Log, "Demoguy", "RestAPI failed to respond properly, check the url.");
+			}
+		});
+	}
+
+	public void SignOut() {
 		//OPTIONAL: You can call SignOut to forcibly close all client associated with this USocketNet
 		// instance. Also, the if Reauthentication on app load will be postpone.
 		USocketNet.Core.SignOut ();
 		ChangeCanvas(0);
 	}
 
-	public void ConnectToServer()
-	{
+	public void ConnectToServer() {
 		USocketNet.Core.Connect(appsecret.text, (ConStat conStat) => {
 			if( conStat == ConStat.Success ) {
 				ChangeCanvas(2);
@@ -70,8 +77,7 @@ public class Demoguy : MonoBehaviour
 		});
 	}
 
-	public void DisconnectFromServer()
-	{
+	public void DisconnectFromServer() {
 		USocketNet.Core.Disconnect();
 		ChangeCanvas(1);
 	}
@@ -84,8 +90,7 @@ public class Demoguy : MonoBehaviour
 	/// </summary>
 	public Config serverConfig = new Config(); 
 
-	void Awake()
-	{
+	void Awake() {
 		ChangeCanvas(0);
 
 		//STEP2: Important! Next is to initialize the 'USocketNet' instance with the 'Config' which is
@@ -101,8 +106,7 @@ public class Demoguy : MonoBehaviour
 	public Text msgPrefabItem = null;
 	public Transform msgPrefabParent = null;
 
-	public void AddChatClient()
-	{
+	public void AddChatClient() {
 		USocketNet.Core.AddMessageClient(appsecret.text, (ConStat conStat) => {
 			if( conStat == ConStat.Success ) {
 				USocketNet.Core.message.ListensOnMessage(MsgType.pub, OnPublicMessage);
@@ -111,15 +115,13 @@ public class Demoguy : MonoBehaviour
 		});
 	}
 
-	private void OnPublicMessage(MsgJson msgJson)
-	{
+	private void OnPublicMessage(MsgJson msgJson) {
 		Text msgView = Instantiate(msgPrefabItem.gameObject, msgPrefabParent).GetComponent<Text>();
 		msgView.text = msgJson.username  + " (" + msgJson.datestamp +"): " + msgJson.message;
 		msgView.gameObject.SetActive(true);
 	}
 
-	public void SendMessage()
-	{
+	public void SendMessage() {
 		USocketNet.Core.message.SendMessage(MsgType.pub, priMsgContent.text, (MsgRes msgRes) => {
 			if(msgRes.status == RStats.Success) {
 				priMsgContent.text = string.Empty;
@@ -128,28 +130,24 @@ public class Demoguy : MonoBehaviour
 		});
 	}
 
-	public void RemoveChatClient()
-	{
+	public void RemoveChatClient() {
 		USocketNet.Core.RemoveMessageClient();
 	}
 
 
-	public void AddGameClient()
-	{
+	public void AddGameClient() {
 		USocketNet.Core.AddGameClient(appsecret.text, (ConStat conStat) => {
 			USocketNet.Log(Logs.Log, "Demogguy", "Connection to Game Server return: " + conStat.ToString() );
 		});
 	}
 
-	public void RemoveGameClient()
-	{
+	public void RemoveGameClient() {
 		USocketNet.Core.RemoveGameClient();
 	}
 
 	float timer = 0f;
 
-	void Update()
-	{
+	void Update() {
 		if(USocketNet.Core.IsMasterConnected) {
 			pingSocket.text = USocketNet.Core.Master.GetPingInMS + "ms";
 		}

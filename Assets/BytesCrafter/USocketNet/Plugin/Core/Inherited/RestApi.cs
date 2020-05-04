@@ -109,5 +109,56 @@ namespace BytesCrafter.USocketNet.RestApi {
         {
             responseData = new BC_USN_Response_Data();
         }
+
+        public void VerifyProject(string secretkey, Action<ProjectObject> callback) 
+        {
+            if( USocketNet.config.restapiUrl == string.Empty )
+			{
+				USocketNet.Log(Logs.Warn, "RestApi", "Please fill up RestApi url on this USocketNet core instance.");
+				callback( new ProjectObject("urlempty", "Please fill up RestApi url on this USocketNet core instance.") );
+				return;
+			}
+            
+            USocketNet.Core.StartCoroutine( VerifyingProject(secretkey, callback) );
+        }
+
+        IEnumerator VerifyingProject( string prjkey, Action<ProjectObject> callback ) 
+        {            
+            WWWForm creds = new WWWForm();
+            creds.AddField("wpid", USocketNet.User.wpid);
+            creds.AddField("snid", USocketNet.User.snid);
+            creds.AddField("pkey", prjkey);
+
+            string rapi = USocketNet.config.restapiUrl;
+            string endString = rapi[rapi.Length - 1] == '/' ? "" : "/";
+            var request = UnityWebRequest.Post( rapi + endString + "wp-json/usocketnet/v1/project/verify", creds);
+            
+            yield return request.SendWebRequest();
+            
+            if ( request.isNetworkError || request.isHttpError )
+            {
+                USocketNet.Log(Logs.Error, "RestApi", "Request failed with status code of "+request.responseCode+", Try again.");
+                callback( new ProjectObject("reqerror", "Request failed with status code of "+request.responseCode+", Try again." ) );
+            }
+
+            else
+            {
+                string bytes = Encoding.UTF8.GetString( request.downloadHandler.data );
+                ProjectObject response = JsonUtility.FromJson<ProjectObject>(bytes);
+
+                if( response.success )
+                {
+                    USocketNet.Log(Logs.Log, "RestApi", "Play! " +response.data.name+ " [" +response.data.desc+ "]" );
+                    //responseData = response.data;
+                    callback( response );
+                }
+
+                else
+                {
+                    USocketNet.Log(Logs.Warn, "RestApi", response.message);
+                    callback( response );
+                }
+            }
+        }
     }
 }

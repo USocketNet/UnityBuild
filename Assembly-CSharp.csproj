@@ -65,6 +65,7 @@
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\MsgJson.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\MsgType.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\Ports.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\ProjectObject.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\QueueCoder.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\RStats.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\Response.cs" />

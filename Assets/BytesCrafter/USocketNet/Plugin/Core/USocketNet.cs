@@ -160,6 +160,13 @@ namespace BytesCrafter.USocketNet
 				});
 			}
 
+			public void VerifyProject( string secretkey, Action<ProjectObject> callback )
+			{
+				restApi.VerifyProject(secretkey, (ProjectObject response) => {
+					callback(response);
+				});
+			}
+
 			/// <summary>
 			/// Signout the user and will delete previous user authentication data. 
 			/// This will also disconnect all connected USNClient instances.
