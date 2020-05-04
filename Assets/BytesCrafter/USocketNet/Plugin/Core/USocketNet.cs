@@ -175,7 +175,9 @@ namespace BytesCrafter.USocketNet
 			{
 				if( restApi.isAuthenticated ) {
 					restApi.Deauthenticate();
-					Disconnect();
+					MasterDisconnect();
+					MessageDisconnect();
+					MatchDisconnect();
 				} else {
 					USocketNet.Log(Logs.Warn, "RestApi", "You are not authenticated thus you dont have to sign out.");
 				}
@@ -183,12 +185,11 @@ namespace BytesCrafter.USocketNet
 			}
 
 			/// <summary>
-			/// Connect you Master client to server for us to have this core instance 
-			/// neccessary permissions for message and game client to connect.
+			/// Connect you Master client to server.
 			/// </summary>
 			/// <param name="appsecret">App Secret Key from your backend. </param>
 			/// <param name="callback">Callback that will return typeof ConStat.</param>
-			public void Connect(string appsecret, Action<ConStat> callback )
+			public void MasterConnect(string appsecret, Action<ConStat> callback )
 			{
 				if( masterClient == null ) {
 					masterClient = new GameObject("MasterClient").AddComponent<MasterClient>();
@@ -206,16 +207,13 @@ namespace BytesCrafter.USocketNet
 			/// Forcibly close all USocketNet clients from the existing connection 
 			/// to the server caused by Masters disconnection. Includes: Message and Game client.
 			/// </summary>
-			public void Disconnect()
+			public void MasterDisconnect()
 			{
-				if(masterClient != null)
-				{
-					masterClient.Disconnect();
-					Destroy(masterClient.gameObject);
-				}
+				if(masterClient == null)
+					return;
 
-				RemoveMessageClient();
-				RemoveGameClient();
+				masterClient.Disconnect();
+				Destroy(masterClient.gameObject);
 			}
 
 			/// <summary>
@@ -232,27 +230,24 @@ namespace BytesCrafter.USocketNet
 						return null;
 					}
 				}
-			}
-			private MasterClient masterClient;
+			} private MasterClient masterClient;
 
-			public MessageClient message
-			{
+			public bool IsMasterConnected {
 				get {
-					if(isInitialized) {
-						return messageClient;
+					if(masterClient != null) {
+						return masterClient.IsConnected ? true : false;
 					} else {
-						return null;
+						return false;
 					}
 				}
 			}
-			private MessageClient messageClient;
 
 			/// <summary>
 			/// Add and Connect a USocketNet Message client for listening or dealing with messages.
 			/// </summary>
 			/// <param name="appsecret">App Secret Key from your backend. </param>
 			/// <param name="callback">Callback that will return typeof ConStat.</param>
-			public void AddMessageClient(string appsecret, Action<ConStat> callback )
+			public void MessageConnect(string appsecret, Action<ConStat> callback )
 			{
 				messageClient = new GameObject("MessageClient").AddComponent<MessageClient>();
 				messageClient.Connect(appsecret, callback);
@@ -261,7 +256,7 @@ namespace BytesCrafter.USocketNet
 			/// <summary>
 			/// Removed and Disconnect USocketNet Message client from the server.
 			/// </summary>
-			public void RemoveMessageClient()
+			public void MessageDisconnect()
 			{
 				if(messageClient == null)
 					return;
@@ -270,61 +265,70 @@ namespace BytesCrafter.USocketNet
 				Destroy(messageClient.gameObject);
 			}
 
-			public GameClient game
-			{
+			public MessageClient Message {
 				get {
 					if(isInitialized) {
-						return gameClient;
+						return messageClient;
 					} else {
 						return null;
 					}
 				}
+			} private MessageClient messageClient;
+
+			public bool IsMessageConnected {
+				get {
+					if(messageClient != null) {
+						return messageClient.IsConnected ? true : false;
+					} else {
+						return false;
+					}
+				}
 			}
-			private GameClient gameClient;
 
 			/// <summary>
 			/// Add and Connect a USocketNet Game client for listening or dealing with messages.
 			/// </summary>
 			/// <param name="appsecret">App Secret Key from your backend. </param>
 			/// <param name="callback">Callback that will return typeof ConStat.</param>
-			public void AddGameClient(string appsecret, Action<ConStat> callback )
+			public void MatchConnect(string appsecret, Action<ConStat> callback )
 			{
-				gameClient = new GameObject("GameClient").AddComponent<GameClient>();
-				gameClient.Connect(appsecret, callback);
+				matchClient = new GameObject("MatchClient").AddComponent<MatchClient>();
+				matchClient.Connect(appsecret, callback);
 			}
 
 			/// <summary>
 			/// Removed and Disconnect USocketNet Game client from the server.
 			/// </summary>
-			public void RemoveGameClient()
+			public void MatchDisconnect()
 			{
-				if(gameClient == null)
+				if(matchClient == null)
 					return;
 
-				gameClient.Disconnect();
-				Destroy(gameClient.gameObject);
+				matchClient.Disconnect();
+				Destroy(matchClient.gameObject);
+			}
+
+			public MatchClient Match {
+				get {
+					if(isInitialized) {
+						return matchClient;
+					} else {
+						return null;
+					}
+				}
+			} private MatchClient matchClient;
+
+			public bool IsMatchConnected {
+				get {
+					if(matchClient != null) {
+						return matchClient.IsConnected ? true : false;
+					} else {
+						return false;
+					}
+				}
 			}
 
 		#endregion
 
-		public bool IsMasterConnected {
-			get {
-				if(masterClient != null) {
-					return masterClient.IsConnected ? true : false;
-				} else {
-					return false;
-				}
-			}
-		}
-
-		public bool IsMessageConnected {
-			get {
-				if(messageClient != null) {
-					return messageClient.IsConnected ? true : false;
-				} else {
-					return false;
-				}
-			}
-		}
 	}
 }

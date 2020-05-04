@@ -132,6 +132,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: USocketManager
       objectReference: {fileID: 0}
+    - target: {fileID: 1751335750401630, guid: 2960126293d1e874cbd19fad233696c0, type: 3}
+      propertyPath: m_Name
+      value: DemoDisplay
+      objectReference: {fileID: 0}
     - target: {fileID: 224625372023300380, guid: 2960126293d1e874cbd19fad233696c0,
         type: 3}
       propertyPath: m_SizeDelta.y

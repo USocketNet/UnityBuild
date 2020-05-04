@@ -77,7 +77,7 @@ public class Demoguy : MonoBehaviour
 	}
 
 	public void ConnectToServer() {
-		USocketNet.Core.Connect(appsecret.text, (ConStat conStat) => {
+		USocketNet.Core.MasterConnect(appsecret.text, (ConStat conStat) => {
 			if( conStat == ConStat.Success ) {
 				//Enable master display.
 				ShowMaster(true);
@@ -91,7 +91,7 @@ public class Demoguy : MonoBehaviour
 	public void DisconnectFromServer() {
 		//Hide master display.
 		ShowMaster(false);
-		USocketNet.Core.Disconnect();
+		USocketNet.Core.MasterDisconnect();
 	}
 
 	#endregion
@@ -118,11 +118,11 @@ public class Demoguy : MonoBehaviour
 	public Text msgPrefabItem = null;
 	public Transform msgPrefabParent = null;
 
-	public void AddChatClient() {
-		USocketNet.Core.AddMessageClient(appsecret.text, (ConStat conStat) => {
+	public void ConnectMessageClient() {
+		USocketNet.Core.MessageConnect(appsecret.text, (ConStat conStat) => {
 			if( conStat == ConStat.Success ) {
 				ChangeCanvas(3);
-				USocketNet.Core.message.ListensOnMessage(MsgType.pub, OnPublicMessage);
+				USocketNet.Core.Message.ListensOnMessage(MsgType.pub, OnPublicMessage);
 			}
 			USocketNet.Log(Logs.Log, "Demogguy", "Connection to Chat Server return: " + conStat.ToString() );
 		});
@@ -143,7 +143,7 @@ public class Demoguy : MonoBehaviour
 	}
 
 	public void SendMessage() {
-		USocketNet.Core.message.SendMessage(MsgType.pub, priMsgContent.text, (MsgRes msgRes) => {
+		USocketNet.Core.Message.SendMessage(MsgType.pub, priMsgContent.text, (MsgRes msgRes) => {
 			if(msgRes.status == RStats.Success) {
 				priMsgContent.text = string.Empty;
 			}
@@ -151,20 +151,20 @@ public class Demoguy : MonoBehaviour
 		});
 	}
 
-	public void RemoveChatClient() {
+	public void DisconnectMessageClient() {
 		ChangeCanvas(2);
-		USocketNet.Core.RemoveMessageClient();
+		USocketNet.Core.MessageDisconnect();
 	}
 
 
-	public void AddGameClient() {
-		USocketNet.Core.AddGameClient(appsecret.text, (ConStat conStat) => {
+	public void ConnectMatchClient() {
+		USocketNet.Core.MatchConnect(appsecret.text, (ConStat conStat) => {
 			USocketNet.Log(Logs.Log, "Demogguy", "Connection to Game Server return: " + conStat.ToString() );
 		});
 	}
 
-	public void RemoveGameClient() {
-		USocketNet.Core.RemoveGameClient();
+	public void DisconnectMatchClient() {
+		USocketNet.Core.MatchDisconnect();
 	}
 
 	float timer = 0f;
@@ -181,7 +181,7 @@ public class Demoguy : MonoBehaviour
 				if(chatBotEnabled != null) {
 					if(chatBotEnabled.isOn) {
 						//Send Random Message.
-						USocketNet.Core.message.SendMessage(MsgType.pub, RandomMessage, (MsgRes msgRes) => {
+						USocketNet.Core.Message.SendMessage(MsgType.pub, RandomMessage, (MsgRes msgRes) => {
 							USocketNet.Log(Logs.Log, "Demogguy", "Manual Public Message Send: " + msgRes.status.ToString() );
 						});
 					}

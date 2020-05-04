@@ -100,6 +100,7 @@ namespace BytesCrafter.USocketNet.RestApi {
 
         public void Deauthenticate() {
             responseData = new BC_USN_Response_Data();
+            allProjects = new List<ProjectObjectRaw>();
         }
 
         public void VerifyProject(string secretkey, Action<ProjectObject> callback) {
