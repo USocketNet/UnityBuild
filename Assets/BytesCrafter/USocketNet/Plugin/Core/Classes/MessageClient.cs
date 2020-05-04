@@ -38,7 +38,7 @@ namespace BytesCrafter.USocketNet
 		/// Connects to server using user specific credentials.
 		/// </summary>
 		/// <param name="callback">Callback.</param>
-		public void Connect( string appsecret, Action<ConStat> callback )
+		public void Connect( Action<ConStat> callback )
 		{
 			if( USocketNet.config.serverUrl == string.Empty )
 			{
@@ -47,7 +47,7 @@ namespace BytesCrafter.USocketNet
 				return;
 			}
 
-			bc_usn_websocket.InitConnection(appsecret, USocketNet.config.serverPort.message, this, callback);
+			bc_usn_websocket.InitConnection(string.Empty, USocketNet.config.serverPort.message, this, callback);
 		}
 
         /// <summary>

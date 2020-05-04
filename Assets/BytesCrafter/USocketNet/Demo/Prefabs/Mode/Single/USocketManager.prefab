@@ -3199,7 +3199,7 @@ MonoBehaviour:
   appsecret: {fileID: 7443288022523665224}
   serverConfig:
     restapiUrl: http://localhost:81
-    serverUrl: localhost
+    serverUrl: ws://localhost
     connectTimeout: 5
     debugOnLog: 1
     runOnBackground: 1

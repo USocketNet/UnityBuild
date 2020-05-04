@@ -135,11 +135,11 @@ namespace BytesCrafter.USocketNet.Networks {
 
 		#region Connection Mechanism
 		private USNClient curClient = null;
-        public void InitConnection(string appsecret, string port, USNClient usnClient, Action<ConStat> callback) 
+        public void InitConnection(string projectKey, string port, USNClient usnClient, Action<ConStat> callback) 
         {
 			curClient = usnClient;
 			queueCoder.Starts();
-			threadset.Start(appsecret, port, OnOpen, OnError, OnClose, OnPacket);
+			threadset.Start(projectKey, port, OnOpen, OnError, OnClose, OnPacket);
 
 			AddCallback("open", OnReceivedOpen);
 			AddCallback("close", OnReceivedClose);

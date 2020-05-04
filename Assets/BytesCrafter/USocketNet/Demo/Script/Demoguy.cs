@@ -77,7 +77,7 @@ public class Demoguy : MonoBehaviour
 	}
 
 	public void ConnectToServer() {
-		USocketNet.Core.MasterConnect(appsecret.text, (ConStat conStat) => {
+		USocketNet.Core.MasterConnect( (ConStat conStat) => {
 			if( conStat == ConStat.Success ) {
 				//Enable master display.
 				ShowMaster(true);

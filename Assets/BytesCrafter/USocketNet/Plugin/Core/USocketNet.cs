@@ -189,11 +189,11 @@ namespace BytesCrafter.USocketNet
 			/// </summary>
 			/// <param name="appsecret">App Secret Key from your backend. </param>
 			/// <param name="callback">Callback that will return typeof ConStat.</param>
-			public void MasterConnect(string appsecret, Action<ConStat> callback )
+			public void MasterConnect(Action<ConStat> callback )
 			{
 				if( masterClient == null ) {
 					masterClient = new GameObject("MasterClient").AddComponent<MasterClient>();
-					masterClient.Connect(appsecret, callback);
+					masterClient.Connect(callback);
 				} else {
 					if(masterClient.IsConnected) {
 						callback( ConStat.Online );
@@ -250,7 +250,7 @@ namespace BytesCrafter.USocketNet
 			public void MessageConnect(string appsecret, Action<ConStat> callback )
 			{
 				messageClient = new GameObject("MessageClient").AddComponent<MessageClient>();
-				messageClient.Connect(appsecret, callback);
+				messageClient.Connect(callback);
 			}
 
 			/// <summary>

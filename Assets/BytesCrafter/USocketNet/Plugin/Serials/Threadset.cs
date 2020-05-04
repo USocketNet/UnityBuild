@@ -97,13 +97,14 @@ namespace BytesCrafter.USocketNet.Networks
 			}
 		}
 
-		public void Start(string appsecret, string port, EventHandler OnOpen, EventHandler<ErrorEventArgs> OnError, EventHandler<CloseEventArgs> OnClose, EventHandler<MessageEventArgs> OnPacket) 
+		public void Start(string projectKey, string port, EventHandler OnOpen, EventHandler<ErrorEventArgs> OnError, EventHandler<CloseEventArgs> OnClose, EventHandler<MessageEventArgs> OnPacket) 
 		{
 			string hostUrl = USocketNet.config.serverUrl + ":" + port;
 			string sioPath = "/socket.io/?EIO=4&transport=websocket";
-			string usrTok = "&wpid=" + USocketNet.User.token.wpid + "&snid=" + USocketNet.User.token.snid + "&apid=" + appsecret;
+			string pkey = projectKey == string.Empty ? string.Empty : "&apid=" + projectKey;
+			string usrTok = "&wpid=" + USocketNet.User.token.wpid + "&snid=" + USocketNet.User.token.snid + pkey;
 
-			curWebsocket = new WebSocket("ws://" + hostUrl + sioPath + usrTok);
+			curWebsocket = new WebSocket( hostUrl + sioPath + usrTok);
 			curWebsocket.OnOpen += OnOpen;
 			curWebsocket.OnError += OnError;
 			curWebsocket.OnClose += OnClose;
