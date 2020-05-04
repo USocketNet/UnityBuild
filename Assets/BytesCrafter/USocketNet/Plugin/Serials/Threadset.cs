@@ -101,8 +101,9 @@ namespace BytesCrafter.USocketNet.Networks
 		{
 			string hostUrl = USocketNet.config.serverUrl + ":" + port;
 			string sioPath = "/socket.io/?EIO=4&transport=websocket";
-			string pkey = projectKey == string.Empty ? string.Empty : "&apid=" + projectKey;
-			string usrTok = "&wpid=" + USocketNet.User.token.wpid + "&snid=" + USocketNet.User.token.snid + pkey;
+			string pkey = projectKey == string.Empty ? string.Empty : "&pkey=" + projectKey;
+			string uname = projectKey == string.Empty ? string.Empty : "&uname=" + USocketNet.User.uname;
+			string usrTok = "&wpid=" + USocketNet.User.token.wpid + "&snid=" + USocketNet.User.token.snid + pkey + uname;
 
 			curWebsocket = new WebSocket( hostUrl + sioPath + usrTok);
 			curWebsocket.OnOpen += OnOpen;

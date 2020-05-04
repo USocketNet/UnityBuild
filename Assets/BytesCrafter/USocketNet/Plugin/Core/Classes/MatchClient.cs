@@ -45,7 +45,7 @@ namespace BytesCrafter.USocketNet
 				return;
 			}
 
-			bc_usn_websocket.InitConnection(projectKey, USocketNet.config.serverPort.game, this, callback);
+			bc_usn_websocket.InitConnection(projectKey, USocketNet.config.serverPort.match, this, callback);
 		}
 
         /// <summary>

@@ -3209,11 +3209,6 @@ MonoBehaviour:
   privateViewer: {fileID: 114387362753631060}
   msgPrefabItem: {fileID: 7315214797100379167}
   msgPrefabParent: {fileID: 224625372023300380}
-  pubMsgContent: {fileID: 0}
-  publicViewer: {fileID: 0}
-  chanMsgContent: {fileID: 114036299991717698}
-  channelViewer: {fileID: 114772660469484532}
-  roomname: {fileID: 0}
 --- !u!1 &1671801635185572
 GameObject:
   m_ObjectHideFlags: 0
@@ -4095,7 +4090,7 @@ GameObject:
   - component: {fileID: 224430097614648264}
   - component: {fileID: 225920613851223360}
   m_Layer: 5
-  m_Name: MatchDisplay
+  m_Name: DemoDisplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6716,7 +6711,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Highlighted
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 755767552509048095}
   m_OnClick:
     m_PersistentCalls:
