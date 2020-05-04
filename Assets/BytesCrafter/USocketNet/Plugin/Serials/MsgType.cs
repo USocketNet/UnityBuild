@@ -30,19 +30,22 @@ namespace BytesCrafter.USocketNet
     public enum MsgType 
     {
         //Public
-        pub = 0,
+        svr = 0,
         //AppWide
-        apw = 1,
+        prj = 1,
         //Variant
         var = 2,
-        //Channel
-        chl = 3,
+        //Match
+        mat = 3,
+        //Group
+        grp = 4,
         //Private
-        pri = 4
+        pri = 5
     }
 
     [System.Serializable]
     public class MsgRes {
         public RStats status = RStats.Failed;
+        public string d = string.Empty;
     }
 }

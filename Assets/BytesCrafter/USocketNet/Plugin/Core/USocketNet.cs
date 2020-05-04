@@ -247,7 +247,7 @@ namespace BytesCrafter.USocketNet
 			/// </summary>
 			/// <param name="appsecret">App Secret Key from your backend. </param>
 			/// <param name="callback">Callback that will return typeof ConStat.</param>
-			public void MessageConnect(string appsecret, Action<ConStat> callback )
+			public void MessageConnect( Action<ConStat> callback )
 			{
 				messageClient = new GameObject("MessageClient").AddComponent<MessageClient>();
 				messageClient.Connect(callback);
@@ -290,10 +290,10 @@ namespace BytesCrafter.USocketNet
 			/// </summary>
 			/// <param name="appsecret">App Secret Key from your backend. </param>
 			/// <param name="callback">Callback that will return typeof ConStat.</param>
-			public void MatchConnect(string appsecret, Action<ConStat> callback )
+			public void MatchConnect(string projectKey, Action<ConStat> callback )
 			{
 				matchClient = new GameObject("MatchClient").AddComponent<MatchClient>();
-				matchClient.Connect(appsecret, callback);
+				matchClient.Connect(projectKey, callback);
 			}
 
 			/// <summary>

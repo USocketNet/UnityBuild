@@ -119,16 +119,25 @@ public class Demoguy : MonoBehaviour
 	public Transform msgPrefabParent = null;
 
 	public void ConnectMessageClient() {
-		USocketNet.Core.MessageConnect(appsecret.text, (ConStat conStat) => {
+		USocketNet.Core.MessageConnect( (ConStat conStat) => {
 			if( conStat == ConStat.Success ) {
 				ChangeCanvas(3);
-				USocketNet.Core.Message.ListensOnMessage(MsgType.pub, OnPublicMessage);
+				USocketNet.Core.Message.ListensOnMessage(MsgType.svr, OnPublicMessage);
+				USocketNet.Core.Message.ListensOnMessage(MsgType.pri, OnPrivateMessage);
 			}
 			USocketNet.Log(Logs.Log, "Demogguy", "Connection to Chat Server return: " + conStat.ToString() );
 		});
 	}
 
 	private void OnPublicMessage(MsgJson msgJson) {
+		DisplayMessage(msgJson);
+	}
+
+	private void OnPrivateMessage(MsgJson msgJson) {
+		DisplayMessage(msgJson);
+	}
+
+	private void DisplayMessage(MsgJson msgJson) {
 		if(msgPrefabParent.childCount > 60) {
 			Text last = msgPrefabParent.GetChild(msgPrefabParent.childCount-2).GetComponent<Text>();
 			last.transform.SetAsFirstSibling();
@@ -139,16 +148,29 @@ public class Demoguy : MonoBehaviour
 			msgView.text = msgJson.username  + " (" + msgJson.datestamp +"): " + msgJson.message;
 			msgView.gameObject.SetActive(true);
 		}
-		
 	}
 
 	public void SendMessage() {
-		USocketNet.Core.Message.SendMessage(MsgType.pub, priMsgContent.text, (MsgRes msgRes) => {
+		
+		if(priMsgReceiver.text == string.Empty) {
+			USocketNet.Core.Message.SendMessage(priMsgContent.text, (MsgRes msgRes) => {
 			if(msgRes.status == RStats.Success) {
-				priMsgContent.text = string.Empty;
-			}
-			USocketNet.Log(Logs.Log, "Demogguy", "Auto Public Message Send: " + msgRes.status.ToString() );
-		});
+					MsgJson msgJson = new MsgJson(USocketNet.User.uname, priMsgContent.text, msgRes.d);
+					DisplayMessage(msgJson);
+					priMsgContent.text = string.Empty;
+				}
+				USocketNet.Log(Logs.Log, "Demogguy", "Manual Public Message Status: " + msgRes.status.ToString() );
+			});
+		} else {
+			USocketNet.Core.Message.SendMessage(priMsgContent.text, priMsgReceiver.text, (MsgRes msgRes) => {
+				if(msgRes.status == RStats.Success) {
+					MsgJson msgJson = new MsgJson(USocketNet.User.uname, priMsgContent.text, msgRes.d);
+					DisplayMessage(msgJson);
+					priMsgContent.text = string.Empty;
+				}
+				USocketNet.Log(Logs.Log, "Demogguy", "Manual Public Message Status: " + msgRes.status.ToString() );
+			});
+		}
 	}
 
 	public void DisconnectMessageClient() {
@@ -159,7 +181,7 @@ public class Demoguy : MonoBehaviour
 
 	public void ConnectMatchClient() {
 		USocketNet.Core.MatchConnect(appsecret.text, (ConStat conStat) => {
-			USocketNet.Log(Logs.Log, "Demogguy", "Connection to Game Server return: " + conStat.ToString() );
+			USocketNet.Log(Logs.Log, "Demogguy", "Connection to Match Server return: " + conStat.ToString() );
 		});
 	}
 
@@ -177,13 +199,28 @@ public class Demoguy : MonoBehaviour
 		if(USocketNet.Core.IsMessageConnected)
 		{	
 			timer += Time.deltaTime;
-			if( timer > 2f) {
+			if( timer > 1f) {
 				if(chatBotEnabled != null) {
 					if(chatBotEnabled.isOn) {
 						//Send Random Message.
-						USocketNet.Core.Message.SendMessage(MsgType.pub, RandomMessage, (MsgRes msgRes) => {
-							USocketNet.Log(Logs.Log, "Demogguy", "Manual Public Message Send: " + msgRes.status.ToString() );
-						});
+						if(priMsgReceiver.text == string.Empty) {
+							USocketNet.Core.Message.SendMessage(RandomMessage, (MsgRes msgRes) => {
+								if(msgRes.status == RStats.Success) {
+									MsgJson msgJson = new MsgJson(USocketNet.User.uname, RandomMessage, msgRes.d);
+									DisplayMessage(msgJson);
+								}
+								USocketNet.Log(Logs.Log, "Demogguy", "Auto Server Wide Message: " + msgRes.status.ToString() );
+							});
+						} else {
+							USocketNet.Core.Message.SendMessage(RandomMessage, priMsgReceiver.text, (MsgRes msgRes) => {
+								if(msgRes.status == RStats.Success) {
+									MsgJson msgJson = new MsgJson(USocketNet.User.uname, RandomMessage, msgRes.d);
+									DisplayMessage(msgJson);
+								}
+								USocketNet.Log(Logs.Log, "Demogguy", "Auto Server Wide Message: " + msgRes.status.ToString() );
+							});
+						}
+						
 					}
 				}
 				timer = 0f;
@@ -203,40 +240,5 @@ public class Demoguy : MonoBehaviour
 	}
 	
 
-	
 
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-
-	[Header("PUBLIC MESSAGE")]
-	public InputField pubMsgContent = null;
-	public MessageDisplay publicViewer = null;
-
-	
-
-	[Header("CHANNEL MESSAGE")]
-	public InputField chanMsgContent = null;
-	public MessageDisplay channelViewer = null;
-
-	[Header("Server Room")]
-	public InputField roomname = null;
-
-	
 }

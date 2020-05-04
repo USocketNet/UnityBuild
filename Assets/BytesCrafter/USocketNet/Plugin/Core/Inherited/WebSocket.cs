@@ -158,7 +158,11 @@ namespace BytesCrafter.USocketNet.Networks {
 			//AddCallback("pong", Ponging);
 			
 			if(USocketNet.config.serverPort.GetServType(port) == ServType.Message) {
-				AddCallback("pub", OnPublicMessage);
+				AddCallback("svr", OnServerMessage);
+			}
+
+			if(USocketNet.config.serverPort.GetServType(port) == ServType.Message) {
+				AddCallback("pri", OnPrivateMessage);
 			}
 
             socketThread = new Thread(RunSocketThread);
@@ -182,9 +186,9 @@ namespace BytesCrafter.USocketNet.Networks {
 			eventListeners[mType].Add(listener);
 		}
 
-		private void OnPublicMessage(SocketIOEvent e)
+		private void OnServerMessage(SocketIOEvent e)
 		{
-			string mType = MsgType.pub.ToString();
+			string mType = MsgType.svr.ToString();
 			if (!eventListeners.ContainsKey(mType))
 				return;
 			
@@ -196,6 +200,24 @@ namespace BytesCrafter.USocketNet.Networks {
 					handler(msgJson);
 				} catch (Exception except) {
 					USocketNet.Log(Logs.Warn, "disable", "OnPublicMessage ->" + except.Message);
+				}
+			}
+		}
+
+		private void OnPrivateMessage(SocketIOEvent e)
+		{
+			string mType = MsgType.svr.ToString();
+			if (!eventListeners.ContainsKey(mType))
+				return;
+			
+			MsgJson msgJson = new MsgJson(JsonUtility.FromJson<MsgRaw>(e.data.ToString()));
+
+			foreach (Action<MsgJson> handler in eventListeners[mType])
+			{
+				try {
+					handler(msgJson);
+				} catch (Exception except) {
+					USocketNet.Log(Logs.Warn, "disable", "OnPrivateMessage ->" + except.Message);
 				}
 			}
 		}

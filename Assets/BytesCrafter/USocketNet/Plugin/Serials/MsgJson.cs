@@ -36,6 +36,13 @@ public class MsgJson
     public string receiver { get; private set; }
     public string datestamp { get; private set; }
 
+    public MsgJson(string _myuname, string _message, string _datestamp)
+    {
+        username = _myuname;
+        message = _message;
+        datestamp = _datestamp;
+    } 
+
     public MsgJson(MsgRaw msgRaw)
     {
         username = msgRaw.u;
@@ -72,5 +79,10 @@ public class MsgRaw
 
     public MsgRaw(string msgContent) {
         m = msgContent;
+    }
+
+    public MsgRaw(string msgContent, string userID) {
+        m = msgContent;
+        r = userID;
     }
 }

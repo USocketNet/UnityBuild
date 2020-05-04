@@ -59,16 +59,49 @@ namespace BytesCrafter.USocketNet
 			bc_usn_websocket.ForceDisconnect();
 		}
 
+		public void JoinServerWide() { //svr-ID -> ID=cluster id
+
+		}
+
+		public void JoinProjectWide(string eventID) { //prj-ID -> ID=project id
+			
+		}
+
+		public void JoinVariantWide(string eventID) { //prj-pID-vID -> pID=parent id and vID=variant id.
+			
+		}
+
+		public void JoinMatchWide(string eventID) { //mat-mtid -> mtid=match id from server.
+			
+		}
+
+		public void JoinGroupWide(string eventID) { //grp-cID -> cID=custom id what user want.
+			
+		}
+
 		/// <summary>
 		/// Send any type of human message to the other clients.
 		/// </summary>
-		/// <param name="msgType"></param>
 		/// <param name="msgContent"></param>
 		/// <param name="callback"></param>
-		public void SendMessage(MsgType msgType, string msgContent, Action<MsgRes> callback) 
+		public void SendMessage(string msgContent, Action<MsgRes> callback) 
 		{
 			string sendData = JsonUtility.ToJson(new MsgRaw(msgContent));
-			bc_usn_websocket.SendEmit("pub", new JSONObject(sendData), (JSONObject jsonObj) => {
+			bc_usn_websocket.SendEmit("svr", new JSONObject(sendData), (JSONObject jsonObj) => {
+				callback( JSONProcessor.ToObject<MsgRes>(jsonObj.ToString()) );
+			});
+		}
+
+		/// <summary>
+		/// Send any type of human message to specific client.
+		/// </summary>
+		/// <param name="msgContent"></param>
+		/// <param name="userID"></param>
+		/// <param name="callback"></param>
+		public void SendMessage(string msgContent, string userID, Action<MsgRes> callback) 
+		{
+			string sendData = JsonUtility.ToJson(new MsgRaw(msgContent, userID));
+			bc_usn_websocket.SendEmit("pri", new JSONObject(sendData), (JSONObject jsonObj) => {
 				callback( JSONProcessor.ToObject<MsgRes>(jsonObj.ToString()) );
 			});
 		}
