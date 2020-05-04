@@ -254,12 +254,8 @@ namespace BytesCrafter.USocketNet
 			/// <param name="callback">Callback that will return typeof ConStat.</param>
 			public void AddMessageClient(string appsecret, Action<ConStat> callback )
 			{
-				if(masterClient != null) {
-					messageClient = new GameObject("MessageClient").AddComponent<MessageClient>();
-					messageClient.Connect(appsecret, callback);
-				} else {
-					callback(ConStat.Invalid);
-				}
+				messageClient = new GameObject("MessageClient").AddComponent<MessageClient>();
+				messageClient.Connect(appsecret, callback);
 			}
 
 			/// <summary>
@@ -293,12 +289,8 @@ namespace BytesCrafter.USocketNet
 			/// <param name="callback">Callback that will return typeof ConStat.</param>
 			public void AddGameClient(string appsecret, Action<ConStat> callback )
 			{
-				if(masterClient != null) {
-					gameClient = new GameObject("GameClient").AddComponent<GameClient>();
-					gameClient.Connect(appsecret, callback);
-				} else {
-					callback(ConStat.Invalid);
-				}
+				gameClient = new GameObject("GameClient").AddComponent<GameClient>();
+				gameClient.Connect(appsecret, callback);
 			}
 
 			/// <summary>

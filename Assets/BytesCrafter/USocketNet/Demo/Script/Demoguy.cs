@@ -20,6 +20,16 @@ public class Demoguy : MonoBehaviour
 		canvasGroup [index].alpha = 1f;
 		canvasGroup [index].gameObject.SetActive (true);
 	}
+	public CanvasGroup masterDisplay;
+	private void ShowMaster(bool yes) {
+		if(yes) {
+			masterDisplay.alpha = 1f;
+			masterDisplay.gameObject.SetActive (true);
+		} else {
+			masterDisplay.alpha = 0f;
+			masterDisplay.gameObject.SetActive (false);
+		}
+	}
 
 	[Header("PING MECHANISM")]
 	public Text pingSocket = null;
@@ -69,7 +79,8 @@ public class Demoguy : MonoBehaviour
 	public void ConnectToServer() {
 		USocketNet.Core.Connect(appsecret.text, (ConStat conStat) => {
 			if( conStat == ConStat.Success ) {
-				ChangeCanvas(2);
+				//Enable master display.
+				ShowMaster(true);
 				USocketNet.Log(Logs.Log, "Demoguy", "You are now connected with id: " + USocketNet.Core.Master.Identity );
 			} else {
 				USocketNet.Log(Logs.Log, "Demoguy", "Connection failed on status of: " + conStat.ToString() );
@@ -78,8 +89,9 @@ public class Demoguy : MonoBehaviour
 	}
 
 	public void DisconnectFromServer() {
+		//Hide master display.
+		ShowMaster(false);
 		USocketNet.Core.Disconnect();
-		ChangeCanvas(1);
 	}
 
 	#endregion
@@ -109,6 +121,7 @@ public class Demoguy : MonoBehaviour
 	public void AddChatClient() {
 		USocketNet.Core.AddMessageClient(appsecret.text, (ConStat conStat) => {
 			if( conStat == ConStat.Success ) {
+				ChangeCanvas(3);
 				USocketNet.Core.message.ListensOnMessage(MsgType.pub, OnPublicMessage);
 			}
 			USocketNet.Log(Logs.Log, "Demogguy", "Connection to Chat Server return: " + conStat.ToString() );
@@ -116,9 +129,17 @@ public class Demoguy : MonoBehaviour
 	}
 
 	private void OnPublicMessage(MsgJson msgJson) {
-		Text msgView = Instantiate(msgPrefabItem.gameObject, msgPrefabParent).GetComponent<Text>();
-		msgView.text = msgJson.username  + " (" + msgJson.datestamp +"): " + msgJson.message;
-		msgView.gameObject.SetActive(true);
+		if(msgPrefabParent.childCount > 60) {
+			Text last = msgPrefabParent.GetChild(msgPrefabParent.childCount-2).GetComponent<Text>();
+			last.transform.SetAsFirstSibling();
+			last.text = msgJson.username  + " (" + msgJson.datestamp +"): " + msgJson.message;
+		} else {
+			Text msgView = Instantiate(msgPrefabItem.gameObject, msgPrefabParent).GetComponent<Text>();
+			msgView.transform.SetAsFirstSibling();
+			msgView.text = msgJson.username  + " (" + msgJson.datestamp +"): " + msgJson.message;
+			msgView.gameObject.SetActive(true);
+		}
+		
 	}
 
 	public void SendMessage() {
@@ -131,6 +152,7 @@ public class Demoguy : MonoBehaviour
 	}
 
 	public void RemoveChatClient() {
+		ChangeCanvas(2);
 		USocketNet.Core.RemoveMessageClient();
 	}
 
