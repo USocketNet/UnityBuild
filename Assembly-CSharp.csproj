@@ -45,6 +45,25 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+     <Compile Include="Assets\Arena Battle Starter Kit\Scripts\Scene\CameraController.cs" />
+     <Compile Include="Assets\Arena Battle Starter Kit\Scripts\Scene\GrassItemCtrl.cs" />
+     <Compile Include="Assets\Arena Battle Starter Kit\Scripts\Scene\SceneController.cs" />
+     <Compile Include="Assets\Arena Battle Starter Kit\Scripts\Scene\StageItem\StageItemCtrl.cs" />
+     <Compile Include="Assets\Arena Battle Starter Kit\Scripts\Scene\UnitItem\UnitItemBaseCtrl.cs" />
+     <Compile Include="Assets\Arena Battle Starter Kit\Scripts\Scene\UnitItem\_AI\UnitItemAIHelperCtrl.cs" />
+     <Compile Include="Assets\Arena Battle Starter Kit\Scripts\Scene\UnitItem\_Bullets\BulletCtrl.cs" />
+     <Compile Include="Assets\Arena Battle Starter Kit\Scripts\Scene\UnitItem\_UI\UnitItemUICtrl.cs" />
+     <Compile Include="Assets\Arena Battle Starter Kit\Scripts\UI\Base\ClosableWindowCtrl.cs" />
+     <Compile Include="Assets\Arena Battle Starter Kit\Scripts\UI\Base\JoystickCtrl.cs" />
+     <Compile Include="Assets\Arena Battle Starter Kit\Scripts\UI\Base\ProgressPanelCtrl.cs" />
+     <Compile Include="Assets\Arena Battle Starter Kit\Scripts\UI\UIController.cs" />
+     <Compile Include="Assets\Arena Battle Starter Kit\Scripts\UI\Windows\GameOverlayWindow\GameOverlayWindowCtrl.cs" />
+     <Compile Include="Assets\Arena Battle Starter Kit\Scripts\UI\Windows\GameOverlayWindow\JoystickComponentCtrl.cs" />
+     <Compile Include="Assets\Arena Battle Starter Kit\Scripts\UI\Windows\LoadingWindow\LoadingWindowCtrl.cs" />
+     <Compile Include="Assets\Arena Battle Starter Kit\Scripts\_Libs\CameraFacingCtrl.cs" />
+     <Compile Include="Assets\Arena Battle Starter Kit\Scripts\_Libs\Common.cs" />
+     <Compile Include="Assets\Arena Battle Starter Kit\Scripts\_Libs\FPSCounter.cs" />
+     <Compile Include="Assets\Arena Battle Starter Kit\Scripts\_Libs\Utils.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Demo\Script\Demoguy.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Demo\Script\MessageDisplay.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Demo\Script\SimpleControl.cs" />
@@ -61,6 +80,7 @@
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Core\USocketNetWebGL.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\ConStat.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\Config.cs" />
+     <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\MatchInfo.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\MsgJson.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\MsgType.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Serials\Ports.cs" />
@@ -150,6 +170,30 @@
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Websocket\WebSocketFrame.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Websocket\WebSocketState.cs" />
      <Compile Include="Assets\BytesCrafter\USocketNet\Plugin\Websocket\WebSocketStream.cs" />
+     <Compile Include="Assets\MiniBattleRoyale\DEMO\scripts\Customizer.cs" />
+     <Compile Include="Assets\MiniBattleRoyale\DEMO\scripts\Mc_Attachment.cs" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
+     <None Include="Assets\Arena Battle Starter Kit\Shaders\Default.shader" />
+     <None Include="Assets\Arena Battle Starter Kit\readme.txt" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
+     <None Include="Assets\Arena Battle Starter Kit\Shaders\Outline.shader" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader" />
+     <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF.shader" />
+     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
+     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
+     <None Include="Assets\MiniBattleRoyale\README.txt" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Mobile.shader" />
+     <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile.shader" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader" />
  <Reference Include="Unity.VSCode.Editor">
  <HintPath>C:/_Projects/USocketNet-on-Unity/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
  </Reference>
@@ -158,6 +202,12 @@
  </Reference>
  <Reference Include="UnityEditor.UI">
  <HintPath>C:/_Projects/USocketNet-on-Unity/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.TextMeshPro.Editor">
+ <HintPath>C:/_Projects/USocketNet-on-Unity/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.TextMeshPro">
+ <HintPath>C:/_Projects/USocketNet-on-Unity/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.9f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
